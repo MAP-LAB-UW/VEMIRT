@@ -254,8 +254,13 @@ IW.iwgvemm <- function(Y, D, X, SIGMA, MU, Sigma, Mu, a, b, gamma, beta, lambda,
       Sigma.L <- linalg_cholesky(Sigma)
       Sigma1.L.mask <- torch_tensor(lower.tri(matrix(0, K, K)))$bool()
       Sigma1.L.v <- (Sigma.L[1] / torch_cat(list(torch_ones(c(K, 1)), sqrt(1 - Sigma.L[1]$square()$cumsum(2))[, 1:(K - 1)]), 2))$masked_select(Sigma1.L.mask)$arctanh()$requires_grad_(T)
-      Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
-      Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
+      if (G > 1) {
+	    Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
+	    Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
+      } else {
+      	Sigma2.L.mask <- torch_tensor(NULL)
+		Sigma2.L.v <- torch_tensor(NULL)
+      }
       Mu.mask <- torch_cat(list(matrix(0, 1, K), matrix(1, G - 1, K)))$bool()
       Mu.v <- torch_tensor(Mu)$masked_select(Mu.mask)$requires_grad_(T)
       a.mask <- torch_tensor(D)$bool()
@@ -274,7 +279,10 @@ IW.iwgvemm <- function(Y, D, X, SIGMA, MU, Sigma, Mu, a, b, gamma, beta, lambda,
     with(parent.frame(), {
       z <- Sigma1.L.v$tanh()
       Sigma1.L <- torch_eye(K)$masked_scatter(Sigma1.L.mask, z) * torch_cat(c(torch_ones(c(K, 1)), (1 - torch_zeros(c(K, K))$masked_scatter(Sigma1.L.mask, z)[, 1:(K- 1)]$square())$cumprod(2)$sqrt()), 2)
-      Sigma2.L <- torch_zeros(Sigma2.L.mask$shape)$masked_scatter(Sigma2.L.mask, Sigma2.L.v)
+      Sigma2.L <- if (G > 1)
+	    torch_zeros(Sigma2.L.mask$shape)$masked_scatter(Sigma2.L.mask, Sigma2.L.v)
+	  else
+		torch_tensor(NULL)	
       Sigma.L <- torch_cat(c(Sigma1.L$unsqueeze(1), Sigma2.L))
       Mu <- torch_zeros(Mu.mask$shape)$masked_scatter(Mu.mask, Mu.v)
       a <- torch_zeros(a.mask$shape)$masked_scatter(a.mask, a.v)

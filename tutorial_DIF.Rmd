@@ -2,7 +2,7 @@
 title: Differential Item Functioning Analysis of Two Parameter Logistic Models Using
   VEMIRT
 author: "Weicong Lyu, Chun Wang, and Gongjun Xu"
-date: "March 23, 2024"
+date: "March 28, 2024"
 output:
   html_document:
     toc: true
@@ -12,9 +12,9 @@ output:
 # Introduction
 In this tutorial, we illustrate how to conduct differential item functioning (DIF) analysis of two parameter logistic (2PL) models using the `VEMIRT` package in `R`, which can be installed with
 ```{r eval = F}
-devtools::install_github("weiconglyu/VEMIRT")
+devtools::install_github("MAP-LAB-UW/VEMIRT")
 ```
-The package requires a C++ compiler to work properly, and users are referred to https://github.com/weiconglyu/VEMIRT for more information.
+The package requires a C++ compiler to work properly, and users are referred to https://github.com/MAP-LAB-UW/VEMIRT for more information.
 ```{r}
 library(VEMIRT)
 ```

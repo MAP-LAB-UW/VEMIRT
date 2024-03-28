@@ -11,7 +11,7 @@
 
 <meta name="author" content="Weicong Lyu, Chun Wang, and Gongjun Xu" />
 
-<meta name="date" content="2024-03-23" />
+<meta name="date" content="2024-03-28" />
 
 <title>Differential Item Functioning Analysis of Two Parameter Logistic Models Using VEMIRT</title>
 
@@ -353,7 +353,7 @@ display: none;
 <h1 class="title toc-ignore">Differential Item Functioning Analysis of
 Two Parameter Logistic Models Using VEMIRT</h1>
 <h4 class="author">Weicong Lyu, Chun Wang, and Gongjun Xu</h4>
-<h4 class="date">March 23, 2024</h4>
+<h4 class="date">March 28, 2024</h4>
 
 </div>
 
@@ -372,9 +372,9 @@ Structure</a></li>
 functioning (DIF) analysis of two parameter logistic (2PL) models using
 the <code>VEMIRT</code> package in <code>R</code>, which can be
 installed with</p>
-<pre class="r"><code>devtools::install_github(&quot;weiconglyu/VEMIRT&quot;)</code></pre>
+<pre class="r"><code>devtools::install_github(&quot;MAP-LAB-UW/VEMIRT&quot;)</code></pre>
 <p>The package requires a C++ compiler to work properly, and users are
-referred to <a href="https://github.com/weiconglyu/VEMIRT" class="uri">https://github.com/weiconglyu/VEMIRT</a> for more
+referred to <a href="https://github.com/MAP-LAB-UW/VEMIRT" class="uri">https://github.com/MAP-LAB-UW/VEMIRT</a> for more
 information.</p>
 <pre class="r"><code>library(VEMIRT)</code></pre>
 </div>
@@ -516,7 +516,7 @@ for regularization. For the method of <code>gvemm_DIF</code>, we prefer
 helps improve accuracy.</p>
 <pre class="r"><code>result &lt;- gvemm_DIF(exampleDIF$Y, exampleDIF$D, exampleDIF$X, &#39;IWGVEMM&#39;, seq(0.2, 0.7, by = 0.1))
 result</code></pre>
-<pre><code>## lambda0 = 0.3
+<pre><code>## lambda0 = 0.4
 ## 
 ## Group 2:
 ## 		a1	a2	b
@@ -524,16 +524,16 @@ result</code></pre>
 ## Item 2	 	 	 
 ## Item 3	 	 	 
 ## Item 4	 	 	X
-## Item 5	 	 	X
+## Item 5	 	 	 
 ## Item 6	 	 	 
 ## Item 7	 	 	X
 ## Item 8	 	 	X
-## Item 9	 	 	X
+## Item 9	 	 	 
 ## Item 10	 	 	X
 ## Item 11	 	 	X
 ## Item 12	 	 	X
 ## Item 13	 	 	 
-## Item 14	 	 	X
+## Item 14	 	 	 
 ## Item 15	 	 	 
 ## Item 16	 	 	 
 ## Item 17	 	 	 
@@ -543,21 +543,21 @@ result</code></pre>
 ## 
 ## Group 3:
 ## 		a1	a2	b
-## Item 1	X	 	X
+## Item 1	 	 	X
 ## Item 2	 	 	 
 ## Item 3	 	 	 
-## Item 4	 	X	X
+## Item 4	 	 	X
 ## Item 5	 	 	X
 ## Item 6	 	 	X
 ## Item 7	X	 	X
 ## Item 8	 	X	X
-## Item 9	X	 	X
+## Item 9	 	 	X
 ## Item 10	 	X	X
 ## Item 11	X	 	X
 ## Item 12	 	X	X
 ## Item 13	 	 	 
 ## Item 14	 	 	 
-## Item 15	X	 	 
+## Item 15	 	 	 
 ## Item 16	 	 	 
 ## Item 17	 	 	 
 ## Item 18	 	 	 
@@ -588,11 +588,11 @@ too:</p>
 ## Item 12	 	 	X
 ## Item 13	 	 	X
 ## Item 14	 	 	X
-## Item 15	 	 	 
+## Item 15	X	 	 
 ## Item 16	 	 	 
 ## Item 17	 	 	 
 ## Item 18	 	 	 
-## Item 19	X	 	 
+## Item 19	 	 	 
 ## Item 20	 	 	X
 ## 
 ## Group 3:
@@ -624,20 +624,20 @@ can be obtained too:</p>
 <pre><code>## List of 16
 ##  $ lambda0: num 0.3
 ##  $ lambda : num 16.4
-##  $ iter   : int [1:3] 48 108 105
+##  $ iter   : int [1:3] 48 103 103
 ##  $ SIGMA  : num [1:3000, 1:2, 1:2] 0.1026 0.0998 0.115 0.1352 0.1103 ...
 ##  $ MU     : num [1:3000, 1:2] 0.815 0.68 1.361 -1.852 1.257 ...
-##  $ Sigma  : num [1:3, 1:2, 1:2] 1 0.931 0.942 0.923 0.83 ...
-##  $ Mu     : num [1:3, 1:2] 0 0.0158 0.0113 0 -0.0136 ...
-##  $ a      : num [1:20, 1:2] 2.06 0 2.56 0 2.61 ...
-##  $ b      : num [1:20] 1.6966 -1.3208 -1.9611 0.6621 0.0891 ...
-##  $ gamma  : num [1:3, 1:20, 1:2] 0 0 0.588 0 0 ...
-##  $ beta   : num [1:3, 1:20] 0 0.805 1 0 0 ...
-##  $ ll     : num -22764
+##  $ Sigma  : num [1:3, 1:2, 1:2] 1 0.911 0.938 0.917 0.827 ...
+##  $ Mu     : num [1:3, 1:2] 0 0.00496 -0.00181 0 -0.0167 ...
+##  $ a      : num [1:20, 1:2] 2.06 0 2.55 0 2.62 ...
+##  $ b      : num [1:20] 1.688 -1.3302 -1.9791 0.6455 0.0723 ...
+##  $ gamma  : num [1:3, 1:20, 1:2] 0 0 0.54 0 0 ...
+##  $ beta   : num [1:3, 1:20] 0 0.821 1.033 0 0 ...
+##  $ ll     : num -22771
 ##  $ l0     : num 29
-##  $ AIC    : num 45586
-##  $ BIC    : num 45760
-##  $ GIC    : num 45866</code></pre>
+##  $ AIC    : num 45600
+##  $ BIC    : num 45775
+##  $ GIC    : num 45880</code></pre>
 </div>
 
 

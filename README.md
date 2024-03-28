@@ -36,5 +36,5 @@ To install this package from source:
     package from [GitHub](https://github.com/) with:
 
 ``` r
-devtools::install_github("weiconglyu/VEMIRT")
+devtools::install_github("MAP-LAB-UW/VEMIRT")
 ```
