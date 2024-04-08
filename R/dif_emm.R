@@ -891,14 +891,14 @@ lrt_DIF <- function(Y, D, X, unif = F){
     while(diff>0){
       md.cons0 <- multipleGroup(verbose = F, resp, model, group = Group,SE=TRUE,invariance=c('free_means', 'free_var','slopes',colnames(resp)[anchors0]))
       d=DIF(md.cons0, which.par = c('d'), p.adjust = 'fdr',scheme = 'drop')
-      anchors=which(d$adj_pvals>0.05)
+      anchors=which(d$adj_p>0.05)
       diff=length(anchors0)-length(anchors)
       anchors0=anchors
       #anchors=c(1:20)[-which(colnames(resp)%in%rownames(d))]
     }
     md.noncons0 <- multipleGroup(verbose = F, resp, model, group = Group,SE=TRUE,invariance=c('free_means', 'free_var','slopes',colnames(resp)[anchors]))
     dif1=DIF(md.noncons0, which.par = c('d'), p.adjust = 'fdr',scheme = 'add',items2test=c(1:J)[-anchors])
-    dif1.t=dif1[which(dif1$adj_pvals<0.05),]
+    dif1.t=dif1[which(dif1$adj_p<0.05),]
 
     #refit
     if (length(rownames(dif1.t))==0){
@@ -927,7 +927,7 @@ lrt_DIF <- function(Y, D, X, unif = F){
     while(diff>0){
       md.cons0 <- multipleGroup(verbose = F, resp, model, group = Group,SE=TRUE,invariance=c('free_means', 'free_var',colnames(resp)[anchors0]))
       d=DIF(md.cons0, which.par = c(rownames(indic),'d'), p.adjust = 'fdr',scheme = 'drop')
-      anchors=which(d$adj_pvals>0.05)
+      anchors=which(d$adj_p>0.05)
       diff=length(anchors0)-length(anchors)
       anchors0=anchors
       #anchors=c(1:20)[-which(colnames(resp)%in%rownames(d))]
@@ -938,7 +938,7 @@ lrt_DIF <- function(Y, D, X, unif = F){
     for (jj in Jt){
       an=rownames(indic)[which(indic[,jj]==1)]
       dif1=DIF(md.noncons0, which.par = c(an,'d'), p.adjust = 'fdr',scheme = 'add', items2test=jj)
-      dif1.t=rbind(dif1.t,dif1[which(dif1$adj_pvals<0.05),])
+      dif1.t=rbind(dif1.t,dif1[which(dif1$adj_p<0.05),])
     }
 
     #refit

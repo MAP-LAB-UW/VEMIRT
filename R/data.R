@@ -9,6 +9,9 @@ NULL
 #' @format A data frame with 2000 respondents and 75 items
 "exampleData_2pl"
 
+#' True item parameters for M2PL
+'exampleItem_2pl'
+
 #' Factor-loading indicator matrix for M2PL-CFA
 #'
 #' The factor-loading indicator matrix can be used as an input for
@@ -39,6 +42,9 @@ NULL
 #' as 0.1.
 #' @format A data frame with 2000 respondents and 45 items
 "exampleData_3pl"
+
+#' True item parameters for M3PL
+'exampleItem_3pl'
 
 #' Factor-loading indicator matrix for M3PL-CFA
 #'
