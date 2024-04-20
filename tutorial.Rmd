@@ -1,0 +1,176 @@
+---
+title: Variational Estimation for Multidimensional Item Response Theory Using `VEMIRT`
+author: "Weicong Lyu, Jiaying Xiao, Chun Wang, and Gongjun Xu"
+date: "April 21, 2024"
+output:
+  html_document:
+    toc: true
+    pandoc_args: "--preserve-tabs"
+---
+
+# Introduction
+In this tutorial, we illustrate how to conduct multidimensional item response theory (MIRT) analysis of multidimensional two parameter logistic (M2PL) and multidimensional three parameter logistic (M3PL) models, and differential item functioning (DIF) analysis of M2PL models using the `VEMIRT` package in `R`, which can be installed with
+```{r eval = F}
+devtools::install_github("MAP-LAB-UW/VEMIRT")
+torch::install_torch()
+```
+The package requires a C++ compiler to work properly, and users are referred to https://github.com/MAP-LAB-UW/VEMIRT for more information.
+```{r}
+library(VEMIRT)
+```
+Most functions are based on the expectation-maximization (EM) algorithm. The Gaussian variational expectation-maximization (GVEM) algorithm is provided for higher dimensions.
+
+
+# Data Input
+Data required for analysis are summarized below:
+
+| Analysis | Item Responses | Loading Indicator | Group Membership |
+| :-: | :-: | :-: | :-: |
+| Exploratory Factor Analysis | $\checkmark$ |
+| Confirmatory Factor Analysis | $\checkmark$ | $\checkmark$ |
+| Differential Item Functioning | $\checkmark$ | $\checkmark$ | $\checkmark$ |
+
+Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbers of respondents and items respectively:
+```{r}
+head(exampleDIF$Y)
+```
+
+CFA relies on a $J$ by $D$ binary loading indicator matrix specifying latent dimensions each item loads on, where $D$ is the number of latent dimensions:
+```{r}
+exampleDIF$D
+```
+
+DIF analysis additionally needs an $N$ dimensional group membership vector, whose elements are integers from $1$ to $G$, where $G$ is the number of groups:
+```{r}
+table(exampleDIF$X)
+```
+
+
+<!-- `VEMIRT` provides simulated data set `exampleDIF` as an example: -->
+<!-- ```{r} -->
+<!-- str(exampleDIF) -->
+<!-- ``` -->
+<!-- `Y` is an $N$ by $J$ binary response matrix, where $N$ and $J$ are the numbers of respondents and items respectively: -->
+<!-- ```{r} -->
+<!-- head(exampleDIF$Y) -->
+<!-- ``` -->
+<!-- `D` is a $J$ by $D$ binary loading indicator matrix specifying latent dimensions each item loads on, where $D$ is the number of latent dimensions: -->
+<!-- ```{r} -->
+<!-- exampleDIF$D -->
+<!-- ``` -->
+<!-- `X` is an $N$ dimensional vector of integers from $1$ to $G$, where $G$ is the number of groups: -->
+<!-- ```{r} -->
+<!-- table(exampleDIF$X) -->
+<!-- ``` -->
+<!-- The first `j` items of the data have DIF on both slopes and intercepts: -->
+<!-- ```{r} -->
+<!-- exampleDIF$j -->
+<!-- with(exampleDIF$params, cbind(a[1, , ], a[2, , ], a[3, , ])) -->
+<!-- exampleDIF$params$b -->
+<!-- ``` -->
+<!-- `params$theta` is the respondent latent traits: -->
+<!-- ```{r} -->
+<!-- head(exampleDIF$params$theta) -->
+<!-- ``` -->
+<!-- Only `Y`, `D` and `X` are needed for DIF analysis, while `j` and `params` are the parameters used for generating the item responses. -->
+
+
+# Exploratory Factor Analysis
+## Parallel Analysis
+Parallel analysis can be conducted to determine the number of factors:
+```{r eval = F}
+pa_poly(exampleData_2pl, n.iter = 5, figure = FALSE)
+```
+```{r cache = T, echo = F, message = F, warning = F}
+result <- pa_poly(exampleData_2pl, n.iter = 5, figure = FALSE)
+```
+
+## M2PL Model
+`VEMIRT` provides the following functions to conduct EFA for the M2PL model:
+
+| Function | Description |
+| :-: | :-: |
+| `gvem_2PLEFA_rot` | GVEM with post-doc rotation |
+| `gvem_2PLEFA_lasso` | GVEM with lasso penalty |
+| `gvem_2PLEFA_adaptlasso` | GVEM with adaptive lasso penalty |
+
+Currently these functions do not estimate the standard errors of item parameters.
+
+`gvem_2PLEFA_rot` needs the item responses and the number of factors (`domain`), and applies the promax rotation by default.
+```{r eval = F}
+gvem_2PLEFA_rot(exampleData_2pl, domain = 5)
+```
+
+Both `gvem_2PLEFA_lasso` and `gvem_2PLEFA_adaptlasso` need item responses, constraint setting (`constrain`), and a binary matrix specifying constraints on the sub-matrix of the factor loading structure (`indic`). `constrain` should be either `"C1"` or `"C2"` to ensure identifiability. Under `"C1"`, a $D\times D$ sub-matrix of `indic` should be an identity matrix, indicating that each of these $D$ items loads solely on one factor. Under `"C2"`, a $D\times D$ sub-matrix of `indic` should be a lower triangular matrix whose diagonal elements are all one, indicating that each of these $D$ items loads on one factor and potentially other factors as well; non-zero elements other than the diagonal are penalized. For identification under `"C2"`, another argument `non_pen` should be provided, which specifies an anchor item that loads on all the factors. `gvem_2PLEFA_adaptlasso` needs an additional tuning parameter `gamma`.
+```{r eval = F}
+gvem_2PLEFA_adaptlasso(exampleData_2pl, indic = exampleIndic_efa2pl_c1, constrain = "C1")
+gvem_2PLEFA_lasso(exampleData_2pl, indic = exampleIndic_efa2pl_c2, constrain = "C2", non_pen = 61, gamma = 2)
+```
+
+## M3PL Model
+`VEMIRT` provides the following functions to conduct EFA for the M3PL model:
+
+| Function | Description |
+| :-: | :-: |
+| `sgvem_3PLEFA_rot` | Stochastic GVEM with post-doc rotation |
+| `sgvem_3PLEFA_lasso` | Stochastic GVEM with lasso penalty |
+| `sgvem_3PLEFA_adaptlasso` | Stochastic GVEM with adaptive lasso penalty |
+
+The usage of these functions is similar to those for M2PL models, but some additional arguments are required: the size of the subsample for each iteration (`samp`), the forget rate for the stochastic algorithm (`forgetrate`), the mean and the variance of the prior distribution of item difficulty parameters (`mu_b` and `sigma2_b`), the $\alpha$ and $\beta$ parameters of the prior distribution of guessing parameters (`Alpha` and `Beta`).
+```{r eval = F}
+sgvem_3PLEFA_lasso(exampleData_3pl, exampleIndic_efa3pl_c1, samp = 50, forgetrate = 0.51, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C1")
+sgvem_3PLEFA_adaptlasso(exampleData_3pl, exampleIndic_efa3pl_c2, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C2", non_pen = 19, gamma = 2)
+```
+
+
+# Confirmatory Factor Analysis
+## M2PL Model
+`VEMIRT` provides the following functions to conduct CFA for the M2PL model:
+
+| Function | Description |
+| :-: | :-: |
+| `gvem_2PLCFA` | GVEM |
+| `bs_2PLCFA` | GVEM with bootstrap |
+| `importanceSampling` | GVEM with importance sampling |
+
+A binary loading indicator matrix needs to be provided for CFA. `gvem_2PLCFA` can produce biased estimates while the other two functions help reduce the bias. Also, only `gvem_2PLCFA` and `bs_2PLCFA` are able to provide the standard errors of item parameters.
+```{r eval = F}
+result <- gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)
+bs_2PLCFA(result)
+importanceSampling(exampleData_2pl, result)
+```
+
+## M3PL Model
+`sgvem_3PLCFA` conducts CFA for M3PL models. Its usage is similar to that of `sgvem_3PLEFA_*` except that additionally a binary loading indicator matrix is needed.
+```{r eval = F}
+sgvem_3PLCFA(exampleData_3pl, exampleIndic_cfa3pl, samp = 50, forgetrate = 0.51, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40)
+```
+
+
+# Differential Item Functioning
+`VEMIRT` provides the following functions to detect DIF for the M2PL model:
+
+| Function | Description |
+| :-: | :-: |
+| `lrt_DIF` | Likelihood Ratio Test |
+| `em_DIF` | EM with lasso penalty |
+| `gvemm_DIF` | GVEMM with lasso penalty |
+
+We recommend `em_DIF` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `gvemm_DIF` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `IWGVEMM` is recommended for `gvemm_DIF` because this method has an additional importance sampling step which helps improve accuracy.
+```{r cache = T, results = F}
+result <- gvemm_DIF(exampleDIF$Y, exampleDIF$D, exampleDIF$X, 'IWGVEMM', seq(0.2, 0.7, by = 0.1))
+result
+```
+```{r echo = F}
+result
+```
+
+DIF items are flagged by `X`. By default, `gvemm_DIF` chooses the best tuning parameter using the generalized information criterion (GIC), but AIC and BIC can be used too:
+```{r}
+print(result, 'AIC')
+```
+The message warns us that the optimal tuning parameter may be out of the range specified for estimation.
+Finally, other parameter estimates can be obtained too:
+```{r}
+str(coef(result, 'BIC'))
+```

@@ -39,10 +39,7 @@ To install this package from source:
 
 2) Install the `devtools` package (if necessary), and install the package from [GitHub](https://github.com/) with: 
 
-
 ``` r
 devtools::install_github("MAP-LAB-UW/VEMIRT")
+torch::install_torch()
 ```
-
-
-
