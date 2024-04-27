@@ -13,24 +13,24 @@ gvemm_DIF(
   criterion = "GIC",
   iter = 1000,
   eps = 0.001,
-  c = 0.7,
+  c = 0.75,
   S = 10,
   M = 10,
   lr = 0.1
 )
 }
 \arguments{
-\item{Y}{An \eqn{N\times J} binary matrix of item responses}
+\item{Y}{An \eqn{N\times J} binary matrix of item responses (missing responses should be coded as \code{NA})}
 
 \item{D}{A \eqn{J\times K} binary matrix of loading indicators}
 
 \item{X}{An \eqn{N} dimensional vector of group indicators (integers from \code{1} to \code{G})}
 
-\item{method}{Estimation algorithm, one of \code{'GVEMM'} and \code{'IWGVEMM'}}
+\item{method}{Estimation algorithm, one of \code{'GVEMM'} or \code{'IWGVEMM'}}
 
 \item{Lambda0}{A vector of \code{lambda0} values for \eqn{L_1} penalty (\code{lambda} is \code{sqrt(N) * lambda0})}
 
-\item{criterion}{Information criterion for model selection, one of \code{'GIC'} (recommended), \code{'BIC'} and \code{'AIC'}}
+\item{criterion}{Information criterion for model selection, one of \code{'GIC'} (recommended), \code{'BIC'}, or \code{'AIC'}}
 
 \item{iter}{Maximum number of iterations}
 
@@ -42,7 +42,7 @@ gvemm_DIF(
 
 \item{M}{Sample size for approximating a tighter lower bound (\code{'IWGVEMM'} only)}
 
-\item{lr}{Learning rate for the Adam optimizer (\code{'IWGVEMM'} only)}
+\item{lr}{Learning rate of parameters other than discrimination for the Adam optimizer (\code{'IWGVEMM'} only)}
 }
 \value{
 An object of class \code{vemirt_DIF}, which is a list containing three elements:
@@ -51,7 +51,7 @@ An object of class \code{vemirt_DIF}, which is a list containing three elements:
   \item{all}{A list of models whose length is equal to \code{Lambda0}:}
   \item{ ...$lambda0}{Corresponding element in \code{Lambda0}}
   \item{ ...$lambda}{\code{sqrt(N) * lambda0}}
-  \item{ ...$iter}{Number(s) of iterations}
+  \item{ ...$niter}{Number(s) of iterations}
   \item{ ...$SIGMA}{Person-level posterior covariance matrices}
   \item{ ...$MU}{Person-level posterior mean vectors}
   \item{ ...$Sigma}{Group-level posterior covariance matrices}
@@ -62,6 +62,7 @@ An object of class \code{vemirt_DIF}, which is a list containing three elements:
   \item{ ...$beta}{DIF parameters for the intercepts}
   \item{ ...$ll}{Log-likelihood}
   \item{ ...$l0}{Number of nonzero parameters in \code{gamma} and \code{beta}}
+  \item{ ...$N}{Number of respondents}
   \item{ ...$AIC}{Akaike Information Criterion}
   \item{ ...$BIC}{Bayesian Information Criterion}
   \item{ ...$GIC}{Generalized Information Criterion}
