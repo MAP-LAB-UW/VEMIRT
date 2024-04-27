@@ -42,7 +42,7 @@ gvemm_DIF(
 
 \item{M}{Sample size for approximating a tighter lower bound (\code{'IWGVEMM'} only)}
 
-\item{lr}{Learning rate of parameters other than discrimination for the Adam optimizer (\code{'IWGVEMM'} only)}
+\item{lr}{Learning rate for the Adam optimizer (\code{'IWGVEMM'} only)}
 }
 \value{
 An object of class \code{vemirt_DIF}, which is a list containing three elements:

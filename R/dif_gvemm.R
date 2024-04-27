@@ -305,7 +305,7 @@ IC <- function(ll, l0, c, N) {
 #' @param c Constant for computing GIC
 #' @param S Sample size for approximating the expected lower bound (\code{'IWGVEMM'} only)
 #' @param M Sample size for approximating a tighter lower bound (\code{'IWGVEMM'} only)
-#' @param lr Learning rate of parameters other than discrimination for the Adam optimizer (\code{'IWGVEMM'} only)
+#' @param lr Learning rate for the Adam optimizer (\code{'IWGVEMM'} only)
 #'
 #' @return An object of class \code{vemirt_DIF}, which is a list containing three elements:
 #'   \item{fit}{The best (with lowest information criterion) model, which is an element of \code{all}}
