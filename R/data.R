@@ -1,6 +1,3 @@
-#' @importFrom tibble tibble
-NULL
-
 #' Response data set for M2PL
 #'
 #' The response data set is simulated based on a

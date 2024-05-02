@@ -39,11 +39,13 @@
 #' @import Rcpp RcppArmadillo
 #' @importFrom psych Promax
 #' @importFrom GPArotation cfQ
-#' @import Matrix
 #' @importFrom polycor polychor
-#' @import testit
+#' @import tibble
 #' @import MASS
-#' @import abind
+#' @import Matrix
+#' @import testit
+#' @importFrom abind abind
+#' @import rlang
 #' @import mirt
 #' @import torch
 ## usethis namespace: end

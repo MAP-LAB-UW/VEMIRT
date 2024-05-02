@@ -9,7 +9,7 @@ print(x, criterion = NULL)
 \arguments{
 \item{x}{An object of class \code{vemirt_DIF}}
 
-\item{criterion}{Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'} and \code{'GIC'}, otherwise use the criterion specified when fitting the model(s)}
+\item{criterion}{Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)}
 }
 \description{
 Print DIF Items
