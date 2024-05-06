@@ -11,7 +11,7 @@ best_vemirt_DIF <- function(all, N, criterion) {
   if (length(ic) > 1)
     if (best == 1)
       warning('Optimal lambda0 may be less than ', all[[best]]$lambda0, '.')
-    else if (best == length(ic))
+    else if (best == length(ic) && all[[best]]$l0 > 0)
       warning('Optimal lambda0 may be greater than ', all[[best]]$lambda0, '.')
   best
 }

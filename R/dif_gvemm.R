@@ -91,8 +91,12 @@ init.gvemm <- function(Y, D, X, ...) {
 
           gamma.beta  <- torch_stack(tapply(1:N, X, function(n) {
             N <- length(n)
-            torch_cat(list(prox(((Y[n] - 0.5)$unsqueeze(3) * mu[n]$squeeze(4) + 2 * eta[n]$unsqueeze(3) * (BB[n]$unsqueeze(3) * mu[n]$squeeze(4) - (sigma.mu[n] %*% a$unsqueeze(3))$squeeze(4)))$sum(1), lambda) / diagonal((2 * eta[n]$view(c(N, -1, 1, 1)) * sigma.mu[n])$sum(1)),
-                           (prox(((Y[n] - 0.5) + 2 * eta[n] * (b - (AG.t[n] %*% mu[n])$view(c(N, -1))))$sum(1), lambda) / (2 * eta[n]$sum(1)))$unsqueeze(2)), 2)
+            if (lambda == 0)
+              torch_cat(list(((2 * eta[n]$view(c(N, -1, 1, 1)) * sigma.mu[n])$sum(1)$pinverse() %*% ((Y[n] - 0.5)$unsqueeze(3) * mu[n]$squeeze(4) + 2 * eta[n]$unsqueeze(3) * (BB[n]$unsqueeze(3) * mu[n]$squeeze(4) - (sigma.mu[n] %*% a$unsqueeze(3))$squeeze(4)))$sum(1)$unsqueeze(3))$squeeze(3),
+                             (((Y[n] - 0.5) + 2 * eta[n] * (b - (AG.t[n] %*% mu[n])$view(c(N, -1))))$sum(1) / (2 * eta[n]$sum(1)))$unsqueeze(2)), 2)
+            else
+              torch_cat(list(prox(((Y[n] - 0.5)$unsqueeze(3) * mu[n]$squeeze(4) + 2 * eta[n]$unsqueeze(3) * (BB[n]$unsqueeze(3) * mu[n]$squeeze(4) - (sigma.mu[n] %*% a$unsqueeze(3))$squeeze(4)))$sum(1), lambda) / diagonal((2 * eta[n]$view(c(N, -1, 1, 1)) * sigma.mu[n])$sum(1)),
+                             (prox(((Y[n] - 0.5) + 2 * eta[n] * (b - (AG.t[n] %*% mu[n])$view(c(N, -1))))$sum(1), lambda) / (2 * eta[n]$sum(1)))$unsqueeze(2)), 2)
           }))
           gamma$set_data(gamma.beta[, , 1:K]$masked_fill(!gamma.mask, 0))
           beta$set_data(gamma.beta[, , (K + 1)]$masked_fill(!beta.mask, 0))
@@ -320,7 +324,7 @@ iwgvemm <- function(e, lambda) {
 #' @examples
 #' \dontrun{
 #' with(exampleDIF, gvemm_DIF(Y, D, X))}
-gvemm_DIF <- function(Y, D, X, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1), criterion = 'GIC', iter = 1000, eps = 1e-3, c = 0.75, S = 10, M = 10, lr = 0.1) {
+gvemm_DIF <- function(Y, D, X, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1), criterion = 'GIC', iter = 1000, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
   Lambda0 <- unique(sort(Lambda0))
   if (is.character(X))
     X <- as.factor(X)
