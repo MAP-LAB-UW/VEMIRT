@@ -9,11 +9,11 @@ gvemm_DIF(
   D,
   X,
   method = "IWGVEMM",
-  Lambda0 = seq(0.2, 0.7, by = 0.1),
+  Lambda0 = seq(0.1, 0.8, by = 0.1),
   criterion = "GIC",
-  iter = 1000,
+  iter = 200,
   eps = 0.001,
-  c = 0.75,
+  c = 0.7,
   S = 10,
   M = 10,
   lr = 0.1
@@ -28,7 +28,7 @@ gvemm_DIF(
 
 \item{method}{Estimation algorithm, one of \code{'GVEMM'} or \code{'IWGVEMM'}}
 
-\item{Lambda0}{A vector of \code{lambda0} values (duplicate values removed automatically) for \eqn{L_1} penalty (\code{lambda} equals \code{sqrt(N) * lambda0})}
+\item{Lambda0}{A vector of \code{lambda0} values for \eqn{L_1} penalty (\code{lambda} equals \code{sqrt(N) * lambda0})}
 
 \item{criterion}{Information criterion for model selection, one of \code{'GIC'} (recommended), \code{'BIC'}, or \code{'AIC'}}
 
@@ -45,8 +45,9 @@ gvemm_DIF(
 \item{lr}{Learning rate for the Adam optimizer (\code{'IWGVEMM'} only)}
 }
 \value{
-An object of class \code{vemirt_DIF}, which is a list containing three elements:
+An object of class \code{vemirt_DIF}, which is a list containing the following elements:
   \item{N}{Number of respondents}
+  \item{niter0}{Number of iterations for initialization (GVEM with \code{lambda} equal to \code{0})}
   \item{fit}{The best (with lowest information criterion) model, which is an element of \code{all}}
   \item{best}{The index of \code{fit} in \code{all}}
   \item{all}{A list of models whose length is equal to \code{Lambda0}:}

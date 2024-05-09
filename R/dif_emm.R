@@ -769,7 +769,7 @@ Reg_Adaptive_DIF <- function(resp,Group,indic,eta,lam=1,Unif=F,eps =1e-3,max.tol
 #' @examples
 #' \dontrun{
 #' with(exampleDIF, em_DIF(Y, D, X))}
-em_DIF <- function(Y, D, X, method = 'EMM', unif = F, Lambda0 = seq(0.2, 0.7, by = 0.1), criterion = 'BIC', iter = 1000, eps = 1e-3, c = 0.7, eta = 1) {
+em_DIF <- function(Y, D, X, method = 'EMM', unif = F, Lambda0 = seq(0.1, 0.8, by = 0.1), criterion = 'BIC', iter = 1000, eps = 1e-3, c = 0.7, eta = 1) {
   if (!(method %in% c('EM', 'EMM', 'Adapt')))
     stop(paste0("Method '", method, "' not supported."))
   if (!(criterion %in% c('AIC', 'BIC', 'GIC')))
@@ -828,7 +828,7 @@ em_DIF <- function(Y, D, X, method = 'EMM', unif = F, Lambda0 = seq(0.2, 0.7, by
          ll = sim$ll, l0 = sim$l0, AIC = sim$aic, BIC = sim$bic, GIC = sim$gic)
   })
   close(pb)
-  new_vemirt_DIF(result, criterion)
+  new_vemirt_DIF(0, result, person, criterion)
 }
 
 

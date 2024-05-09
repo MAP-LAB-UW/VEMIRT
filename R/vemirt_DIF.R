@@ -16,9 +16,9 @@ best_vemirt_DIF <- function(all, N, criterion) {
   best
 }
 
-new_vemirt_DIF <- function(all, N, criterion) {
+new_vemirt_DIF <- function(niter0, all, N, criterion) {
   best <- best_vemirt_DIF(all, N, criterion)
-  structure(list(N = N, fit = all[[best]], best = best, all = all), class = 'vemirt_DIF')
+  structure(lst(niter0, all, N, best, fit = all[[best]]), class = 'vemirt_DIF')
 }
 
 #' Extract Parameter Estimates from DIF Analysis

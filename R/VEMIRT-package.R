@@ -40,12 +40,12 @@
 #' @importFrom psych Promax
 #' @importFrom GPArotation cfQ
 #' @importFrom polycor polychor
-#' @import tibble
+#' @importFrom tibble tibble
+#' @importFrom tibble lst
 #' @import MASS
 #' @import Matrix
 #' @import testit
 #' @importFrom abind abind
-#' @import rlang
 #' @import mirt
 #' @import torch
 ## usethis namespace: end
