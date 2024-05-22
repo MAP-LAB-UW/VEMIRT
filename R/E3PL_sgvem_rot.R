@@ -32,14 +32,14 @@
 #'   \item{AIC}{model fit index}
 #'   \item{BIC}{model fit index}
 #'   \item{ur_a}{item discrimination parameters before conducting the rotation, a \eqn{J \times K} \code{matrix}}
-#' @seealso \code{\link{sgvem_3PLEFA_lasso}}, \code{\link{sgvem_3PLEFA_adaptlasso}}
+#' @seealso \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_adaptlasso}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' sgvem_3PLEFA_rot(exampleData_3pl, 3,samp=50,forgetrate=0.51,
+#' E3PL_sgvem_rot(exampleData_3pl, 3,samp=50,forgetrate=0.51,
 #' mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,rot="Promax")}
-sgvem_3PLEFA_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000,rot="Promax") {
+E3PL_sgvem_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000,rot="Promax") {
   start=Sys.time()
   u=data.matrix(u)
   person=dim(u)[1]

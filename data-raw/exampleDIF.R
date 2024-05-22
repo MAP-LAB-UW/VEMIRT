@@ -1,5 +1,5 @@
 library(abind)
-library(mvnfast)
+library(mvtnorm)
 set.seed(987)
 
 Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
@@ -18,10 +18,10 @@ b <- rnorm(J)
 b <- unname(rbind(b, b, b))
 b[-1, 1:(j / 2)] <- b[-1, 1:(j / 2)] - c(0.5, 1)
 b[-1, (j / 2 + 1):j] <- b[-1, (j / 2 + 1):j] + c(0.5, 1)
-theta <- rmvn(n * 3, rep(0, 2), Sigma)
+theta <- rmvnorm(n * 3, rep(0, 2), Sigma)
 Y <- t(sapply(1:(n * 3), function(n) {
   rbinom(J, 1, plogis(a[X[n], , ] %*% theta[n, ] - b[X[n], ]))
 }))
-exampleDIF <- list(Y = Y, D = D, X = X, j = j, params = list(a = a, b = b, theta = theta))
+exampleDIF <- list(data = Y, model = D, group = X, j = j, params = list(a = a, b = b, theta = theta))
 
 usethis::use_data(exampleDIF, overwrite = TRUE)

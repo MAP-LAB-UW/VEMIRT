@@ -25,13 +25,13 @@
 #'   \item{AIC}{model fit index}
 #'   \item{BIC}{model fit index}
 #'   \item{SE}{Standard errors of item parameters, a \eqn{J \times (K+1)} matrix where the last column includes SE estimates for item difficulty parameters}
-#' @seealso \code{\link{sgvem_3PLCFA}},\code{\link{importanceSampling}},\code{\link{bs_2PLCFA}}
+#' @seealso \code{\link{C3PL_sgvem}},\code{\link{importanceSampling}},\code{\link{C2PL_bs}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)}
-gvem_2PLCFA <- function(u,indic,max.iter=5000,SE.est=FALSE) {
+#' C2PL_gvem(exampleData_2pl, exampleIndic_cfa2pl)}
+C2PL_gvem <- function(u,indic,max.iter=5000,SE.est=FALSE) {
   start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)

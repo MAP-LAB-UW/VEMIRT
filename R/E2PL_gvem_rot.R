@@ -22,14 +22,14 @@
 #'   \item{AIC}{model fit index}
 #'   \item{BIC}{model fit index}
 #'   \item{ur_a}{item discrimination parameters before conducting the rotation, a \eqn{J \times K} \code{matrix}}
-#' @seealso \code{\link{gvem_2PLEFA_lasso}}, \code{\link{gvem_2PLEFA_adaptlasso}}
+#' @seealso \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_adaptlasso}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' gvem_2PLEFA_rot(exampleData_2pl, domain=5,max.iter=3000)
-#' gvem_2PLEFA_rot(exampleData_2pl, domain=5,rot="cfQ")}
-gvem_2PLEFA_rot <- function(u, domain,max.iter=5000,rot="Promax") {
+#' E2PL_gvem_rot(exampleData_2pl, domain=5,max.iter=3000)
+#' E2PL_gvem_rot(exampleData_2pl, domain=5,rot="cfQ")}
+E2PL_gvem_rot <- function(u, domain,max.iter=5000,rot="Promax") {
   start=Sys.time()
   u=data.matrix(u)
   person=dim(u)[1]

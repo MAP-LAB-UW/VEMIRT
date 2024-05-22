@@ -1,61 +1,6 @@
 # Written by Weicong Lyu
 
-#' @export
-`%*%.torch_tensor` <- function(x, y) {
-  torch_matmul(x, y)
-}
-
-#' @export
-t.torch_tensor <- function(x) {
-  torch_transpose(x, -1, -2)
-}
-
-diagonal <- function(e) {
-  torch_diagonal(e, dim1 = -1, dim2 = -2)
-}
-
-sym <- function(e) {
-  (e + t(e)) / 2
-}
-
-prox <- function(x, lambda) {
-  sign(x) * (abs(x) - lambda)$maximum(0)
-}
-
-distance <- function(x, y) {
-  mapply(function(x, y) {
-    as.array(max(abs(x - y)))
-  }, x, y)
-}
-
-IC <- function(ll, l0, N, c) {
-  -2 * ll + l0 * c(AIC = 2, BIC = log(N), GIC = c * log(N) * log(log(N)))
-}
-
-init.new <- function(...) {
-  with(parent.frame(), {
-    vars <- ls()
-    tensors <- list()
-    arrays <- lst(...)
-    for (var in vars) {
-      value <- get(var)
-      if (inherits(par, 'torch_tensor'))
-        tensors[[var]] <- value
-      else
-        arrays[[var]] <- value
-    }
-    function(var = NULL) {
-      if (is.null(var))
-        c(arrays, with_no_grad(lapply(tensors, function(tensor) {
-          tensor$clone()$requires_grad_(tensor$requires_grad)
-        })))
-      else
-        get(var)
-    }
-  })
-}
-
-mstep.gvemm <- function() {
+mstep.gvem <- function() {
   with(parent.frame(), {
     params.old <- NULL
     for (i in 1:iter) {
@@ -69,19 +14,15 @@ mstep.gvemm <- function() {
       SIGMA.inv <- Sigma.inv[X] + 2 * (eta$view(c(N, -1, 1, 1)) * (aG %*% aG.t)[X])$sum(2)
       SIGMA <- sym(SIGMA.inv$inverse())
       MU <- (SIGMA %*% (((Y - 0.5 + 2 * eta * BB)$view(c(N, -1, 1, 1)) * AG)$sum(2) + (Sigma.inv %*% Mu$unsqueeze(3))[X]))$squeeze(3)
-      Mu <- torch_stack(lapply(n, function(n) {
-        MU[n]$mean(1)
-      }))
+      Mu <- torch_stack(lapply(n, function(n) MU[n]$mean(1)))
       mu <- MU - Mu[X]
       sigma.mu <- SIGMA + mu$unsqueeze(3) %*% mu$unsqueeze(2)
-      Sigma <- sym(torch_stack(lapply(n, function(n) {
-        sigma.mu[n]$mean(1)
-      })))
+      Sigma <- sym(torch_stack(lapply(n, function(n) sigma.mu[n]$mean(1))))
 
       mu <- a.mask.diag %*% MU$view(c(N, 1, -1, 1))
       sigma.mu <- a.mask.diag %*% SIGMA$unsqueeze(2) %*% a.mask.diag + mu %*% t(mu)
       xi <- sqrt(BB$square() - 2 * BB * (AG.t %*% mu)$view(c(N, -1)) + (AG.t %*% sigma.mu %*% AG)$view(c(N, -1)))
-      eta <- torch_where(abs(xi) < 1e-3, 0.125, (1 / (1 + exp(-xi)) - 0.5) / (2 * xi))$masked_fill(!Y.mask, 0)
+      eta <- torch_where(abs(xi) < 1e-3, 0.125, (torch_sigmoid(xi) - 0.5) / (2 * xi))$masked_fill(!Y.mask, 0)
       a <- ((2 * eta$view(c(N, -1, 1, 1)) * sigma.mu)$sum(1)$pinverse() %*% ((Y - 0.5)$view(c(N, -1, 1, 1)) * mu + 2 * eta$view(c(N, -1, 1, 1)) * (BB$view(c(N, -1, 1, 1)) * mu - sigma.mu %*% gamma[X]$unsqueeze(4)))$sum(1))$squeeze(3)$masked_fill(!a.mask, 0)
       b <- (0.5 - Y + 2 * eta * (beta[X] + (AG.t %*% mu)$view(c(N, -1))))$sum(1) / (2 * eta$sum(1))
       gamma.beta  <- torch_stack(lapply(n, function(n) {
@@ -121,7 +62,7 @@ mstep.gvemm <- function() {
   })
 }
 
-init.gvemm <- function(Y, D, X, iter, eps, ...) {
+init.gvem <- function(Y, D, X, iter, eps, ...) {
   N <- nrow(Y)
   n <- tapply(1:N, X, identity)
   J <- ncol(Y)
@@ -143,21 +84,21 @@ init.gvemm <- function(Y, D, X, iter, eps, ...) {
   beta.mask <- torch_cat(list(torch_zeros(1, J), torch_ones(G - 1, J)))$bool()
   beta <- beta.mask * 0
 
-  niter.init <- mstep.gvemm()
+  niter.init <- mstep.gvem()
   rm(aG, aG.t, AG, sigma, mu, sigma.mu, gamma.beta, SIGMA.inv, Sigma.inv, sigma.inv, params.old, i)
-  init.new(...)
+  init.new()
 }
 
-est.gvemm <- function(e, lambda) {
+est.gvem <- function(e, lambda) {
   list2env(e, environment())
   niter <- if (lambda == 0)
     c(0, 0)
   else {
-    niter <- mstep.gvemm()
+    niter <- mstep.gvem()
     lambda <- 0
     gamma.mask <- gamma != 0
     beta.mask <- beta != 0
-    c(niter, mstep.gvemm())
+    c(niter, mstep.gvem())
   }
   mu <- (MU - Mu[X])$unsqueeze(3)
   ll <- as.array((nnf_logsigmoid(xi)$masked_fill(!Y.mask, 0) + (0.5 - Y) * (BB - (AG.t %*% MU$view(c(N, 1, -1, 1)))$view(c(N, -1))) - xi / 2)$masked_fill(!Y.mask, 0)$sum() - (Sigma$logdet()[X]$sum() + diagonal(linalg_solve(Sigma[X], SIGMA + mu %*% t(mu)))$sum()) / 2)
@@ -169,10 +110,10 @@ assemble.iwgvemm <- function() {
   with(parent.frame(), {
     z <- Sigma1.L.v$tanh()
     Sigma1.L <- torch_eye(K)$masked_scatter(Sigma1.L.mask, z) * torch_cat(c(torch_ones(K, 1), (1 - torch_zeros(K, K)$masked_scatter(Sigma1.L.mask, z)[, 1:(K- 1)]$square())$cumprod(2)$sqrt()), 2)
-    Sigma2.L <- if (G > 1)
-      torch_zeros(Sigma2.L.mask$shape)$masked_scatter(Sigma2.L.mask, Sigma2.L.v)
-    else
+    Sigma2.L <- if (G == 1)
       torch_tensor(NULL)
+    else
+      torch_zeros(Sigma2.L.mask$shape)$masked_scatter(Sigma2.L.mask, Sigma2.L.v)
     Sigma.L <- torch_cat(c(Sigma1.L$unsqueeze(1), Sigma2.L))
     Mu <- torch_zeros(Mu.mask$shape)$masked_scatter(Mu.mask, Mu.v)
     a <- torch_zeros(a.mask$shape)$masked_scatter(a.mask, a.v)
@@ -181,17 +122,13 @@ assemble.iwgvemm <- function() {
   })
 }
 
-proximal.adam <- function(x, state, params, lambda) {
-  betas.t <- params$betas ^ state$step
-  lr <- params$lr / (1 - betas.t[1]) / (sqrt(state$exp_avg_sq / (1 - betas.t[2])) + params$eps)
-  x$set_data(prox(x, lr * lambda))
-}
-
 mstep.iwgvemm <- function() {
   with(parent.frame(), {
-    params <- lst(Sigma1.L.v, Sigma2.L.v, Mu.v, a.v, b, gamma.v, beta.v)
+    params <- if (Sigma1.L.v$shape[1] == 0)
+      lst(a.v, b)
+    else
+      lst(Sigma1.L.v, Sigma2.L.v, Mu.v, a.v, b, gamma.v, beta.v)
     opt <- optim_adam(params, lr)
-    opt.pars <- opt$param_groups[[1]]
     for (i in 1:iter) {
       params.old <- with_no_grad(lapply(params, torch_clone))
       assemble.iwgvemm()
@@ -220,8 +157,8 @@ mstep.iwgvemm <- function() {
   })
 }
 
-init.iwgvemm <- function(Y, D, X, iter, eps, c, S, M, lr, ...) {
-  init <- do.call(init.gvemm, as.list(environment()))
+init.iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
+  init <- do.call(init.gvem, as.list(environment()))
   e <- init()
   e$Y <- array(Y, append(dim(Y), 1, 1))
   list2env(e, environment())
@@ -232,12 +169,12 @@ init.iwgvemm <- function(Y, D, X, iter, eps, c, S, M, lr, ...) {
   Sigma.L <- linalg_cholesky(Sigma)
   Sigma1.L.mask <- torch_tensor(lower.tri(matrix(0, K, K)))$bool()
   Sigma1.L.v <- (Sigma.L[1] / torch_cat(list(torch_ones(K, 1), sqrt(1 - Sigma.L[1]$square()$cumsum(2))[, 1:(K - 1)]), 2))$masked_select(Sigma1.L.mask)$arctanh()$requires_grad_(T)
-  if (G > 1) {
-    Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
-    Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
-  } else {
+  if (G == 1) {
     Sigma2.L.mask <- torch_tensor(NULL)
     Sigma2.L.v <- torch_tensor(NULL)
+  } else {
+    Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
+    Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
   }
   Mu.mask <- torch_cat(list(torch_zeros(1, K), torch_ones(G - 1, K)))$bool()
   Mu.v <- torch_tensor(Mu)$masked_select(Mu.mask)$requires_grad_(T)
@@ -256,8 +193,8 @@ init.iwgvemm <- function(Y, D, X, iter, eps, c, S, M, lr, ...) {
   theta.logd <- torch_tensor(rowSums(dnorm(z, log = T), dims = 2))
 
   niter.init <- c(init('niter.init'), mstep.iwgvemm())
-  rm(AG.t, BB, xi, eta, a.mask.diag, z, Sigma.L, Sigma1.L, Sigma2.L, Mu, a, gamma, beta, log.w, opt, opt.pars, params, params.old, i)
-  init.new(...)
+  rm(AG.t, BB, xi, eta, a.mask.diag, z, Sigma.L, Sigma1.L, Sigma2.L, Mu, a, gamma, beta, log.w, opt, params, params.old, i)
+  init.new()
 }
 
 est.iwgvemm <- function(e, lambda) {
@@ -279,12 +216,12 @@ est.iwgvemm <- function(e, lambda) {
   })
 }
 
-#' GVEMM Algorithms for DIF Detection in 2PL Models
+#' GVEM Algorithms for DIF Detection in 2PL Models
 #'
-#' @param Y An \eqn{N\times J} binary matrix of item responses (missing responses should be coded as \code{NA})
-#' @param D A \eqn{J\times K} binary matrix of loading indicators
-#' @param X An \eqn{N} dimensional vector of group indicators (integers from \code{1} to \code{G})
-#' @param method Estimation algorithm, one of \code{'GVEMM'} or \code{'IWGVEMM'}
+#' @param data An \eqn{N\times J} binary matrix of item responses (missing responses should be coded as \code{NA})
+#' @param model A \eqn{J\times K} binary matrix of loading indicators  (all items load on the only dimension by default)
+#' @param group An \eqn{N} dimensional vector of group indicators from \code{1} to \code{G} (all respondents are in the same group by default)
+#' @param method Estimation algorithm, one of \code{'GVEM'} or \code{'IWGVEMM'}
 #' @param Lambda0 A vector of \code{lambda0} values for \eqn{L_1} penalty (\code{lambda} equals \code{sqrt(N) * lambda0})
 #' @param criterion Information criterion for model selection, one of \code{'GIC'} (recommended), \code{'BIC'}, or \code{'AIC'}
 #' @param iter Maximum number of iterations
@@ -317,27 +254,30 @@ est.iwgvemm <- function(e, lambda) {
 #'   \item{ ...$BIC}{Bayesian Information Criterion}
 #'   \item{ ...$GIC}{Generalized Information Criterion}
 #'
-#' @seealso \code{\link{em_DIF}}, \code{\link{lrt_DIF}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}
+#' @seealso \code{\link{DIF_em}}, \code{\link{DIF_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' with(exampleDIF, gvemm_DIF(Y, D, X))}
-gvemm_DIF <- function(Y, D, X, method = 'IWGVEMM', Lambda0 = seq(0.1, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
+#' with(exampleDIF, DIF_gvem(data, model, group))}
+DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = seq(0.1, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
   fn <- switch(method,
-               GVEMM = list(init.gvemm, est.gvemm),
+               GVEM = list(init.gvem, est.gvem),
                IWGVEMM = list(init.iwgvemm, est.iwgvemm),
                stop(paste0("Method '", method, "' not supported.")))
+  Y <- as.matrix(data)
+  D <- model
+  X <- group
+  N <- nrow(Y)
   if (is.character(X))
     X <- as.factor(X)
   if (!is.integer(X))
     X <- as.integer(X)
   if (min(X) == 0)
     X <- X + 1
-  N <- nrow(Y)
 
   cat('Fitting the model with lambda = 0 for initial values...\n')
-  init <- fn[[1]](Y, D, X, iter, eps, c, S, M, lr)
+  init <- fn[[1]](Y, D, X, iter, eps, S, M, lr, c)
   cat('Fitting the model with different lambdas...\n')
   pb <- txtProgressBar(0, length(Lambda0), style = 3)
   result <- lapply(Lambda0, function(lambda0) {

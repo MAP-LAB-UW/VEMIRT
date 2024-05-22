@@ -35,14 +35,14 @@
 #' Cho, A. E., Wang, C., Zhang, X., & Xu, G. (2021). Gaussian variational estimation for multidimensional item response theory. \emph{British Journal of Mathematical and Statistical Psychology, 74}, 52-85.
 #'
 #' Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimation for Exploratory Item Factor Analysis. \emph{Psychometrika}. https://doi.org/10.1007/s11336-022-09874-6
-#' @seealso \code{\link{gvem_2PLCFA}}
+#' @seealso \code{\link{C2PL_gvem}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' sgvem_3PLCFA(exampleData_3pl, exampleIndic_cfa3pl,samp=50,forgetrate=0.51,
+#' C3PL_sgvem(exampleData_3pl, exampleIndic_cfa3pl,samp=50,forgetrate=0.51,
 #' mu_b=0,sigma2_b=4,Alpha=10,Beta=40)}
-sgvem_3PLCFA <- function(u,indic,samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000) {
+C3PL_sgvem <- function(u,indic,samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000) {
   start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)

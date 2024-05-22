@@ -1,5 +1,4 @@
-#' Exploratory M2PL Analysis with Adaptive Lasso Penalty
-#'
+#' Exploratory M2PL Analysis with Lasso Penalty
 #'
 #' @param u a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 #' consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
@@ -7,7 +6,7 @@
 #' @param indic a \eqn{J \times K} \code{matrix} or a \code{data.frame} that
 #' describes the factor loading structure of \eqn{J} items to \eqn{K} factors. It
 #' consists of binary values where 0 refers to the item is irrelevant with this factor,
-#' 1 otherwise. For exploratory factor analysis with adaptive lasso penalty, \code{indic} should be
+#' 1 otherwise. For exploratory factor analysis with lasso penalty, \code{indic} should be
 #' imposed certain constraints on the a \eqn{K \times K} sub-matrix to ensure identifiability.
 #' The remaining parts do not assume any pre-specified zero structure but instead, the
 #' appropriate lasso penalty would recover the true zero structure. Also see \code{constrain}
@@ -30,8 +29,6 @@
 #' During estimation, under both the \code{"C1"} and \code{"C1"} constraints, the population means and variances are constrained to be 0 and 1, respectively.
 #' @param non_pen the index of an item which is associated with each factor to satisfy \code{"C2"}.
 #' For \code{C1}, the input can be \code{NULL}
-#' @param gamma a numerical value of adaptive lasso parameter. Zou (2006) recommended three values, 0.5, 1, and 2.
-#' The default value is 2.
 #' @return a list containing the following objects:
 #'   \item{ra}{item discrimination parameters, a \eqn{J \times K} \code{matrix}}
 #'   \item{rb}{item difficulty parameters, vector of length \eqn{J}}
@@ -48,30 +45,27 @@
 #'   \item{lbd}{numerical value of lasso penalty parameter \eqn{\lambda}}
 #' @references
 #' Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimation for Exploratory Item Factor Analysis. \emph{Psychometrika}. https://doi.org/10.1007/s11336-022-09874-6
-#'
-#' Zou, H. (2006). The adaptive LASSO and its oracle properties.  \emph{Journal of the American Statistical Association, 7}, 1011418–1429.
-#'
-#' @seealso \code{\link{gvem_2PLEFA_rot}}, \code{\link{gvem_2PLEFA_lasso}}, \code{\link{exampleIndic_efa2pl_c1}}, \code{\link{exampleIndic_efa2pl_c2}}
+#' @seealso \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{exampleIndic_efa2pl_c1}}, \code{\link{exampleIndic_efa2pl_c2}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' gvem_2PLEFA_adaptlasso(exampleData_2pl, exampleIndic_efa2pl_c1,constrain="C1",non_pen=NULL,gamma=2)
-#' gvem_2PLEFA_adaptlasso(exampleData_2pl, exampleIndic_efa2pl_c2,constrain="C2",non_pen=61,gamma=2)}
+#' E2PL_gvem_lasso(exampleData_2pl, exampleIndic_efa2pl_c1,constrain="C1")
+#' E2PL_gvem_lasso(exampleData_2pl, exampleIndic_efa2pl_c2,constrain="C2",non_pen=61)}
 
-#main function for gvem_2PLEFA_adaptlasso
-gvem_2PLEFA_adaptlasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL,gamma=2){
+#main function for gvem_2PLEFA_lasso
+E2PL_gvem_lasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL){
   start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)
   domain=dim(indic)[2]
   if(constrain=="C1"){
-    result=vem_2PLEFA_adaptive_const1_all(u,domain,indic,gamma,max.iter)
+    result=vem_2PLEFA_L1_const1_all(u,domain,indic,max.iter)
   }else{
     if(is.null(non_pen)){
       stop('non_pen argument is required for the C2 constraint',call.=FALSE)
     }else{
-      result=vem_2PLEFA_adaptive_const2_all(u,domain,gamma,indic,non_pen,max.iter)
+      result=vem_2PLEFA_L1_const2_all(u,domain,indic,non_pen,max.iter)
     }
   }
   if(result$lbd==0.1 || result$lbd==40){
@@ -86,19 +80,23 @@ gvem_2PLEFA_adaptlasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NU
   return(result)
 }
 
-#adaptive lasso with constraint 1 function
-vem_2PLEFA_adaptive_const1 <- function(u,new_a,new_b,eta,xi,Sigma, domain,lbd,indic,nopenalty_col,weights,max.iter) {
+
+
+###l1
+vem_2PLEFA_L1_const1 <- function(u,new_a,new_b,eta,xi,Sigma, domain,lbd,indic,nopenalty_col,max.iter) {
   person=dim(u)[1]
   item=dim(u)[2]
-  converge = 1
-  #is_singular = 0
+  converge = 0
+  is_singular = 0
+
   MU=matrix(0,nrow=domain,ncol=person)
   SIGMA=array(0,dim=c(domain,domain,person))
   n = 0
   par_Sigma = Sigma
-  while(converge==1 && Matrix::rankMatrix(Sigma) == domain && n<max.iter){
-    #update Sigma, MU, SIGMA
+  #nv<-NULL
+  while(converge==0 && Matrix::rankMatrix(Sigma) == domain && n < max.iter){
     par_Sigma = Sigma
+    #update MU, SIGMA, Sigma
     rs1<-ecfa2(u,Sigma,domain, person, item, eta, new_a, new_b)
     xi=rs1$xi
     SIGMA=rs1$SIGMA
@@ -120,12 +118,15 @@ vem_2PLEFA_adaptive_const1 <- function(u,new_a,new_b,eta,xi,Sigma, domain,lbd,in
     #update a
     new_a1=nalc12pl(u, indic, nopenalty_col, person, eta, new_b, SIGMA, MU)
     new_a1[-nopenalty_col,]=new_a[-nopenalty_col,]
-    #adaptive lasso penalty
+    #L1-penalty
     sdf=setdiff(1:item,nopenalty_col)
-    new_a=paal2pl(u, domain, person, lbd, sdf, eta, new_a1, new_b, SIGMA, MU,weights)
+    new_a=palc12pl(u, domain, person, lbd, sdf, eta, new_a1, new_b, SIGMA, MU)
     #par_a=new_a2
-    if (norm(as.vector(new_a)-as.vector(par_a),type="2")+norm(new_b-par_b,type="2")<0.0001){
-      converge=0
+    #nv<-append(nv,norm(as.vector(new_a)-as.vector(par_a),type="2")+norm(new_b-par_b,type="2")+
+    #             norm(as.vector(Sigma)-as.vector(par_Sigma),type="2"))
+    if (norm(as.vector(new_a)-as.vector(par_a),type="2")+norm(new_b-par_b,type="2")+
+        norm(as.vector(Sigma)-as.vector(par_Sigma),type="2")<0.001){
+      converge=1
     }
     n=n+1
   }
@@ -149,12 +150,13 @@ vem_2PLEFA_adaptive_const1 <- function(u,new_a,new_b,eta,xi,Sigma, domain,lbd,in
               BIC=bic))
 }
 
-#main function for adaptive lasso l1: choose optimal lambda
-vem_2PLEFA_adaptive_const1_all<-function(u,domain,indic,gamma,max.iter){
+
+####main function for l1
+vem_2PLEFA_L1_const1_all<-function(u,domain,indic,max.iter){
   lbd=seq(2,20,2)
-  nopenalty_col=which(rowSums(indic)==1)
   person=dim(u)[1]
   item=dim(u)[2]
+  nopenalty_col=which(rowSums(indic)==1)
   #initialization
   initial=init(u,domain,indic)
   new_a = initial[[1]]
@@ -162,21 +164,19 @@ vem_2PLEFA_adaptive_const1_all<-function(u,domain,indic,gamma,max.iter){
   eta= initial[[3]]
   xi=initial[[4]]
   Sigma=initial[[5]]
-  #create weights: use CFA
-  wa=gvem_2PLCFA(u,indic,max.iter)$ra
-  weights = abs(wa)^gamma+1e-05
   rl<-vector("list",length(lbd))
   gic<-NULL
   for(j in 1:length(lbd)){
-    rl [[j]]=vem_2PLEFA_adaptive_const1(u,new_a,new_b,eta,xi,Sigma, domain,lbd[j],indic,nopenalty_col,weights,max.iter)
+    r0=vem_2PLEFA_L1_const1(u,new_a,new_b,eta,xi,Sigma,domain,lbd[j],indic,nopenalty_col,max.iter)
+    rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
     lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                  rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
     gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
-    new_a = rl[[j]]$ra
-    new_b = rl[[j]]$rb
-    eta= rl[[j]]$reta
-    xi=rl[[j]]$reps
-    Sigma=rl[[j]]$rsigma
+    new_a = r0$ra
+    new_b = r0$rb
+    eta= r0$reta
+    xi=r0$reps
+    Sigma=r0$rsigma
   }
   id=which.min(gic)
   #adjust the range of lambda
@@ -185,55 +185,57 @@ vem_2PLEFA_adaptive_const1_all<-function(u,domain,indic,gamma,max.iter){
     rl<-vector("list",length(lbd))
     gic<-NULL
     for(j in 1:length(lbd)){
-      rl [[j]]=vem_2PLEFA_adaptive_const1(u,new_a,new_b,eta,xi,Sigma, domain,lbd[j],indic,nopenalty_col,weights,max.iter)
+      r0=vem_2PLEFA_L1_const1(u,new_a,new_b,eta,xi,Sigma,domain,lbd[j],indic,nopenalty_col,max.iter)
+      rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
-      new_a = rl[[j]]$ra
-      new_b = rl[[j]]$rb
-      eta= rl[[j]]$reta
-      xi=rl[[j]]$reps
-      Sigma=rl[[j]]$rsigma
+      new_a = r0$ra
+      new_b = r0$rb
+      eta= r0$reta
+      xi=r0$reps
+      Sigma=r0$rsigma
     }}
   else if(id==10){
     lbd=seq(20,40,length.out=6)
     rl<-vector("list",length(lbd))
     gic<-NULL
     for(j in 1:length(lbd)){
-      rl [[j]]=vem_2PLEFA_adaptive_const1(u,new_a,new_b,eta,xi,Sigma, domain,lbd[j],indic,nopenalty_col,weights,max.iter)
+      r0=vem_2PLEFA_L1_const1(u,new_a,new_b,eta,xi,Sigma,domain,lbd[j],indic,nopenalty_col,max.iter)
+      rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
-      new_a = rl[[j]]$ra
-      new_b = rl[[j]]$rb
-      eta= rl[[j]]$reta
-      xi=rl[[j]]$reps
-      Sigma=rl[[j]]$rsigma
+      new_a = r0$ra
+      new_b = r0$rb
+      eta= r0$reta
+      xi=r0$reps
+      Sigma=r0$rsigma
     }
   }
   id=which.min(gic)
-  rs=gvem_2PLCFA(u,rl[[id]]$Q_mat,max.iter)
+  rs=rl[[id]]
   rs$lbd=lbd[id]
   #rs$id=id
-  return(rs)
-}
+  return(rs)}
 
-#adaptive lasso with constraint 2 function
-vem_2PLEFA_adaptive_const2 <- function(u, new_a,new_b,eta,xi,Sigma, domain,lbd,
-                                       indic,nopenalty_col,weights,max.iter) {
+
+#####l2
+vem_2PLEFA_L1_const2 <- function(u,new_a,new_b,eta,xi,Sigma,domain,lbd,
+                                 indic,nopenalty_col,max.iter) {
   person=dim(u)[1]
   item=dim(u)[2]
-  converge = 1
-
+  converge = 0
+  is_singular = 0
 
   MU=matrix(0,nrow=domain,ncol=person)
   SIGMA=array(0,dim=c(domain,domain,person))
   n = 0
 
   par_Sigma = Sigma
-  while(converge==1 && Matrix::rankMatrix(Sigma) == domain && n<max.iter){
+  while(converge==0 && Matrix::rankMatrix(Sigma) == domain && n < max.iter){
     par_Sigma = Sigma
-    #update MU, SIGMA, Sigma
+    #update Sigma, MU, SIGMA
     rs1<-ecfa2(u,Sigma,domain, person, item, eta, new_a, new_b)
     xi=rs1$xi
     SIGMA=rs1$SIGMA
@@ -257,28 +259,27 @@ vem_2PLEFA_adaptive_const2 <- function(u, new_a,new_b,eta,xi,Sigma, domain,lbd,
     lastone=apply(indic[nopenalty_col,], 1, function(x) tail(which(x!=0),1))
     new_a=nalc22pl(u, domain,new_a,nopenalty_col,lastone, person, eta, new_b, SIGMA, MU)
     #L1-penalty: off-diagnoal
-    new_a=paalc22pl(u, new_a,indic,nopenalty_col,lastone, lbd, person, eta, new_b, SIGMA, MU,weights)
+    new_a=palc22pl(u, new_a,nopenalty_col,lastone, lbd, person, eta, new_b, SIGMA, MU)
     #upper-tiangular should be zero
     new_a=replace(new_a,indic==0,0)
     #domain+1:item
     #find penaly columns
     pc=setdiff(1:item,nopenalty_col)
-    new_a=paalc22pl1(u, domain, item, person, lbd, eta, new_a, new_b, SIGMA, MU,pc,weights)
-
+    new_a=palc22pl1(u, domain, item, person, lbd, eta, new_a, new_b, SIGMA, MU,pc)
+    #new_a=replace(new_a,new_a< 0,0)
     #par_a=new_a2
     if (norm(as.vector(new_a)-as.vector(par_a),type="2")+norm(new_b-par_b,type="2")+
         norm(as.vector(Sigma)-as.vector(par_Sigma),type="2")<0.001){
-      converge=0
+      converge=1
     }
     n=n+1
   }
   if (Matrix::rankMatrix(Sigma) < domain){
     rsigma = par_Sigma
-    #is_singular = 1
+    is_singular = 1
   }else{
     rsigma = Sigma
   }
-  #new_a=replace(new_a,new_a< 0,0)
   new_a=replace(new_a,abs(new_a)< 0.001,0)
   Q_mat = (new_a != 0)*1
   #gic
@@ -292,8 +293,9 @@ vem_2PLEFA_adaptive_const2 <- function(u, new_a,new_b,eta,xi,Sigma, domain,lbd,
               BIC=bic))
 }
 
-#main function: choose optimal lambda
-vem_2PLEFA_adaptive_const2_all<-function(u,domain,gamma,indic,non_pen,max.iter){
+
+####main function for l2
+vem_2PLEFA_L1_const2_all<-function(u,domain,indic,non_pen,max.iter){
   lbd=seq(2,20,2)
   person=dim(u)[1]
   item=dim(u)[2]
@@ -305,22 +307,19 @@ vem_2PLEFA_adaptive_const2_all<-function(u,domain,gamma,indic,non_pen,max.iter){
   eta= initial[[3]]
   xi=initial[[4]]
   Sigma=initial[[5]]
-  #create weights: use CFA
-  wa=gvem_2PLCFA(u,indic,max.iter)$ra
-  weights = abs(wa)^gamma+1e-05
   rl<-vector("list",length(lbd))
   gic<-NULL
   for(j in 1:length(lbd)){
-    rl [[j]]=vem_2PLEFA_adaptive_const2(u,new_a,new_b,eta,xi,Sigma, domain,lbd[j],
-                                        indic,nopenalty_col,weights,max.iter)
+    r0=vem_2PLEFA_L1_const2(u,new_a,new_b,eta,xi,Sigma,  domain,lbd[j],indic,nopenalty_col,max.iter)
+    rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
     lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                  rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
     gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
-    new_a = rl[[j]]$ra
-    new_b = rl[[j]]$rb
-    eta= rl[[j]]$reta
-    xi=rl[[j]]$reps
-    Sigma=rl[[j]]$rsigma
+    new_a = r0$ra
+    new_b = r0$rb
+    eta= r0$reta
+    xi=r0$reps
+    Sigma=r0$rsigma
   }
   id=which.min(gic)
   #adjust the range of lambda
@@ -329,34 +328,36 @@ vem_2PLEFA_adaptive_const2_all<-function(u,domain,gamma,indic,non_pen,max.iter){
     rl<-vector("list",length(lbd))
     gic<-NULL
     for(j in 1:length(lbd)){
-      rl [[j]]=vem_2PLEFA_adaptive_const2(u,new_a,new_b,eta,xi,Sigma, domain,lbd[j],indic,nopenalty_col,weights,max.iter)
+      r0=vem_2PLEFA_L1_const2(u,new_a,new_b,eta,xi,Sigma,  domain,lbd[j],indic,nopenalty_col,max.iter)
+      rl [[j]]=gvem_2PLCFA(u, r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
-      new_a = rl[[j]]$ra
-      new_b = rl[[j]]$rb
-      eta= rl[[j]]$reta
-      xi=rl[[j]]$reps
-      Sigma=rl[[j]]$rsigma
+      new_a = r0$ra
+      new_b = r0$rb
+      eta= r0$reta
+      xi=r0$reps
+      Sigma=r0$rsigma
     }}
   else if(id==10){
     lbd=seq(20,40,length.out=6)
     rl<-vector("list",length(lbd))
     gic<-NULL
     for(j in 1:length(lbd)){
-      rl [[j]]=vem_2PLEFA_adaptive_const2(u,new_a,new_b,eta,xi,Sigma, domain,lbd[j],indic,nopenalty_col,weights,max.iter)
+      r0=vem_2PLEFA_L1_const2(u,new_a,new_b,eta,xi,Sigma,  domain,lbd[j],indic,nopenalty_col,max.iter)
+      rl [[j]]=gvem_2PLCFA(u, r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
-      new_a = rl[[j]]$ra
-      new_b = rl[[j]]$rb
-      eta= rl[[j]]$reta
-      xi=rl[[j]]$reps
-      Sigma=rl[[j]]$rsigma
+      new_a = r0$ra
+      new_b = r0$rb
+      eta= r0$reta
+      xi=r0$reps
+      Sigma=r0$rsigma
     }
   }
   id=which.min(gic)
-  rs=gvem_2PLCFA(u, rl[[id]]$Q_mat,max.iter)
+  rs=rl[[id]]
   rs$lbd=lbd[id]
   #rs$id=id
   return(rs)

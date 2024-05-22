@@ -10,14 +10,14 @@
 #'   \item{boots_b}{item difficulty parameters corrected by bootstrap sampling, a vector of length \eqn{J}}
 #'   \item{sd_a}{stardard errors of item discrimination parameters, a \eqn{J \times K} matrix}
 #'   \item{sd_b}{stardard errors of item difficulty parameters, a vector of length \eqn{J}}
-#' @seealso \code{\link{gvem_2PLCFA}},\code{\link{importanceSampling}}
+#' @seealso \code{\link{C2PL_gvem}},\code{\link{importanceSampling}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' gvem_result <- gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)
-#' bs_2PLCFA(gvem_result, boots=10)}
-bs_2PLCFA <- function(gvem_result,boots=5){
+#' C2PL_bs(gvem_result, boots=10)}
+C2PL_bs <- function(gvem_result,boots=5){
   domain <- dim(gvem_result$ra)[2]
   indic <- gvem_result$Q_mat
   item <- dim(gvem_result$ra)[1]
@@ -30,7 +30,7 @@ bs_2PLCFA <- function(gvem_result,boots=5){
     theta<-MASS::mvrnorm(N1,mu,gvem_result$rsigma)
     u2<-1/(1+exp(-(theta%*%t(gvem_result$ra)-do.call(rbind, replicate(N1, list(t(gvem_result$rb)))))))
     u2<-1*(u2>matrix(runif(N1*item),nrow=N1))
-    rs2[[j]]=gvem_2PLCFA(u2,indic)
+    rs2[[j]]=C2PL_gvem(u2,indic)
   }
   #check the result
   new_a<-sapply(rs2,'[',"ra")

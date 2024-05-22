@@ -7,11 +7,11 @@
 \format{
 A list of components of the data set:
 \tabular{ll}{
-\code{ Y}\tab Item responses\cr
+\code{ data}\tab Item responses\cr
 \tab\cr
-\code{D}\tab Loading indicators\cr
+\code{model}\tab Loading indicators\cr
 \tab\cr
-\code{X}\tab Group indicators\cr
+\code{group}\tab Group indicators\cr
 \tab\cr
 \code{j}\tab Number of DIF items (the first \code{j} items have DIF)\cr
 \tab\cr

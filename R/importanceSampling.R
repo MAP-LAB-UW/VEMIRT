@@ -32,12 +32,12 @@
 #'   \item{new_Sigma_theta}{population variance-covariance matrix estimated by IV-GVEM, a \eqn{K \times K} matrix}
 #'   \item{best_lr}{The learning rate used for importance sampling}
 #'   \item{best_lb}{The lower bound value for importance sampling}
-#' @seealso \code{\link{gvem_2PLCFA}}, \code{\link{gvem_2PLEFA_rot}},\code{\link{bs_2PLCFA}}
+#' @seealso \code{\link{C2PL_gvem}}, \code{\link{E2PL_gvem_rot}},\code{\link{C2PL_bs}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' CFA_result <- gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)
+#' CFA_result <- C2PL_gvem(exampleData_2pl, exampleIndic_cfa2pl)
 #' importanceSampling(exampleData_2pl,CFA_result)
 #' }
 importanceSampling<-function(u,gvem_result,S=10,M=10,max.iter=10){

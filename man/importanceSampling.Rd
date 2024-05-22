@@ -49,10 +49,10 @@ to correct the bias on item parameters under M2PL models
 }
 \examples{
 \dontrun{
-CFA_result <- gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)
+CFA_result <- C2PL_gvem(exampleData_2pl, exampleIndic_cfa2pl)
 importanceSampling(exampleData_2pl,CFA_result)
 }
 }
 \seealso{
-\code{\link{gvem_2PLCFA}}, \code{\link{gvem_2PLEFA_rot}},\code{\link{bs_2PLCFA}}
+\code{\link{C2PL_gvem}}, \code{\link{E2PL_gvem_rot}},\code{\link{C2PL_bs}}
 }
