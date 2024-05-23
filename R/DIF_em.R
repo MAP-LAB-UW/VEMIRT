@@ -236,7 +236,7 @@ DIF_em <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data
                EMM = list(init.em, est.emm),
                stop(paste0("Method '", method, "' not supported.")))
   Y <- as.matrix(data)
-  D <- model
+  D <- as.matrix(model)
   X <- group
   N <- nrow(Y)
   if (is.character(X))

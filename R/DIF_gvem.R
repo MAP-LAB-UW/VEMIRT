@@ -111,7 +111,7 @@ assemble.iwgvemm <- function() {
     z <- Sigma1.L.v$tanh()
     Sigma1.L <- torch_eye(K)$masked_scatter(Sigma1.L.mask, z) * torch_cat(c(torch_ones(K, 1), (1 - torch_zeros(K, K)$masked_scatter(Sigma1.L.mask, z)[, 1:(K- 1)]$square())$cumprod(2)$sqrt()), 2)
     Sigma2.L <- if (G == 1)
-      torch_tensor(NULL)
+      NULL.tensor()
     else
       torch_zeros(Sigma2.L.mask$shape)$masked_scatter(Sigma2.L.mask, Sigma2.L.v)
     Sigma.L <- torch_cat(c(Sigma1.L$unsqueeze(1), Sigma2.L))
@@ -124,10 +124,7 @@ assemble.iwgvemm <- function() {
 
 mstep.iwgvemm <- function() {
   with(parent.frame(), {
-    params <- if (Sigma1.L.v$shape[1] == 0)
-      lst(a.v, b)
-    else
-      lst(Sigma1.L.v, Sigma2.L.v, Mu.v, a.v, b, gamma.v, beta.v)
+    params <- lst(Sigma1.L.v, Sigma2.L.v, Mu.v, a.v, b, gamma.v, beta.v)
     opt <- optim_adam(params, lr)
     for (i in 1:iter) {
       params.old <- with_no_grad(lapply(params, torch_clone))
@@ -170,8 +167,8 @@ init.iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
   Sigma1.L.mask <- torch_tensor(lower.tri(matrix(0, K, K)))$bool()
   Sigma1.L.v <- (Sigma.L[1] / torch_cat(list(torch_ones(K, 1), sqrt(1 - Sigma.L[1]$square()$cumsum(2))[, 1:(K - 1)]), 2))$masked_select(Sigma1.L.mask)$arctanh()$requires_grad_(T)
   if (G == 1) {
-    Sigma2.L.mask <- torch_tensor(NULL)
-    Sigma2.L.v <- torch_tensor(NULL)
+    Sigma2.L.mask <- NULL.tensor()
+    Sigma2.L.v <- NULL.tensor()
   } else {
     Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
     Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
@@ -266,7 +263,7 @@ DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(da
                IWGVEMM = list(init.iwgvemm, est.iwgvemm),
                stop(paste0("Method '", method, "' not supported.")))
   Y <- as.matrix(data)
-  D <- model
+  D <- as.matrix(model)
   X <- group
   N <- nrow(Y)
   if (is.character(X))

@@ -10,6 +10,10 @@ t.torch_tensor <- function(x) {
   torch_transpose(x, -1, -2)
 }
 
+NULL.tensor <- function() {
+  torch_tensor(NULL, dtype = torch_float())
+}
+
 diagonal <- function(e) {
   torch_diagonal(e, dim1 = -1, dim2 = -2)
 }
@@ -29,7 +33,7 @@ proximal.adam <- function(x, state, params, lambda) {
 }
 
 distance <- function(x, y) {
-  mapply(function(x, y) as.array(max(abs(x - y))), x, y)
+  mapply(function(x, y) tryCatch(as.array(max(abs(x - y))), error = function(e) 0), x, y)
 }
 
 IC <- function(ll, l0, N, c) {
