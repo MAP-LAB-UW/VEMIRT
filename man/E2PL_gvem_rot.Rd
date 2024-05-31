@@ -7,7 +7,7 @@
 E2PL_gvem_rot(u, domain, max.iter = 5000, rot = "Promax")
 }
 \arguments{
-\item{u}{a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+\item{u}{an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 missing values are coded as \code{NA}}
 
@@ -45,4 +45,7 @@ E2PL_gvem_rot(exampleData_2pl, domain=5,rot="cfQ")}
 }
 \seealso{
 \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_adaptlasso}}
+}
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
 }

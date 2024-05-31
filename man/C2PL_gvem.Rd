@@ -7,7 +7,7 @@
 C2PL_gvem(u, indic, max.iter = 5000, SE.est = FALSE)
 }
 \arguments{
-\item{u}{a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+\item{u}{an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 missing values are coded as \code{NA}}
 
@@ -46,4 +46,7 @@ C2PL_gvem(exampleData_2pl, exampleIndic_cfa2pl)}
 }
 \seealso{
 \code{\link{C3PL_sgvem}},\code{\link{importanceSampling}},\code{\link{C2PL_bs}}
+}
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
 }

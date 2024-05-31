@@ -18,7 +18,7 @@ E3PL_sgvem_rot(
 )
 }
 \arguments{
-\item{u}{a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+\item{u}{an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 missing values are coded as \code{NA}}
 
@@ -71,4 +71,7 @@ mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,rot="Promax")}
 }
 \seealso{
 \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_adaptlasso}}
+}
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
 }

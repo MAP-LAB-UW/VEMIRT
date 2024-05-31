@@ -27,3 +27,6 @@ Identify the number of factors
 \dontrun{
 pa_poly(exampleData_2pl, n.iter=20)}
 }
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
+}

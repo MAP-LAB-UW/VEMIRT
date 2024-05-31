@@ -15,5 +15,8 @@ print(x, criterion = NULL)
 Print DIF Items by Group
 }
 \seealso{
-\code{\link{em_DIF}}, \code{\link{gvemm_DIF}}, \code{\link{lrt_DIF}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+\code{\link{DIF_em}}, \code{\link{DIF_gvem}}, \code{\link{DIF_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+}
+\author{
+Weicong Lyu <wlyu4@uw.edu>
 }

@@ -19,7 +19,7 @@ E3PL_sgvem_lasso(
 )
 }
 \arguments{
-\item{u}{a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+\item{u}{an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 missing values are coded as \code{NA}}
 
@@ -36,13 +36,13 @@ appropriate lasso penalty would recover the true zero structure. Also see \code{
 \item{forgetrate}{the forget rate for the stochastic algorithm. The value should be within the
 range from 0.5 to 1. Default is 0.51}
 
-\item{mu_b}{the mean parameter for the prior distribution of item difficulty parameters}
+\item{mu_b}{the mean parameter for the normal prior distribution of item difficulty parameters}
 
-\item{sigma2_b}{the variance parameter for the prior distribution of item difficulty parameters}
+\item{sigma2_b}{the variance parameter for the normal prior distribution of item difficulty parameters}
 
-\item{Alpha}{the \eqn{\alpha} parameter for the prior distribution of guessing parameters}
+\item{Alpha}{the \eqn{\alpha} parameter for the beta prior distribution of guessing parameters}
 
-\item{Beta}{the \eqn{\beta} parameter for the prior distribution of guessing parameters}
+\item{Beta}{the \eqn{\beta} parameter for the beta prior distribution of guessing parameters}
 
 \item{max.iter}{the maximum number of iterations for the EM cycle; default is 5000}
 
@@ -56,12 +56,12 @@ with other factors as well. Nonzero entries (in the lower triangular part) excep
 sub-matrix are penalized during the estimation procedure. For instance, assume \eqn{K=3}, then the \code{"C2"} constraint will
 imply the following submatrix: \eqn{C2=\begin{bmatrix} 1 & 0 & 0\\ 1 & 1 & 0\\ 1 & 1 & 1\\\end{bmatrix}}. As shown, item 1 is allowed to only
 load on the first factor, item 2 will for sure load on the second factor but it may also load on the first factor (hence a penalty is added
-on the \eqn{(2,1)} element of \code{"C1"}, i.e., \eqn{C2_{2,1}} ). Item 3 will for sure load on the third factor but it may also load on the
+on the \eqn{(2,1)} element of \code{"C2"}, i.e., \eqn{C2_{2,1}} ). Item 3 will for sure load on the third factor but it may also load on the
 first two factors. However, note that for all remaining items their loading vector will all be \eqn{(1, 1, 1)} hence indistinguishable from the
 third anchor item. Therefore, we need to alert the algorithm that this third anchor item will for sure load on the third factor, and
 and whether or not it loads on the first two factors depends on the regularization results. Therefore, we need to specify
 \code{"non_pen="} to identify the \eqn{K}th anchor item. Although, \code{"C2"} is much weaker than \code{"C1"}, it still ensures empirical identifiability. Default is \code{"C1"}.
-During estimation, under both the \code{"C1"} and \code{"C1"} constraints, the population means and variances are constrained to be 0 and 1, respectively.}
+During estimation, under both the \code{"C1"} and \code{"C2"} constraints, the population means and variances are constrained to be 0 and 1, respectively.}
 
 \item{non_pen}{the index of an item which is associated with each factor to satisfy \code{"C2"}.
 For \code{C1}, the input can be \code{NULL}}
@@ -101,4 +101,7 @@ Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimat
 }
 \seealso{
 \code{\link{E3PL_sgvem_rot}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{exampleIndic_efa3pl_c1}}, \code{\link{exampleIndic_efa3pl_c2}}
+}
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
 }

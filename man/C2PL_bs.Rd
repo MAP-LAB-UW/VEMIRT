@@ -21,7 +21,7 @@ a list containing the following objects:
 }
 \description{
 A bootstrap version of GVEM (i.e., GVEM-BS) can be implemented
-to correct the bias on item parameters and compute standard errors under M2PL models
+to correct the bias on item parameters and compute standard errors under confirmatory M2PL models
 }
 \examples{
 \dontrun{
@@ -30,4 +30,7 @@ C2PL_bs(gvem_result, boots=10)}
 }
 \seealso{
 \code{\link{C2PL_gvem}},\code{\link{importanceSampling}}
+}
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
 }

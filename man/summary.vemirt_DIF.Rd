@@ -15,5 +15,8 @@ print(x, criterion = NULL)
 Summarize DIF Items
 }
 \seealso{
-\code{\link{em_DIF}}, \code{\link{gvemm_DIF}}, \code{\link{lrt_DIF}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}
+\code{\link{DIF_em}}, \code{\link{DIF_gvem}}, \code{\link{DIF_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}
+}
+\author{
+Weicong Lyu <wlyu4@uw.edu>
 }

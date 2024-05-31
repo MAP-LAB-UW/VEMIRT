@@ -28,7 +28,7 @@
 #' @section Differential item functioning analysis:
 #' \itemize{
 #'   \item \code{\link{DIF_em}} conducts DIF analysis for M2PL models using EM algorithms
-#'   \item \code{\link{DIF_gvem}} conducts DIF analysis for M2PL models using GVEMM algorithms
+#'   \item \code{\link{DIF_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms
 #'   \item \code{\link{DIF_lrt}} conducts DIF analysis for M2PL models using the likelihood ratio test
 #' }
 # #' @keywords internal
@@ -49,5 +49,6 @@
 #' @importFrom abind abind
 #' @import mirt
 #' @import torch
+#' @import mvQuad
 ## usethis namespace: end
 NULL

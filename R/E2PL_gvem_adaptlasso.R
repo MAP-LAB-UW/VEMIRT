@@ -1,19 +1,19 @@
 #' Exploratory M2PL Analysis with Adaptive Lasso Penalty
 #'
 #'
-#' @param u a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+#' @param u an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 #' consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 #' missing values are coded as \code{NA}
 #' @param indic a \eqn{J \times K} \code{matrix} or a \code{data.frame} that
 #' describes the factor loading structure of \eqn{J} items to \eqn{K} factors. It
-#' consists of binary values where 0 refers to the item is irrelevant with this factor,
-#' 1 otherwise. For exploratory factor analysis with adaptive lasso penalty, \code{indic} should be
-#' imposed certain constraints on the a \eqn{K \times K} sub-matrix to ensure identifiability.
+#' consists of binary values where 0 refers to the item is irrelevant to this factor, and
+#' 1 otherwise. For exploratory factor analysis with adaptive lasso penalty, \code{indic} should
+#' include constraints on the a \eqn{K \times K} sub-matrix to ensure identifiability.
 #' The remaining parts do not assume any pre-specified zero structure but instead, the
 #' appropriate lasso penalty would recover the true zero structure. Also see \code{constrain}
 #' @param max.iter the maximum number of iterations for the EM cycle; default is 5000
 #' @param constrain the constraint setting: \code{"C1"} or \code{"C2"}. To ensure
-#' identifiablity, \code{"C1"} sets a \eqn{K \times K} sub-matrix of \code{indic} to be an
+#' identifiability, \code{"C1"} sets a \eqn{K \times K} sub-matrix of \code{indic} to be an
 #' identity matrix.This constraint anchor \eqn{K} factors by designating \eqn{K} items that load solely on each factor respectively.
 #' Note that the \eqn{K \times K} matrix does not have to appear at the top of the \code{indic} matrix.
 #' \code{"C2"} sets the \eqn{K \times K} sub-matrix to be a lower triangular matrix with the diagonal being ones. That is, there
@@ -22,13 +22,13 @@
 #' sub-matrix are penalized during the estimation procedure. For instance, assume \eqn{K=3}, then the \code{"C2"} constraint will
 #' imply the following submatrix: \eqn{C2=\begin{bmatrix} 1 & 0 & 0\\ 1 & 1 & 0\\ 1 & 1 & 1\\\end{bmatrix}}. As shown, item 1 is allowed to only
 #' load on the first factor, item 2 will for sure load on the second factor but it may also load on the first factor (hence a penalty is added
-#' on the \eqn{(2,1)} element of \code{"C1"}, i.e., \eqn{C2_{2,1}} ). Item 3 will for sure load on the third factor but it may also load on the
+#' on the \eqn{(2,1)} element of \code{"C2"}, i.e., \eqn{C2_{2,1}} ). Item 3 will for sure load on the third factor but it may also load on the
 #' first two factors. However, note that for all remaining items their loading vector will all be \eqn{(1, 1, 1)} hence indistinguishable from the
 #' third anchor item. Therefore, we need to alert the algorithm that this third anchor item will for sure load on the third factor, and
-#' and whether or not it loads on the first two factors depends on the regularization results. Therefore, we need to specify
+#' whether or not it loads on the first two factors depends on the regularization results. Therefore, we need to specify
 #' \code{"non_pen="} to identify the \eqn{K}th anchor item. Although, \code{"C2"} is much weaker than \code{"C1"}, it still ensures empirical identifiability. Default is \code{"C1"}.
-#' During estimation, under both the \code{"C1"} and \code{"C1"} constraints, the population means and variances are constrained to be 0 and 1, respectively.
-#' @param non_pen the index of an item which is associated with each factor to satisfy \code{"C2"}.
+#' During estimation, under both the \code{"C1"} and \code{"C2"} constraints, the population means and variances are constrained to be 0 and 1, respectively.
+#' @param non_pen the index of an item that is associated with every factor under constraint \code{"C2"}.
 #' For \code{C1}, the input can be \code{NULL}
 #' @param gamma a numerical value of adaptive lasso parameter. Zou (2006) recommended three values, 0.5, 1, and 2.
 #' The default value is 2.
@@ -51,6 +51,8 @@
 #'
 #' Zou, H. (2006). The adaptive LASSO and its oracle properties.  \emph{Journal of the American Statistical Association, 7}, 1011418–1429.
 #'
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @seealso \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{exampleIndic_efa2pl_c1}}, \code{\link{exampleIndic_efa2pl_c2}}
 #' @export
 #'

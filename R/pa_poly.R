@@ -8,6 +8,8 @@
 #' If FALSE, it suppresses the graphic output
 #' @return \code{pa_poly} returns a \code{data.frame} with the eigenvalues
 #' for the real data and the simulated data.
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @export
 #'
 #' @examples

@@ -1,6 +1,6 @@
 #' Stochastic GVEM for Confirmatory M3PL Analysis
 #'
-#' @param u a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+#' @param u an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 #' consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 #' missing values are coded as \code{NA}
 #' @param indic a \eqn{J \times K} \code{matrix} or a \code{data.frame} that
@@ -35,6 +35,8 @@
 #' Cho, A. E., Wang, C., Zhang, X., & Xu, G. (2021). Gaussian variational estimation for multidimensional item response theory. \emph{British Journal of Mathematical and Statistical Psychology, 74}, 52-85.
 #'
 #' Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimation for Exploratory Item Factor Analysis. \emph{Psychometrika}. https://doi.org/10.1007/s11336-022-09874-6
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @seealso \code{\link{C2PL_gvem}}
 #' @export
 #'

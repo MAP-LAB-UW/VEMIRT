@@ -17,7 +17,7 @@ C3PL_sgvem(
 )
 }
 \arguments{
-\item{u}{a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+\item{u}{an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 missing values are coded as \code{NA}}
 
@@ -73,4 +73,7 @@ Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimat
 }
 \seealso{
 \code{\link{C2PL_gvem}}
+}
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
 }

@@ -32,6 +32,8 @@
 #'   \item{new_Sigma_theta}{population variance-covariance matrix estimated by IV-GVEM, a \eqn{K \times K} matrix}
 #'   \item{best_lr}{The learning rate used for importance sampling}
 #'   \item{best_lb}{The lower bound value for importance sampling}
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @seealso \code{\link{C2PL_gvem}}, \code{\link{E2PL_gvem_rot}},\code{\link{C2PL_bs}}
 #' @export
 #'

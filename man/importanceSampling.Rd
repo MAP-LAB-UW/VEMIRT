@@ -56,3 +56,6 @@ importanceSampling(exampleData_2pl,CFA_result)
 \seealso{
 \code{\link{C2PL_gvem}}, \code{\link{E2PL_gvem_rot}},\code{\link{C2PL_bs}}
 }
+\author{
+Jiaying Xiao <jxiao6@uw.edu>
+}

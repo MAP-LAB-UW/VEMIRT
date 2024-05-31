@@ -17,3 +17,6 @@ Extract Parameter Estimates from DIF Analysis
 \seealso{
 \code{\link{em_DIF}}, \code{\link{gvemm_DIF}}, \code{\link{lrt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
+\author{
+Weicong Lyu <wlyu4@uw.edu>
+}

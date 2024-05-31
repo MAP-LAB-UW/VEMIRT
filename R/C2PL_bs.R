@@ -1,6 +1,6 @@
 #' Bootstrap Version of GVEM Confirmatory Analysis for M2PL
 #' @description A bootstrap version of GVEM (i.e., GVEM-BS) can be implemented
-#' to correct the bias on item parameters and compute standard errors under M2PL models
+#' to correct the bias on item parameters and compute standard errors under confirmatory M2PL models
 #' @param gvem_result a list that includes exploratory or confirmatory GVEM
 #' results for M2PL models.
 #' @param boots the number of bootstrap samples; default is 5
@@ -10,6 +10,8 @@
 #'   \item{boots_b}{item difficulty parameters corrected by bootstrap sampling, a vector of length \eqn{J}}
 #'   \item{sd_a}{stardard errors of item discrimination parameters, a \eqn{J \times K} matrix}
 #'   \item{sd_b}{stardard errors of item difficulty parameters, a vector of length \eqn{J}}
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @seealso \code{\link{C2PL_gvem}},\code{\link{importanceSampling}}
 #' @export
 #'

@@ -1,6 +1,6 @@
 #' Confirmatory M2PL Analysis
 #'
-#' @param u a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+#' @param u an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 #' consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 #' missing values are coded as \code{NA}
 #' @param indic a \eqn{J \times K} \code{matrix} or a \code{data.frame} that
@@ -25,6 +25,8 @@
 #'   \item{AIC}{model fit index}
 #'   \item{BIC}{model fit index}
 #'   \item{SE}{Standard errors of item parameters, a \eqn{J \times (K+1)} matrix where the last column includes SE estimates for item difficulty parameters}
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @seealso \code{\link{C3PL_sgvem}},\code{\link{importanceSampling}},\code{\link{C2PL_bs}}
 #' @export
 #'

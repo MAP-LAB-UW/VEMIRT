@@ -1,6 +1,6 @@
 #' Stochastic GVEM for Exploratory M3PL Analysis
 #'
-#' @param u a \eqn{N \times J} \code{matrix} or a \code{data.frame} that
+#' @param u an \eqn{N \times J} \code{matrix} or a \code{data.frame} that
 #' consists of binary responses of \eqn{N} individuals to \eqn{J} items. The
 #' missing values are coded as \code{NA}
 #' @param domain the number of factors
@@ -32,6 +32,8 @@
 #'   \item{AIC}{model fit index}
 #'   \item{BIC}{model fit index}
 #'   \item{ur_a}{item discrimination parameters before conducting the rotation, a \eqn{J \times K} \code{matrix}}
+#'
+#' @author Jiaying Xiao <jxiao6@uw.edu>
 #' @seealso \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_adaptlasso}}
 #' @export
 #'

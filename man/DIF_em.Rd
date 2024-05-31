@@ -10,12 +10,12 @@ DIF_em(
   group = rep(1, nrow(data)),
   method = "EMM",
   Lambda0 = seq(0.1, 0.8, by = 0.1),
-  level = 18,
-  criterion = "GIC",
+  level = 12,
+  criterion = "BIC",
   iter = 200,
   eps = 0.001,
-  lr = 0.7,
-  c = 1.7
+  lr = 1,
+  c = 1
 )
 }
 \arguments{
@@ -31,7 +31,7 @@ DIF_em(
 
 \item{level}{Accuracy level, either a number for \code{mvQuad} or a vector indicating the grid for each latent dimension}
 
-\item{criterion}{Information criterion for model selection, one of \code{'GIC'} (recommended), \code{'AIC'}, or \code{'BIC'}}
+\item{criterion}{Information criterion for model selection, one of \code{'BIC'} (recommended), \code{'AIC'}, or \code{'GIC'}}
 
 \item{iter}{Maximum number of iterations}
 
@@ -44,10 +44,10 @@ DIF_em(
 \value{
 An object of class \code{vemirt_DIF}, which is a list containing the following elements:
   \item{N}{Number of respondents}
-  \item{niter0}{Number of iterations for initialization (GVEM and EM with \code{lambda} equal to \code{0})}
+  \item{niter0}{Number(s) of iterations for initialization}
   \item{fit}{The best (with lowest information criterion) model, which is an element of \code{all}}
   \item{best}{The index of \code{fit} in \code{all}}
-  \item{all}{A list of models whose length is equal to \code{Lambda0}:}
+  \item{all}{A list of models which has the same length as \code{Lambda0}:}
   \item{ ...$lambda0}{Corresponding element in \code{Lambda0}}
   \item{ ...$lambda}{\code{sqrt(N) * lambda0}}
   \item{ ...$niter}{Number(s) of iterations}
@@ -58,10 +58,10 @@ An object of class \code{vemirt_DIF}, which is a list containing the following e
   \item{ ...$gamma}{DIF parameters for the slopes}
   \item{ ...$beta}{DIF parameters for the intercepts}
   \item{ ...$ll}{Log-likelihood}
-  \item{ ...$l0}{Number of nonzero parameters in \code{gamma} and \code{beta}}
-  \item{ ...$AIC}{Akaike Information Criterion}
-  \item{ ...$BIC}{Bayesian Information Criterion}
-  \item{ ...$GIC}{Generalized Information Criterion}
+  \item{ ...$l0}{Number of nonzero DIF parameters in \code{gamma} and \code{beta}}
+  \item{ ...$AIC}{Akaike Information Criterion: \code{-2*ll+l0*2}}
+  \item{ ...$BIC}{Bayesian Information Criterion: \code{-2*ll+l0*log(N)}}
+  \item{ ...$GIC}{Generalized Information Criterion: \code{-2*ll+c*l0*log(N)*log(log(N))}}
 }
 \description{
 EM Algorithms for DIF Detection in 2PL Models
@@ -72,4 +72,7 @@ with(exampleDIF, DIF_em(data, model, group))}
 }
 \seealso{
 \code{\link{DIF_gvem}}, \code{\link{DIF_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+}
+\author{
+Weicong Lyu <wlyu4@uw.edu>
 }
