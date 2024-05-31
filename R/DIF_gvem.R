@@ -2,7 +2,6 @@
 
 mstep.gvem <- function() {
   with(parent.frame(), {
-    init <- lambda == 0 && !exists('niter.init')
     params.old <- NULL
     for (i in 1:iter) {
       aG <- (a + gamma)$unsqueeze(4)
@@ -51,17 +50,6 @@ mstep.gvem <- function() {
       Sigma <- sym(Sigma / sigma / sigma$unsqueeze(2))
       a$mul_(sigma)
       gamma$mul_(sigma)
-      if (init)
-        for (g in 2:G) {
-          mu <- Mu[g]$clone()
-          MU[g]$sub_(mu)
-          Mu[g]$sub_(mu)
-          beta[g]$add_(gamma[g] %*% mu)
-          sigma <- Sigma[g]$diag()$sqrt()
-          SIGMA[g] <- sym(SIGMA[g] / sigma / sigma$unsqueeze(2))
-          Sigma[g] <- sym(Sigma[g] / sigma / sigma$unsqueeze(2))
-          gamma[g] <- (a + gamma[g]) * sigma - a
-        }
 
       params <- lapply(lst(SIGMA, MU, Sigma, Mu, a, b, gamma, beta), torch_clone)
       if (!is.null(params.old) && all(distance(params, params.old) < eps))
