@@ -1,6 +1,6 @@
 # Written by Weicong Lyu
 
-mstep.gvem <- function() {
+mstep.DIF_gvem <- function() {
   with(parent.frame(), {
     params.old <- NULL
     for (i in 1:iter) {
@@ -60,7 +60,7 @@ mstep.gvem <- function() {
   })
 }
 
-init.gvem <- function(Y, D, X, iter, eps, ...) {
+init.DIF_gvem <- function(Y, D, X, iter, eps, ...) {
   N <- nrow(Y)
   n <- tapply(1:N, X, identity)
   J <- ncol(Y)
@@ -82,21 +82,21 @@ init.gvem <- function(Y, D, X, iter, eps, ...) {
   beta <- beta.mask * 0
 
   lambda <- 0
-  niter.init <- mstep.gvem()
+  niter.init <- mstep.DIF_gvem()
   keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init)
   init.new()
 }
 
-est.gvem <- function(e, lambda) {
+est.DIF_gvem <- function(e, lambda) {
   list2env(e, environment())
   niter <- if (lambda == 0)
     c(0, 0)
   else {
-    niter <- mstep.gvem()
+    j <- mstep.DIF_gvem()
     lambda <- 0
     gamma.mask <- gamma != 0
     beta.mask <- beta != 0
-    c(niter, mstep.gvem())
+    c(j, mstep.DIF_gvem())
   }
   AG <- (a + gamma)$unsqueeze(4)[X]
   AG.t <- t(AG)
@@ -110,7 +110,7 @@ est.gvem <- function(e, lambda) {
   c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
 }
 
-assemble.iwgvemm <- function() {
+assemble.DIF_iwgvemm <- function() {
   with(parent.frame(), {
     z <- Sigma1.L.v$tanh()
     Sigma1.L <- torch_eye(K)$masked_scatter(Sigma1.L.mask, z) * torch_cat(c(torch_ones(K, 1), (1 - torch_zeros(K, K)$masked_scatter(Sigma1.L.mask, z)[, 1:-2]$square())$cumprod(2)$sqrt()), 2)
@@ -126,29 +126,28 @@ assemble.iwgvemm <- function() {
   })
 }
 
-proximal.adam <- function(x, state, params, lambda) {
-  betas.t <- params$betas ^ state$step
-  lr <- params$lr / (1 - betas.t[1]) / (sqrt(state$exp_avg_sq / (1 - betas.t[2])) + params$eps)
-  x$set_data(prox(x, lr * lambda))
-}
-
-mstep.iwgvemm <- function() {
+mstep.DIF_iwgvemm <- function() {
   with(parent.frame(), {
     params <- lst(Sigma1.L.v, Sigma2.L.v, Mu.v, a.v, b, gamma.v, beta.v)
     opt <- optim_adam(params, lr)
+    params.old <- NULL
     for (i in 1:iter) {
-      params.old <- with_no_grad(lapply(params, torch_clone))
-      assemble.iwgvemm()
+      assemble.DIF_iwgvemm()
       xi <- (((a + gamma)[X]$unsqueeze(2) * theta$unsqueeze(3))$sum(4) - (b - beta)[X]$unsqueeze(2))$masked_fill(!Y.mask, NaN)
       log.w <- torch_where(Y, nnf_logsigmoid(xi), nnf_logsigmoid(-xi))$nansum(3) +
         torch_cat(lapply(1:G, function(g) {
           distr_multivariate_normal(Mu[g], scale_tril = Sigma.L[g])$log_prob(theta[n[[g]]])
         }))[X.rank] - theta.logd
       Q <- (log.w$view(c(N, S, M))$logsumexp(3) - log(M))$mean(2)$sum()
+      with_no_grad({
+        if (!is.null(params.old) && all(distance(params, params.old) < eps))
+          return(i - 1)
+        params.old <- lapply(params, torch_clone)
+      })
       opt$zero_grad()
       (-Q)$backward()
       opt$step()
-      with_no_grad({
+      with_no_grad(
         if (lambda == 0) {
           gamma.v$masked_fill_(!gamma.v.mask, 0)
           beta.v$masked_fill_(!beta.v.mask, 0)
@@ -156,16 +155,14 @@ mstep.iwgvemm <- function() {
           proximal.adam(gamma.v, opt$state$get(gamma.v), opt$param_groups[[1]], lambda)
           proximal.adam(beta.v, opt$state$get(beta.v), opt$param_groups[[1]], lambda)
         }
-        if (all(distance(params, params.old) < eps))
-          break
-      })
+      )
     }
     i
   })
 }
 
-init.iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
-  init <- do.call(init.gvem, as.list(environment()))
+init.DIF_iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
+  init <- do.call(init.DIF_gvem, as.list(environment()))
   e <- init()
   e$Y <- array(Y, append(dim(Y), 1, 1))
   list2env(e, environment())
@@ -199,30 +196,24 @@ init.iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
   theta <- (linalg_cholesky(SIGMA)$unsqueeze(2) %*% torch_tensor(z)$unsqueeze(4))$squeeze(4) + torch_tensor(MU)$unsqueeze(2)
   theta.logd <- torch_tensor(rowSums(dnorm(z, log = T), dims = 2))
   lambda <- 0
-  niter.init <- c(init('niter.init'), mstep.iwgvemm())
-  keep(Y, D, X, iter, eps, S, M, lr, Y.mask, X.rank, N, n, J, K, G, MU, SIGMA, Mu.mask, Mu.v, Sigma1.L.mask, Sigma1.L.v, Sigma2.L.mask, Sigma2.L.v, a.mask, a.v, b, gamma.mask, gamma.v, gamma.v.mask, beta.mask, beta.v, beta.v.mask, theta, theta.logd, niter.init)
+  niter.init <- c(init('niter.init'), mstep.DIF_iwgvemm())
+  keep(Y, D, X, iter, eps, S, M, lr, Y.mask, X.rank, N, n, J, K, G, SIGMA, MU, Sigma.L, Sigma1.L.mask, Sigma1.L.v, Sigma2.L.mask, Sigma2.L.v, Mu, Mu.mask, Mu.v, a, a.mask, a.v, b, gamma, gamma.mask, gamma.v, gamma.v.mask, beta, beta.mask, beta.v, beta.v.mask, theta, theta.logd, Q, niter.init)
   init.new()
 }
 
-est.iwgvemm <- function(e, lambda) {
+est.DIF_iwgvemm <- function(e, lambda) {
   list2env(e, environment())
   niter <- if (lambda == 0)
     c(0, 0)
   else {
-    niter <- mstep.iwgvemm()
+    j <- mstep.DIF_iwgvemm()
     lambda <- 0
     gamma.v.mask <- gamma.v != 0
     beta.v.mask <- beta.v != 0
-    c(niter, mstep.iwgvemm())
+    c(j, mstep.DIF_iwgvemm())
   }
   with_no_grad({
-    assemble.iwgvemm()
-    xi <- (((a + gamma)[X]$unsqueeze(2) * theta$unsqueeze(3))$sum(4) - (b - beta)[X]$unsqueeze(2))$masked_fill(!Y.mask, NaN)
-    log.w <- torch_where(Y, nnf_logsigmoid(xi), nnf_logsigmoid(-xi))$nansum(3) +
-      torch_cat(lapply(1:G, function(g) {
-        distr_multivariate_normal(Mu[g], scale_tril = Sigma.L[g])$log_prob(theta[n[[g]]])
-      }))[X.rank] - theta.logd
-    ll <- as.array((log.w$view(c(N, S, M))$logsumexp(3) - log(M))$mean(2)$sum())
+    ll <- as.array(Q)
     l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
     c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma = Sigma.L %*% t(Sigma.L), Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
   })
@@ -275,8 +266,8 @@ est.iwgvemm <- function(e, lambda) {
 #' with(exampleDIF, DIF_gvem(data, model, group))}
 DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = seq(0.1, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
   fn <- switch(method,
-               GVEM = list(init.gvem, est.gvem),
-               IWGVEMM = list(init.iwgvemm, est.iwgvemm),
+               GVEM = list(init.DIF_gvem, est.DIF_gvem),
+               IWGVEMM = list(init.DIF_iwgvemm, est.DIF_iwgvemm),
                stop(paste0("Method '", method, "' not supported.")))
   Y <- as.matrix(data)
   D <- as.matrix(model)

@@ -34,6 +34,12 @@ prox <- function(x, lambda) {
   sign(x) * (abs(x) - lambda)$maximum(0)
 }
 
+proximal.adam <- function(x, state, params, lambda) {
+  betas.t <- params$betas ^ state$step
+  lr <- params$lr / (1 - betas.t[1]) / (sqrt(state$exp_avg_sq / (1 - betas.t[2])) + params$eps)
+  x$set_data(prox(x, lr * lambda))
+}
+
 groupsum <- function(n, x) {
   torch_stack(lapply(n, function(n) {
     x[n]$sum(1)

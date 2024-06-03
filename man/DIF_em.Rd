@@ -10,11 +10,10 @@ DIF_em(
   group = rep(1, nrow(data)),
   method = "EMM",
   Lambda0 = seq(0.1, 0.8, by = 0.1),
-  level = 12,
+  level = 10,
   criterion = "BIC",
   iter = 200,
   eps = 0.001,
-  lr = 1,
   c = 1
 )
 }
@@ -36,8 +35,6 @@ DIF_em(
 \item{iter}{Maximum number of iterations}
 
 \item{eps}{Termination criterion on numerical accuracy}
-
-\item{lr}{Learning rate for the Newton-Raphson method}
 
 \item{c}{Constant for computing GIC}
 }
