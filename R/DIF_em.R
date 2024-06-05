@@ -1,5 +1,35 @@
 # Written by Weicong Lyu
 
+init.DIF_em <- function(Y, D, X, level, iter, eps, ...) {
+  init <- do.call(init.DIF_gvem, as.list(environment()))
+  e <- init()
+  e$Y <- torch_tensor(Y)$unsqueeze(2)
+  list2env(e, environment())
+  U <- Y$bool()
+  ab.mask <- torch_hstack(list(a.mask, torch_ones(J, 1)))$unsqueeze(3)
+  ab.mask <- (ab.mask %*% t(ab.mask))$bool()
+  grid <- if (length(level) == 1)
+    suppressMessages(createNIGrid(K, 'nHN', level, 'sparse'))
+  else {
+    z <- as.matrix(do.call(expand.grid, replicate(K, (level[-1] + level[-length(level)]) / 2, simplify = F)))
+    s <- apply(do.call(expand.grid, replicate(K, diff(level), simplify = F)), 1, prod)
+    lst(z, s)
+  }
+
+  lambda <- 0
+  params.old <- NULL
+  for (i in 1:iter) {
+    estep.DIF_em()
+    niter.init <- c(niter.init, mstep.DIF_em())
+    params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
+    if (!is.null(params.old) && all(distance(params, params.old) < eps))
+      break
+    params.old <- params
+  }
+  keep(Y, D, X, level, iter, eps, grid, N, n, J, K, G, U, Sigma, Mu, a, a.mask, b, gamma, gamma.mask, beta, beta.mask, ab.mask, P, niter.init)
+  init.new()
+}
+
 estep.DIF_em <- function() {
   with(parent.frame(), {
     gd <- lapply(1:G, function(g) {
@@ -39,34 +69,10 @@ estep.DIF_em <- function() {
 
 mstep.DIF_em <- function() {
   with(parent.frame(), {
+    mask <- torch_tensor(torch_cat(list(gamma.mask, beta.mask$unsqueeze(3)), 3)$unsqueeze(4), torch_int())
+    gammabeta.mask <- (mask %*% t(mask))$bool()
     pars.old <- NULL
     for (ii in 1:iter) {
-      p <- torch_sigmoid(xi)
-      q <- torch_sigmoid(-xi)
-      W.d <- ((Y - p) * W)$unsqueeze(4)
-      W.dd <- (-(p * q) * W)$unsqueeze(4)
-      d.gamma <- groupsum(n, (Z * W.d)$sum(2))$masked_fill(!gamma.mask, 0)
-      dd.gamma <- groupsum(n, (ZZ * W.dd$unsqueeze(5))$sum(2))
-      d.beta <- groupsum(n, W.d$sum(2))$masked_fill(!beta.mask$unsqueeze(3), 0)
-      dd.beta <- groupsum(n, W.dd$sum(2))$unsqueeze(4)
-      if (lambda == 0) {
-        mask <- torch_tensor(torch_cat(list(gamma.mask, beta.mask$unsqueeze(3)), 3)$unsqueeze(4), torch_int())
-        mask <- (mask %*% t(mask))$bool()
-        dd.gammabeta <- groupsum(n, (Z * W.dd)$sum(2))
-        dd <- torch_cat(list(torch_cat(list(dd.gamma, dd.gammabeta$unsqueeze(4)), 4), torch_cat(list(dd.gammabeta$unsqueeze(3), dd.beta), 4)), 3)$masked_fill(!mask, 0)
-        gammabeta <- torch_cat(list(gamma, beta$unsqueeze(3)), 3) - (dd$pinverse()$masked_fill(!mask, 0) %*% torch_cat(list(d.gamma, d.beta), 3)$unsqueeze(4))$squeeze(4)
-        gamma <- gammabeta[.., 1:-2]$masked_fill_(!gamma.mask, 0)
-        beta <- gammabeta[.., -1]$masked_fill_(!beta.mask, 0)
-      } else {
-        dd.gamma <- diagonal(dd.gamma)
-        dd.beta <- dd.beta$view(c(G, -1))
-        gamma <- -prox(d.gamma - dd.gamma * gamma, lambda) / dd.gamma
-        beta <- -prox(d.beta$squeeze(3) - dd.beta * beta, lambda) / dd.beta
-        gamma.mask <- gamma != 0
-        beta.mask <- beta != 0
-      }
-
-      xi <- (((a + gamma)$view(c(G, 1, J, 1, K)) %*% z$view(c(G, -1, 1, K, 1)))$view(c(G, -1, J)) - (b - beta)$unsqueeze(2))[X]
       p <- torch_sigmoid(xi)
       q <- torch_sigmoid(-xi)
       W.d <- ((Y - p) * W)$unsqueeze(4)
@@ -82,50 +88,37 @@ mstep.DIF_em <- function() {
       b <- ab[, -1]
 
       xi <- (((a + gamma)$view(c(G, 1, J, 1, K)) %*% z$view(c(G, -1, 1, K, 1)))$view(c(G, -1, J)) - (b - beta)$unsqueeze(2))[X]
-      pars <- lapply(lst(a, b, gamma, beta), torch_clone)
+      p <- torch_sigmoid(xi)
+      q <- torch_sigmoid(-xi)
+      W.d <- ((Y - p) * W)$unsqueeze(4)
+      W.dd <- (-(p * q) * W)$unsqueeze(4)
+      d.gamma <- groupsum(n, (Z * W.d)$sum(2))$masked_fill(!gamma.mask, 0)
+      dd.gamma <- groupsum(n, (ZZ * W.dd$unsqueeze(5))$sum(2))
+      d.beta <- groupsum(n, W.d$sum(2))$masked_fill(!beta.mask$unsqueeze(3), 0)
+      dd.beta <- groupsum(n, W.dd$sum(2))$unsqueeze(4)
+      if (lambda == 0) {
+        dd.gammabeta <- groupsum(n, (Z * W.dd)$sum(2))
+        dd <- torch_cat(list(torch_cat(list(dd.gamma, dd.gammabeta$unsqueeze(4)), 4), torch_cat(list(dd.gammabeta$unsqueeze(3), dd.beta), 4)), 3)$masked_fill(!gammabeta.mask, 0)
+        gammabeta <- torch_cat(list(gamma, beta$unsqueeze(3)), 3) - (dd$pinverse()$masked_fill(!gammabeta.mask, 0) %*% torch_cat(list(d.gamma, d.beta), 3)$unsqueeze(4))$squeeze(4)
+        gamma <- gammabeta[.., 1:-2]$masked_fill_(!gamma.mask, 0)
+        beta <- gammabeta[.., -1]$masked_fill_(!beta.mask, 0)
+        pars <- lapply(lst(a, b, gamma, beta), torch_clone)
+      } else {
+        dd.gamma <- diagonal(dd.gamma)
+        dd.beta <- dd.beta$view(c(G, -1))
+        gamma <- -prox(d.gamma - dd.gamma * gamma, lambda) / dd.gamma
+        beta <- -prox(d.beta$squeeze(3) - dd.beta * beta, lambda) / dd.beta
+        pars <- lapply(lst(gamma, beta), function(x) {
+          torch_tensor(x != 0, torch_int())
+        })
+      }
+
+      xi <- (((a + gamma)$view(c(G, 1, J, 1, K)) %*% z$view(c(G, -1, 1, K, 1)))$view(c(G, -1, J)) - (b - beta)$unsqueeze(2))[X]
       if (!is.null(pars.old) && all(distance(pars, pars.old) < eps))
         break
       pars.old <- pars
     }
     ii
-  })
-}
-
-init.DIF_em <- function(Y, D, X, level, iter, eps, ...) {
-  init <- do.call(init.DIF_gvem, as.list(environment()))
-  e <- init()
-  e$Y <- torch_tensor(Y)$unsqueeze(2)
-  list2env(e, environment())
-  U <- Y$bool()
-  ab.mask <- torch_hstack(list(a.mask, torch_ones(J, 1)))$unsqueeze(3)
-  ab.mask <- (ab.mask %*% t(ab.mask))$bool()
-  grid <- if (length(level) == 1)
-    suppressMessages(createNIGrid(K, 'nHN', level, 'sparse'))
-  else {
-    z <- as.matrix(do.call(expand.grid, replicate(K, (level[-1] + level[-length(level)]) / 2, simplify = F)))
-    s <- apply(do.call(expand.grid, replicate(K, diff(level), simplify = F)), 1, prod)
-    lst(z, s)
-  }
-
-  lambda <- 0
-  params.old <- NULL
-  for (i in 1:iter) {
-    estep.DIF_em()
-    niter.init <- c(niter.init, mstep.DIF_em())
-    params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
-    if (!is.null(params.old) && all(distance(params, params.old) < eps))
-      break
-    params.old <- params
-  }
-  keep(Y, D, X, level, iter, eps, grid, N, n, J, K, G, U, Sigma, Mu, a, a.mask, b, gamma, gamma.mask, beta, beta.mask, ab.mask, P, niter.init)
-  init.new()
-}
-
-final.DIF_em <- function() {
-  with(parent.frame(), {
-    ll <- as.array(P$sum(2)$log()$sum())
-    l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
-    c(lst(niter, ll, l0), lapply(lst(Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
   })
 }
 
@@ -176,32 +169,24 @@ est.DIF_emm <- function(e, lambda) {
       gamma.mask <- gamma != 0
       beta.mask <- beta != 0
       niter <- rbind(niter, c(j, mstep.DIF_em()))
-      params <- lapply(lst(gamma, beta), function(x) {
-        torch_tensor(x != 0, torch_int())
-      })
-      lambda <- lambda.bak
-      if (!is.null(params.old) && all(distance(params, params.old) == 0))
-        break
-      params.old <- params
-      gamma.mask <- gamma.mask.bak
-      beta.mask <- beta.mask.bak
-    }
-    params.old <- NULL
-    for (i in 1:iter) {
-      estep.DIF_em()
-      j <- mstep.DIF_em()
-      lambda <- 0
-      gamma.mask <- gamma != 0
-      beta.mask <- beta != 0
-      niter <- rbind(niter, c(j, mstep.DIF_em()))
       params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
       if (!is.null(params.old) && all(distance(params, params.old) < eps))
         break
       params.old <- params
       lambda <- lambda.bak
+      gamma.mask <- gamma.mask.bak
+      beta.mask <- beta.mask.bak
     }
   }
   final.DIF_em()
+}
+
+final.DIF_em <- function() {
+  with(parent.frame(), {
+    ll <- as.array(P$sum(2)$log()$sum())
+    l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
+    c(lst(niter, ll, l0), lapply(lst(Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
+  })
 }
 
 #' EM Algorithms for DIF Detection in 2PL Models
@@ -245,7 +230,7 @@ est.DIF_emm <- function(e, lambda) {
 #' @examples
 #' \dontrun{
 #' with(exampleDIF, DIF_em(data, model, group))}
-DIF_em <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'EMM', Lambda0 = seq(0.1, 0.8, by = 0.1), level = 10, criterion = 'BIC', iter = 200, eps = 1e-3, c = 1) {
+DIF_em <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'EMM', Lambda0 = seq(0.2, 0.8, by = 0.1), level = 10, criterion = 'BIC', iter = 200, eps = 1e-3, c = 1) {
   fn <- switch(method,
                EM = list(init.DIF_em, est.DIF_em),
                EMM = list(init.DIF_em, est.DIF_emm),

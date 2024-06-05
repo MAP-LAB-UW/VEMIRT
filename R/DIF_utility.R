@@ -42,13 +42,13 @@ proximal.adam <- function(x, state, params, lambda) {
 
 groupsum <- function(n, x) {
   torch_stack(lapply(n, function(n) {
-    x[n]$sum(1)
+    x[n]$nansum(1)
   }))
 }
 
 groupmean <- function(n, x) {
   torch_stack(lapply(n, function(n) {
-    x[n]$mean(1)
+    x[n]$nanmean(1)
   }))
 }
 

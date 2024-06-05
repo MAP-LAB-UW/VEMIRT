@@ -1,5 +1,32 @@
 # Written by Weicong Lyu
 
+init.DIF_gvem <- function(Y, D, X, iter, eps, ...) {
+  N <- nrow(Y)
+  n <- tapply(1:N, X, identity)
+  J <- ncol(Y)
+  K <- ncol(D)
+  G <- max(X)
+  Y.na <- is.na(Y)
+  Y[Y.na] <- 0.5
+  Y <- torch_tensor(Y)
+  Y.mask <- torch_tensor(!Y.na)
+  eta <- torch_where(Y.mask, 0.125, 0)
+  Sigma <- torch_stack(replicate(G, diag(K), simplify = F))
+  Mu <- torch_zeros(G, K)
+  a.mask <- torch_tensor(D != 0)
+  a <- a.mask * 1
+  b <- torch_zeros(J)
+  gamma.mask <- torch_stack(c(torch_zeros_like(a.mask), replicate(G - 1, a.mask)))
+  gamma <- gamma.mask * 0
+  beta.mask <- torch_cat(list(torch_zeros(1, J), torch_ones(G - 1, J)))$bool()
+  beta <- beta.mask * 0
+
+  lambda <- 0
+  niter.init <- mstep.DIF_gvem()
+  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init)
+  init.new()
+}
+
 mstep.DIF_gvem <- function() {
   with(parent.frame(), {
     params.old <- NULL
@@ -60,33 +87,6 @@ mstep.DIF_gvem <- function() {
   })
 }
 
-init.DIF_gvem <- function(Y, D, X, iter, eps, ...) {
-  N <- nrow(Y)
-  n <- tapply(1:N, X, identity)
-  J <- ncol(Y)
-  K <- ncol(D)
-  G <- max(X)
-  Y.na <- is.na(Y)
-  Y[Y.na] <- 0.5
-  Y <- torch_tensor(Y)
-  Y.mask <- torch_tensor(!Y.na)
-  eta <- torch_where(Y.mask, 0.125, 0)
-  Sigma <- torch_stack(replicate(G, diag(K), simplify = F))
-  Mu <- torch_zeros(G, K)
-  a.mask <- torch_tensor(D != 0)
-  a <- a.mask * 1
-  b <- torch_zeros(J)
-  gamma.mask <- torch_stack(c(torch_zeros_like(a.mask), replicate(G - 1, a.mask)))
-  gamma <- gamma.mask * 0
-  beta.mask <- torch_cat(list(torch_zeros(1, J), torch_ones(G - 1, J)))$bool()
-  beta <- beta.mask * 0
-
-  lambda <- 0
-  niter.init <- mstep.DIF_gvem()
-  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init)
-  init.new()
-}
-
 est.DIF_gvem <- function(e, lambda) {
   list2env(e, environment())
   niter <- if (lambda == 0)
@@ -106,8 +106,47 @@ est.DIF_gvem <- function(e, lambda) {
   xi <- sqrt(BB$square() - 2 * BB * (AG.t %*% mu)$view(c(N, -1)) + (AG.t %*% sigma.mu %*% AG)$view(c(N, -1)))
   mu <- (MU - Mu[X])$unsqueeze(3)
   ll <- as.array((nnf_logsigmoid(xi)$masked_fill(!Y.mask, 0) + (0.5 - Y) * (BB - (AG.t %*% MU$view(c(N, 1, -1, 1)))$view(c(N, -1))) - xi / 2)$masked_fill(!Y.mask, 0)$sum() - (Sigma$logdet()[X]$sum() + diagonal(linalg_solve(Sigma[X], SIGMA + mu %*% t(mu)))$sum()) / 2)
-  l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
-  c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
+  final.DIF_gvem()
+}
+
+init.DIF_iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
+  init <- do.call(init.DIF_gvem, as.list(environment()))
+  e <- init()
+  e$Y <- array(Y, append(dim(Y), 1, 1))
+  list2env(e, environment())
+
+  Y.mask <- torch_tensor(!is.na(Y))
+  Y <- torch_tensor(Y)$bool()
+  X.rank <- rank(X, ties.method = 'first')
+  Sigma.L <- linalg_cholesky(Sigma)
+  Sigma1.L.mask <- torch_tensor(lower.tri(matrix(0, K, K)))$bool()
+  Sigma1.L.v <- (Sigma.L[1] / torch_cat(list(torch_ones(K, 1), sqrt(1 - Sigma.L[1]$square()$cumsum(2))[, 1:-2]), 2))$masked_select(Sigma1.L.mask)$arctanh()$requires_grad_(T)
+  if (G == 1) {
+    Sigma2.L.mask <- NULL.tensor()
+    Sigma2.L.v <- NULL.tensor()
+  } else {
+    Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
+    Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
+  }
+  Mu.mask <- torch_cat(list(torch_zeros(1, K), torch_ones(G - 1, K)))$bool()
+  Mu.v <- torch_tensor(Mu)$masked_select(Mu.mask)$requires_grad_(T)
+  a.mask <- torch_tensor(D != 0)
+  a.v <- torch_tensor(a)$masked_select(a.mask)$requires_grad_(T)
+  b <- torch_tensor(b)$requires_grad_(T)
+  gamma.mask <- torch_stack(c(torch_zeros_like(a.mask), replicate(G - 1, a.mask)))
+  gamma.v <- torch_tensor(gamma)$masked_select(gamma.mask)$requires_grad_(T)
+  gamma.v.mask <- torch_ones_like(gamma.v)$bool()
+  beta.mask <- torch_cat(list(torch_zeros(1, J), torch_ones(G - 1, J)))$bool()
+  beta.v <- torch_tensor(beta)$masked_select(beta.mask)$requires_grad_(T)
+  beta.v.mask <- torch_ones_like(beta.v)$bool()
+
+  z <- array(rnorm(N * S * M * K), c(N, S * M, K))
+  theta <- (linalg_cholesky(SIGMA)$unsqueeze(2) %*% torch_tensor(z)$unsqueeze(4))$squeeze(4) + torch_tensor(MU)$unsqueeze(2)
+  theta.logd <- torch_tensor(rowSums(dnorm(z, log = T), dims = 2))
+  lambda <- 0
+  niter.init <- c(init('niter.init'), mstep.DIF_iwgvemm())
+  keep(Y, D, X, iter, eps, S, M, lr, Y.mask, X.rank, N, n, J, K, G, SIGMA, MU, Sigma.L, Sigma1.L.mask, Sigma1.L.v, Sigma2.L.mask, Sigma2.L.v, Mu, Mu.mask, Mu.v, a, a.mask, a.v, b, gamma, gamma.mask, gamma.v, gamma.v.mask, beta, beta.mask, beta.v, beta.v.mask, theta, theta.logd, Q, niter.init)
+  init.new()
 }
 
 assemble.DIF_iwgvemm <- function() {
@@ -161,46 +200,6 @@ mstep.DIF_iwgvemm <- function() {
   })
 }
 
-init.DIF_iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
-  init <- do.call(init.DIF_gvem, as.list(environment()))
-  e <- init()
-  e$Y <- array(Y, append(dim(Y), 1, 1))
-  list2env(e, environment())
-
-  Y.mask <- torch_tensor(!is.na(Y))
-  Y <- torch_tensor(Y)$bool()
-  X.rank <- rank(X, ties.method = 'first')
-  Sigma.L <- linalg_cholesky(Sigma)
-  Sigma1.L.mask <- torch_tensor(lower.tri(matrix(0, K, K)))$bool()
-  Sigma1.L.v <- (Sigma.L[1] / torch_cat(list(torch_ones(K, 1), sqrt(1 - Sigma.L[1]$square()$cumsum(2))[, 1:-2]), 2))$masked_select(Sigma1.L.mask)$arctanh()$requires_grad_(T)
-  if (G == 1) {
-    Sigma2.L.mask <- NULL.tensor()
-    Sigma2.L.v <- NULL.tensor()
-  } else {
-    Sigma2.L.mask <- torch_stack(replicate(G - 1, lower.tri(matrix(0, K, K), T), F))$bool()
-    Sigma2.L.v <- Sigma.L[2:G]$masked_select(Sigma2.L.mask)$requires_grad_(T)
-  }
-  Mu.mask <- torch_cat(list(torch_zeros(1, K), torch_ones(G - 1, K)))$bool()
-  Mu.v <- torch_tensor(Mu)$masked_select(Mu.mask)$requires_grad_(T)
-  a.mask <- torch_tensor(D != 0)
-  a.v <- torch_tensor(a)$masked_select(a.mask)$requires_grad_(T)
-  b <- torch_tensor(b)$requires_grad_(T)
-  gamma.mask <- torch_stack(c(torch_zeros_like(a.mask), replicate(G - 1, a.mask)))
-  gamma.v <- torch_tensor(gamma)$masked_select(gamma.mask)$requires_grad_(T)
-  gamma.v.mask <- torch_ones_like(gamma.v)$bool()
-  beta.mask <- torch_cat(list(torch_zeros(1, J), torch_ones(G - 1, J)))$bool()
-  beta.v <- torch_tensor(beta)$masked_select(beta.mask)$requires_grad_(T)
-  beta.v.mask <- torch_ones_like(beta.v)$bool()
-
-  z <- array(rnorm(N * S * M * K), c(N, S * M, K))
-  theta <- (linalg_cholesky(SIGMA)$unsqueeze(2) %*% torch_tensor(z)$unsqueeze(4))$squeeze(4) + torch_tensor(MU)$unsqueeze(2)
-  theta.logd <- torch_tensor(rowSums(dnorm(z, log = T), dims = 2))
-  lambda <- 0
-  niter.init <- c(init('niter.init'), mstep.DIF_iwgvemm())
-  keep(Y, D, X, iter, eps, S, M, lr, Y.mask, X.rank, N, n, J, K, G, SIGMA, MU, Sigma.L, Sigma1.L.mask, Sigma1.L.v, Sigma2.L.mask, Sigma2.L.v, Mu, Mu.mask, Mu.v, a, a.mask, a.v, b, gamma, gamma.mask, gamma.v, gamma.v.mask, beta, beta.mask, beta.v, beta.v.mask, theta, theta.logd, Q, niter.init)
-  init.new()
-}
-
 est.DIF_iwgvemm <- function(e, lambda) {
   list2env(e, environment())
   niter <- if (lambda == 0)
@@ -214,8 +213,21 @@ est.DIF_iwgvemm <- function(e, lambda) {
   }
   with_no_grad({
     ll <- as.array(Q)
+    Sigma <- Sigma.L %*% t(Sigma.L)
+    final.DIF_gvem()
+  })
+}
+
+final.DIF_gvem <- function() {
+  with(parent.frame(), {
+    theta <- (linalg_cholesky(Sigma)$unsqueeze(2) %*% torch_tensor(rnorm(G * N * K))$view(c(G, N, K, 1)) + torch_tensor(Mu)$view(c(G, 1, K, 1)))$unsqueeze(3)
+    xi <- ((a + gamma)$view(c(G, 1, J, 1, K)) %*% theta)$view(c(G, -1, J)) - (b - beta)$unsqueeze(2)
+    P <- xi$sigmoid()$mean(2)
+    Q <- groupmean(n, Y$masked_fill(!Y.mask, NaN)$float()$view(c(N, J)))
+    CE <- as.array(nn_bce_loss()(P, Q))
+    RMSE <- as.array(sqrt(mean((P - Q) ^ 2)))
     l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
-    c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma = Sigma.L %*% t(Sigma.L), Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
+    c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c), CE = CE, RMSE = RMSE)
   })
 }
 
@@ -264,7 +276,7 @@ est.DIF_iwgvemm <- function(e, lambda) {
 #' @examples
 #' \dontrun{
 #' with(exampleDIF, DIF_gvem(data, model, group))}
-DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = seq(0.1, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
+DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = seq(0.2, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
   fn <- switch(method,
                GVEM = list(init.DIF_gvem, est.DIF_gvem),
                IWGVEMM = list(init.DIF_iwgvemm, est.DIF_iwgvemm),
