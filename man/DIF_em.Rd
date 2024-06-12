@@ -9,7 +9,7 @@ DIF_em(
   model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
   method = "EMM",
-  Lambda0 = seq(0.1, 0.8, by = 0.1),
+  Lambda0 = seq(0.2, 0.8, by = 0.1),
   level = 10,
   criterion = "BIC",
   iter = 200,

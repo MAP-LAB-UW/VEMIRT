@@ -10,6 +10,10 @@ init.DIF_gvem <- function(Y, D, X, iter, eps, ...) {
   Y[Y.na] <- 0.5
   Y <- torch_tensor(Y)
   Y.mask <- torch_tensor(!Y.na)
+  p <- groupmean(n, Y$masked_fill(!Y.mask, NaN)$float()$view(c(N, J)))
+  nn <- ceiling(N / G)
+  z0 <- torch_tensor(array(rnorm(G * nn * K), c(G, nn, K, 1)))
+
   eta <- torch_where(Y.mask, 0.125, 0)
   Sigma <- torch_stack(replicate(G, diag(K), simplify = F))
   Mu <- torch_zeros(G, K)
@@ -23,7 +27,7 @@ init.DIF_gvem <- function(Y, D, X, iter, eps, ...) {
 
   lambda <- 0
   niter.init <- mstep.DIF_gvem()
-  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init)
+  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init, p, z0)
   init.new()
 }
 
@@ -145,7 +149,7 @@ init.DIF_iwgvemm <- function(Y, D, X, iter, eps, S, M, lr, ...) {
   theta.logd <- torch_tensor(rowSums(dnorm(z, log = T), dims = 2))
   lambda <- 0
   niter.init <- c(init('niter.init'), mstep.DIF_iwgvemm())
-  keep(Y, D, X, iter, eps, S, M, lr, Y.mask, X.rank, N, n, J, K, G, SIGMA, MU, Sigma.L, Sigma1.L.mask, Sigma1.L.v, Sigma2.L.mask, Sigma2.L.v, Mu, Mu.mask, Mu.v, a, a.mask, a.v, b, gamma, gamma.mask, gamma.v, gamma.v.mask, beta, beta.mask, beta.v, beta.v.mask, theta, theta.logd, Q, niter.init)
+  keep(Y, D, X, iter, eps, S, M, lr, Y.mask, X.rank, N, n, J, K, G, SIGMA, MU, Sigma.L, Sigma1.L.mask, Sigma1.L.v, Sigma2.L.mask, Sigma2.L.v, Mu, Mu.mask, Mu.v, a, a.mask, a.v, b, gamma, gamma.mask, gamma.v, gamma.v.mask, beta, beta.mask, beta.v, beta.v.mask, theta, theta.logd, Q, niter.init, p, z0)
   init.new()
 }
 
@@ -220,14 +224,12 @@ est.DIF_iwgvemm <- function(e, lambda) {
 
 final.DIF_gvem <- function() {
   with(parent.frame(), {
-    theta <- (linalg_cholesky(Sigma)$unsqueeze(2) %*% torch_tensor(rnorm(G * N * K))$view(c(G, N, K, 1)) + torch_tensor(Mu)$view(c(G, 1, K, 1)))$unsqueeze(3)
-    xi <- ((a + gamma)$view(c(G, 1, J, 1, K)) %*% theta)$view(c(G, -1, J)) - (b - beta)$unsqueeze(2)
-    P <- xi$sigmoid()$mean(2)
-    Q <- groupmean(n, Y$masked_fill(!Y.mask, NaN)$float()$view(c(N, J)))
-    CE <- as.array(nn_bce_loss()(P, Q))
-    RMSE <- as.array(sqrt(mean((P - Q) ^ 2)))
+    theta <- (linalg_cholesky(Sigma)$unsqueeze(2) %*% z0)$squeeze(4) + torch_tensor(Mu)$unsqueeze(2)
+    xi <- ((a + gamma)$view(c(G, 1, J, 1, K)) %*% theta$view(c(G, -1, 1, K, 1)))$view(c(G, -1, J)) - (b - beta)$unsqueeze(2)
+    q <- (xi$sigmoid())$mean(2)
+    RMSE <- sqrt(mean((p - q) ^ 2))
     l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
-    c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c), CE = CE, RMSE = RMSE)
+    c(lst(niter, ll, l0), lapply(lst(SIGMA, MU, Sigma, Mu, a, b, gamma, beta, RMSE), as.array), IC(ll, l0, N, c))
   })
 }
 
@@ -263,6 +265,7 @@ final.DIF_gvem <- function() {
 #'   \item{ ...$b}{Intercepts for group 1}
 #'   \item{ ...$gamma}{DIF parameters for the slopes}
 #'   \item{ ...$beta}{DIF parameters for the intercepts}
+#'   \item{ ...$RMSE}{Root mean square error of fitted probability of each item for each group}
 #'   \item{ ...$ll}{Estimated lower bound of log-likelihood}
 #'   \item{ ...$l0}{Number of nonzero DIF parameters in \code{gamma} and \code{beta}}
 #'   \item{ ...$AIC}{Akaike Information Criterion: \code{-2*ll+l0*2}}
@@ -276,7 +279,7 @@ final.DIF_gvem <- function() {
 #' @examples
 #' \dontrun{
 #' with(exampleDIF, DIF_gvem(data, model, group))}
-DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = seq(0.2, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 0.7, S = 10, M = 10, lr = 0.1) {
+DIF_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = seq(0.2, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 1, S = 10, M = 10, lr = 0.1) {
   fn <- switch(method,
                GVEM = list(init.DIF_gvem, est.DIF_gvem),
                IWGVEMM = list(init.DIF_iwgvemm, est.DIF_iwgvemm),

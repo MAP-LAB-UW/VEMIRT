@@ -9,11 +9,11 @@ DIF_gvem(
   model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
   method = "IWGVEMM",
-  Lambda0 = seq(0.1, 0.8, by = 0.1),
+  Lambda0 = seq(0.2, 0.8, by = 0.1),
   criterion = "GIC",
   iter = 200,
   eps = 0.001,
-  c = 0.7,
+  c = 1,
   S = 10,
   M = 10,
   lr = 0.1
@@ -62,6 +62,7 @@ An object of class \code{vemirt_DIF}, which is a list containing the following e
   \item{ ...$b}{Intercepts for group 1}
   \item{ ...$gamma}{DIF parameters for the slopes}
   \item{ ...$beta}{DIF parameters for the intercepts}
+  \item{ ...$RMSE}{Root mean square error of fitted probability of each item for each group}
   \item{ ...$ll}{Estimated lower bound of log-likelihood}
   \item{ ...$l0}{Number of nonzero DIF parameters in \code{gamma} and \code{beta}}
   \item{ ...$AIC}{Akaike Information Criterion: \code{-2*ll+l0*2}}
