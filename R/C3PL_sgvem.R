@@ -42,8 +42,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' C3PL_sgvem(exampleData_3pl, exampleIndic_cfa3pl,samp=50,forgetrate=0.51,
-#' mu_b=0,sigma2_b=4,Alpha=10,Beta=40)}
+#' with(C3PL_data, C3PL_sgvem(data, model, samp=50, forgetrate=0.51, mu_b=0, sigma2_b=4, Alpha=10, Beta=40))}
 C3PL_sgvem <- function(u,indic,samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000) {
   start=Sys.time()
   u=data.matrix(u)
@@ -184,7 +183,7 @@ C3PL_sgvem <- function(u,indic,samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
+  new.vemirt_FA(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
               reta = eta,reps=xi,rsigma = rsigma,mu_i = MU,sig_i = SIGMA,n=n,
               Q_mat=Q_mat,GIC=gic,AIC=aic,
               BIC=bic))

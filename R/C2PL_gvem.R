@@ -27,12 +27,12 @@
 #'   \item{SE}{Standard errors of item parameters, a \eqn{J \times (K+1)} matrix where the last column includes SE estimates for item difficulty parameters}
 #'
 #' @author Jiaying Xiao <jxiao6@uw.edu>
-#' @seealso \code{\link{C3PL_sgvem}},\code{\link{importanceSampling}},\code{\link{C2PL_bs}}
+#' @seealso \code{\link{C3PL_sgvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' C2PL_gvem(exampleData_2pl, exampleIndic_cfa2pl)}
+#' with(C2PL_data, C2PL_gvem(data, model))}
 C2PL_gvem <- function(u,indic,max.iter=5000,SE.est=FALSE) {
   start=Sys.time()
   u=data.matrix(u)
@@ -184,7 +184,7 @@ C2PL_gvem <- function(u,indic,max.iter=5000,SE.est=FALSE) {
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,
-              mu_i = MU,sig_i = SIGMA,n=n,Q_mat=Q_mat,GIC=gic,AIC=aic,
-              BIC=bic,SE=se))
+  new.vemirt_FA(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,
+                     mu_i = MU,sig_i = SIGMA,n=n,Q_mat=Q_mat,GIC=gic,AIC=aic,
+                     BIC=bic,SE=se))
 }

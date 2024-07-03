@@ -42,10 +42,10 @@ Confirmatory M2PL Analysis
 }
 \examples{
 \dontrun{
-C2PL_gvem(exampleData_2pl, exampleIndic_cfa2pl)}
+with(C2PL_data, C2PL_gvem(data, model))}
 }
 \seealso{
-\code{\link{C3PL_sgvem}},\code{\link{importanceSampling}},\code{\link{C2PL_bs}}
+\code{\link{C3PL_sgvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}
 }
 \author{
 Jiaying Xiao <jxiao6@uw.edu>

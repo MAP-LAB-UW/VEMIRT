@@ -25,11 +25,11 @@ to correct the bias on item parameters and compute standard errors under confirm
 }
 \examples{
 \dontrun{
-gvem_result <- gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)
+gvem_result <- with(C2PL_data, C2PL_gvem(data, model))
 C2PL_bs(gvem_result, boots=10)}
 }
 \seealso{
-\code{\link{C2PL_gvem}},\code{\link{importanceSampling}}
+\code{\link{C2PL_gvem}}, \code{\link{C2PL_iw}}
 }
 \author{
 Jiaying Xiao <jxiao6@uw.edu>

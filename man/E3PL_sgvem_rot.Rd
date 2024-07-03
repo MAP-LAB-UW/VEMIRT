@@ -66,7 +66,7 @@ Stochastic GVEM for Exploratory M3PL Analysis
 }
 \examples{
 \dontrun{
-E3PL_sgvem_rot(exampleData_3pl, 3,samp=50,forgetrate=0.51,
+E3PL_sgvem_rot(E3PL_data_C1$data, 3,samp=50,forgetrate=0.51,
 mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,rot="Promax")}
 }
 \seealso{

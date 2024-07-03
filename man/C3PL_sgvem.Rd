@@ -63,8 +63,7 @@ Stochastic GVEM for Confirmatory M3PL Analysis
 }
 \examples{
 \dontrun{
-C3PL_sgvem(exampleData_3pl, exampleIndic_cfa3pl,samp=50,forgetrate=0.51,
-mu_b=0,sigma2_b=4,Alpha=10,Beta=40)}
+with(C3PL_data, C3PL_sgvem(data, model, samp=50, forgetrate=0.51, mu_b=0, sigma2_b=4, Alpha=10, Beta=40))}
 }
 \references{
 Cho, A. E., Wang, C., Zhang, X., & Xu, G. (2021). Gaussian variational estimation for multidimensional item response theory. \emph{British Journal of Mathematical and Statistical Psychology, 74}, 52-85.

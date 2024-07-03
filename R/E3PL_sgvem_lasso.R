@@ -62,12 +62,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' E3PL_sgvem_lasso(exampleData_3pl, exampleIndic_efa3pl_c1,samp=50,
-#' forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,
-#' constrain="C1",non_pen=NULL)
-#' E3PL_sgvem_lasso(exampleData_3pl, exampleIndic_efa3pl_c2,samp=50,
-#' forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,
-#' constrain="C2",non_pen=19)}
+#' with(E3PL_data_C1, E3PL_sgvem_lasso(data,model,samp=50,forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,constrain=constrain,non_pen=non_pen))
+#' with(E3PL_data_C2, E3PL_sgvem_lasso(data,model,samp=50,forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,constrain=constrain,non_pen=non_pen))}
 
 #main function for sgvem_3PLEFA_lasso
 E3PL_sgvem_lasso<-function(u,indic,samp=50,forgetrate=0.51,
@@ -97,7 +93,7 @@ E3PL_sgvem_lasso<-function(u,indic,samp=50,forgetrate=0.51,
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(result)
+  new.vemirt_FA(result)
 }
 
 
@@ -274,7 +270,7 @@ sgvem_3PLEFA_L1_const1_all<-function(u,domain,indic,samp,forgetrate,
     r0=sgvem_3PLEFA_L1_const1(u,new_a,new_b,new_c,new_s,eta,xi,Sigma, domain,
                               inite,samp,forgetrate,lbd[j],indic,
                               mu_b,sigma2_b,Alpha,Beta,nopenalty_col,max.iter)
-    rl [[j]]=sgvem_3PLCFA(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+    rl [[j]]=C3PL_sgvem(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
     lbound=lb3pl(u,rl[[j]]$reps,rl[[j]]$rs,c(1:person),rl[[j]]$ra,rl[[j]]$rc,rl[[j]]$rsigma,
                  rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i,Alpha, Beta, mu_b, sigma2_b)
     gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -295,7 +291,7 @@ sgvem_3PLEFA_L1_const1_all<-function(u,domain,indic,samp,forgetrate,
       r0=sgvem_3PLEFA_L1_const1(u,new_a,new_b,new_c,new_s,eta,xi,Sigma, domain,
                                 inite,samp,forgetrate,lbd[j],indic,
                                 mu_b,sigma2_b,Alpha,Beta,nopenalty_col,max.iter)
-      rl [[j]]=sgvem_3PLCFA(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+      rl [[j]]=C3PL_sgvem(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
       lbound=lb3pl(u,rl[[j]]$reps,rl[[j]]$rs,c(1:person),rl[[j]]$ra,rl[[j]]$rc,rl[[j]]$rsigma,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i,Alpha, Beta, mu_b, sigma2_b)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -314,7 +310,7 @@ sgvem_3PLEFA_L1_const1_all<-function(u,domain,indic,samp,forgetrate,
       r0=sgvem_3PLEFA_L1_const1(u,new_a,new_b,new_c,new_s,eta,xi,Sigma, domain,
                                 inite,samp,forgetrate,lbd[j],indic,
                                 mu_b,sigma2_b,Alpha,Beta,nopenalty_col,max.iter)
-      rl [[j]]=sgvem_3PLCFA(u, r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+      rl [[j]]=C3PL_sgvem(u, r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
       lbound=lb3pl(u,rl[[j]]$reps,rl[[j]]$rs,c(1:person),rl[[j]]$ra,rl[[j]]$rc,rl[[j]]$rsigma,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i,Alpha, Beta, mu_b, sigma2_b)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -515,7 +511,7 @@ sgvem_3PLEFA_L1_const2_all<-function(u,domain,samp,forgetrate,
   for(j in 1:length(lbd)){
     r0=sgvem_3PLEFA_lasso_const2(u,new_a,new_b,new_c,new_s,eta,xi,Sigma,inite,samp,
                                  forgetrate,domain,lbd[j],mu_b,sigma2_b,Alpha,Beta,indic,nopenalty_col,max.iter)
-    rl [[j]]=sgvem_3PLCFA(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+    rl [[j]]=C3PL_sgvem(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
     lbound=lb3pl(u,rl[[j]]$reps,rl[[j]]$rs,c(1:person),rl[[j]]$ra,rl[[j]]$rc,rl[[j]]$rsigma,
                  rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i,Alpha, Beta, mu_b, sigma2_b)
     gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -536,7 +532,7 @@ sgvem_3PLEFA_L1_const2_all<-function(u,domain,samp,forgetrate,
       r0=sgvem_3PLEFA_lasso_const2(u,new_a,new_b,new_c,new_s,eta,xi,Sigma,inite,samp,
                                    forgetrate,domain,lbd[j],mu_b,sigma2_b,Alpha,Beta,indic,
                                    nopenalty_col,max.iter)
-      rl [[j]]=sgvem_3PLCFA(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+      rl [[j]]=C3PL_sgvem(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
       lbound=lb3pl(u,rl[[j]]$reps,rl[[j]]$rs,c(1:person),rl[[j]]$ra,rl[[j]]$rc,rl[[j]]$rsigma,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i,Alpha, Beta, mu_b, sigma2_b)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -555,7 +551,7 @@ sgvem_3PLEFA_L1_const2_all<-function(u,domain,samp,forgetrate,
       r0=sgvem_3PLEFA_lasso_const2(u,new_a,new_b,new_c,new_s,eta,xi,Sigma,inite,samp,
                                    forgetrate,domain,lbd[j],mu_b,sigma2_b,Alpha,Beta,
                                    indic,nopenalty_col,max.iter)
-      rl [[j]]=sgvem_3PLCFA(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+      rl [[j]]=C3PL_sgvem(u,r0$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
       lbound=lb3pl(u,rl[[j]]$reps,rl[[j]]$rs,c(1:person),rl[[j]]$ra,rl[[j]]$rc,rl[[j]]$rsigma,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i,Alpha, Beta, mu_b, sigma2_b)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound

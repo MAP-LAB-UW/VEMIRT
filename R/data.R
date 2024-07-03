@@ -1,72 +1,96 @@
-#' Response data set for M2PL
+#' Simulated Data Set for Confirmatory M2PL Analysis
 #'
-#' The response data set is simulated based on a
-#' between-item M2PL model with 5 factors. The true factor correlations are set
-#' as 0.1.
-#' @format A data frame with 2000 respondents and 75 items
-"exampleData_2pl"
-
-#' True item parameters for M2PL
-'exampleItem_2pl'
-
-#' Factor-loading indicator matrix for M2PL-CFA
+#' Responses are simulated based on a between-item M2PL model with 5 factors. The true factor correlations are set as 0.1.
 #'
-#' The factor-loading indicator matrix can be used as an input for
-#' confirmatory factor analysis.
-#' @format A data frame with 75 items and 5 factors
-"exampleIndic_cfa2pl"
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators\cr
+#' \tab\cr
+#' \code{params}\tab True parameters used for generating the item responses
+#' }
+'C2PL_data'
 
-#' Factor-loading indicator matrix for M2PL-EFA with lasso/ adaptive penalty under constraint 1
+#' Simulated Data Set for Confirmatory M3PL Analysis
 #'
-#' The factor-loading indicator matrix can be used as an input for
-#' exploratory factor analysis with lasso/ adaptive lasso penalty under constraint 1.
-#' @format A data frame with 75 items and 5 factors. Items 1, 16, 31, 46 and 61 can
-#' be combined as an identity matrix to satisfy constraint 1
-"exampleIndic_efa2pl_c1"
-
-#' Factor-loading indicator matrix for M2PL-EFA with lasso/ adaptive penalty under constraint 2
+#' Responses are simulated based on a within-item M3PL model with 3 factors. The true factor correlations are set as 0.1.
 #'
-#' The factor-loading indicator matrix can be used as an input for
-#' exploratory factor analysis with lasso/ adaptive lasso penalty for constraint 1.
-#' @format A data frame with 75 items and 5 factors. Items 1, 16, 31, 46 and 61 can
-#' be combined as a triangular matrix to satisfy constraint 2
-"exampleIndic_efa2pl_c2"
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators\cr
+#' \tab\cr
+#' \code{params}\tab True parameters used for generating the item responses
+#' }
+'C3PL_data'
 
-#' Response data set for M3PL
+#' Simulated Data Set for Exploratory M2PL Analysis Under C1 Constraints
 #'
-#' The response data set is simulated based on a
-#' within-item M3PL model with 3 factors. The true factor correlations are set
-#' as 0.1.
-#' @format A data frame with 2000 respondents and 45 items
-"exampleData_3pl"
-
-#' True item parameters for M3PL
-'exampleItem_3pl'
-
-#' Factor-loading indicator matrix for M3PL-CFA
+#' Responses are simulated based on a between-item M2PL model with 5 factors. The true factor correlations are set as 0.1.
 #'
-#' The factor-loading indicator matrix can be used as an input for
-#' confirmatory factor analysis.
-#' @format A data frame with 45 items and 3 factors
-"exampleIndic_cfa3pl"
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators for (adaptive) lasso penalty\cr
+#' \tab\cr
+#' \code{constrain}\tab Constraint for model identification (\code{'C1'})\cr
+#' \tab\cr
+#' \code{non_pen}\tab Index of an item that is associated with all the factors (\code{NULL} under C1)
+#' }
+'E2PL_data_C1'
 
-#' Factor-loading indicator matrix for M3PL-EFA with lasso/ adaptive penalty under constraint 1
+#' Simulated Data Set for Exploratory M2PL Analysis Under C2 Constraints
 #'
-#' The factor-loading indicator matrix can be used as an input for
-#' exploratory factor analysis with lasso/ adaptive lasso penalty under constraint 1.
-#' @format A data frame with 45 items and 3 factors. Items 1, 16, and 19 can
-#' be combined as an identity matrix to satisfy constraint 1
-"exampleIndic_efa3pl_c1"
-
-#' Factor-loading indicator matrix for M3PL-EFA with lasso/ adaptive penalty under constraint 2
+#' Responses are simulated based on a between-item M2PL model with 5 factors. The true factor correlations are set as 0.1.
 #'
-#' The factor-loading indicator matrix can be used as an input for
-#' exploratory factor analysis with lasso/ adaptive lasso penalty for constraint 1.
-#' @format A data frame with 45 items and 3 factors. Items 1, 16, and 19 can
-#' be combined as a triangular matrix to satisfy constraint 2
-"exampleIndic_efa3pl_c2"
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators for (adaptive) lasso penalty\cr
+#' \tab\cr
+#' \code{constrain}\tab Constraint for model identification (\code{'C2'})\cr
+#' \tab\cr
+#' \code{non_pen}\tab Index of an item that is associated with all the factors
+#' }
+'E2PL_data_C2'
 
-#' Simulated Data Set for DIF Analysis
+#' Simulated Data Set for Exploratory M3PL Analysis Under C1 Constraints
+#'
+#' Responses are simulated based on a within-item M3PL model with 3 factors. The true factor correlations are set as 0.1.
+#'
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators for (adaptive) lasso penalty\cr
+#' \tab\cr
+#' \code{constrain}\tab Constraint for model identification (\code{'C1'})\cr
+#' \tab\cr
+#' \code{non_pen}\tab Index of an item that is associated with all the factors (\code{NULL} under C1)
+#' }
+'E3PL_data_C1'
+
+#' Simulated Data Set for Exploratory M3PL Analysis Under C2 Constraints
+#'
+#' Responses are simulated based on a within-item M3PL model with 3 factors. The true factor correlations are set as 0.1.
+#'
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators for (adaptive) lasso penalty\cr
+#' \tab\cr
+#' \code{constrain}\tab Constraint for model identification (\code{'C2'})\cr
+#' \tab\cr
+#' \code{non_pen}\tab Index of an item that is associated with all the factors
+#' }
+'E3PL_data_C2'
+
+#' Simulated Data Set for DIF M2PL Analysis
 #'
 #' @format A list of components of the data set:
 #' \tabular{ll}{
@@ -86,4 +110,4 @@
 #' \tab\cr
 #' \code{ ...$theta}\tab Latent traits\cr
 #' }
-'exampleDIF'
+'D2PL_data'

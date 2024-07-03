@@ -14,6 +14,7 @@
 #'   \item \code{\link{E2PL_gvem_rot}} conducts M2PL Analysis with post-hoc rotation (Promax & CF-Quartimax)
 #'   \item \code{\link{E2PL_gvem_lasso}} conducts M2PL Analysis with Lasso penalty
 #'   \item \code{\link{E2PL_gvem_adaptlasso}} conducts M2PL Analysis with adaptive Lasso penalty
+#'   \item \code{\link{E2PL_iw}} conducts importance sampling to correct bias for M2PL analysis
 #'   \item \code{\link{E3PL_sgvem_rot}} conducts stochastic GVEM to futher imporve the computational effficiency for exploratory M3PL analysis
 #'   \item \code{\link{E3PL_sgvem_lasso}} conducts M3PL Analysis with Lasso penalty
 #'   \item \code{\link{E3PL_sgvem_adaptlasso}} conducts M3PL Analysis with adaptive Lasso penalty
@@ -21,15 +22,15 @@
 #' @section Confirmatory factor analysis:
 #' \itemize{
 #'   \item \code{\link{C2PL_gvem}} conducts GVEM for confirmatory M2PL analysis
-#'   \item \code{\link{C3PL_sgvem}} conducts stochastic GVEM for confirmatory M3PL analysis
 #'   \item \code{\link{C2PL_bs}} conducts bootstrap sampling to correct bias and produce standard errors for confirmatory M2PL analysis
-#'   \item \code{\link{importanceSampling}} conducts importance sampling to correct bias for M2PL analysis
+#'   \item \code{\link{C2PL_iw}} conducts importance sampling to correct bias for M2PL analysis
+#'   \item \code{\link{C3PL_sgvem}} conducts stochastic GVEM for confirmatory M3PL analysis
 #' }
 #' @section Differential item functioning analysis:
 #' \itemize{
-#'   \item \code{\link{DIF_em}} conducts DIF analysis for M2PL models using EM algorithms
-#'   \item \code{\link{DIF_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms
-#'   \item \code{\link{DIF_lrt}} conducts DIF analysis for M2PL models using the likelihood ratio test
+#'   \item \code{\link{D2PL_em}} conducts DIF analysis for M2PL models using EM algorithms
+#'   \item \code{\link{D2PL_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms
+#'   \item \code{\link{D2PL_lrt}} conducts DIF analysis for M2PL models using the likelihood ratio test
 #' }
 # #' @keywords internal
 "_PACKAGE"

@@ -39,7 +39,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' E3PL_sgvem_rot(exampleData_3pl, 3,samp=50,forgetrate=0.51,
+#' E3PL_sgvem_rot(E3PL_data_C1$data, 3,samp=50,forgetrate=0.51,
 #' mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,rot="Promax")}
 E3PL_sgvem_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000,rot="Promax") {
   start=Sys.time()
@@ -263,7 +263,7 @@ E3PL_sgvem_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
+  new.vemirt_FA(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
               reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
               sig_i = SIGMA,n=n,Q_mat=Q_mat,rk=rk,GIC=gic,AIC=aic,
               BIC=bic,ur_a=ur_a))

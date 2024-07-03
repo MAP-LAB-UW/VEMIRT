@@ -52,8 +52,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' E2PL_gvem_lasso(exampleData_2pl, exampleIndic_efa2pl_c1,constrain="C1")
-#' E2PL_gvem_lasso(exampleData_2pl, exampleIndic_efa2pl_c2,constrain="C2",non_pen=61)}
+#' with(E2PL_data_C1, E2PL_gvem_lasso(data, model, constrain = constrain, non_pen = non_pen))
+#' with(E2PL_data_C2, E2PL_gvem_lasso(data, model, constrain = constrain, non_pen = non_pen))}
 
 #main function for gvem_2PLEFA_lasso
 E2PL_gvem_lasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL){
@@ -79,7 +79,7 @@ E2PL_gvem_lasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL){
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(result)
+  new.vemirt_FA(result)
 }
 
 
@@ -170,7 +170,7 @@ vem_2PLEFA_L1_const1_all<-function(u,domain,indic,max.iter){
   gic<-NULL
   for(j in 1:length(lbd)){
     r0=vem_2PLEFA_L1_const1(u,new_a,new_b,eta,xi,Sigma,domain,lbd[j],indic,nopenalty_col,max.iter)
-    rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
+    rl [[j]]=C2PL_gvem(u,r0$Q_mat,max.iter)
     lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                  rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
     gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -188,7 +188,7 @@ vem_2PLEFA_L1_const1_all<-function(u,domain,indic,max.iter){
     gic<-NULL
     for(j in 1:length(lbd)){
       r0=vem_2PLEFA_L1_const1(u,new_a,new_b,eta,xi,Sigma,domain,lbd[j],indic,nopenalty_col,max.iter)
-      rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
+      rl [[j]]=C2PL_gvem(u,r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -204,7 +204,7 @@ vem_2PLEFA_L1_const1_all<-function(u,domain,indic,max.iter){
     gic<-NULL
     for(j in 1:length(lbd)){
       r0=vem_2PLEFA_L1_const1(u,new_a,new_b,eta,xi,Sigma,domain,lbd[j],indic,nopenalty_col,max.iter)
-      rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
+      rl [[j]]=C2PL_gvem(u,r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -313,7 +313,7 @@ vem_2PLEFA_L1_const2_all<-function(u,domain,indic,non_pen,max.iter){
   gic<-NULL
   for(j in 1:length(lbd)){
     r0=vem_2PLEFA_L1_const2(u,new_a,new_b,eta,xi,Sigma,  domain,lbd[j],indic,nopenalty_col,max.iter)
-    rl [[j]]=gvem_2PLCFA(u,r0$Q_mat,max.iter)
+    rl [[j]]=C2PL_gvem(u,r0$Q_mat,max.iter)
     lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                  rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
     gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -331,7 +331,7 @@ vem_2PLEFA_L1_const2_all<-function(u,domain,indic,non_pen,max.iter){
     gic<-NULL
     for(j in 1:length(lbd)){
       r0=vem_2PLEFA_L1_const2(u,new_a,new_b,eta,xi,Sigma,  domain,lbd[j],indic,nopenalty_col,max.iter)
-      rl [[j]]=gvem_2PLCFA(u, r0$Q_mat,max.iter)
+      rl [[j]]=C2PL_gvem(u, r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound
@@ -347,7 +347,7 @@ vem_2PLEFA_L1_const2_all<-function(u,domain,indic,non_pen,max.iter){
     gic<-NULL
     for(j in 1:length(lbd)){
       r0=vem_2PLEFA_L1_const2(u,new_a,new_b,eta,xi,Sigma,  domain,lbd[j],indic,nopenalty_col,max.iter)
-      rl [[j]]=gvem_2PLCFA(u, r0$Q_mat,max.iter)
+      rl [[j]]=C2PL_gvem(u, r0$Q_mat,max.iter)
       lbound=lb2pl(u,rl[[j]]$reps,rl[[j]]$rsigma,rl[[j]]$ra,
                    rl[[j]]$rb,rl[[j]]$sig_i,rl[[j]]$mu_i)
       gic[j]=log(log(person))*log(person)*sum(rl[[j]]$Q_mat) - 2*lbound

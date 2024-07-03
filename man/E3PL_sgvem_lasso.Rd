@@ -89,12 +89,8 @@ Stochastic GVEM with Lasso Penalty for Exploratory M3PL Analysis
 }
 \examples{
 \dontrun{
-E3PL_sgvem_lasso(exampleData_3pl, exampleIndic_efa3pl_c1,samp=50,
-forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,
-constrain="C1",non_pen=NULL)
-E3PL_sgvem_lasso(exampleData_3pl, exampleIndic_efa3pl_c2,samp=50,
-forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,
-constrain="C2",non_pen=19)}
+with(E3PL_data_C1, E3PL_sgvem_lasso(data,model,samp=50,forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,constrain=constrain,non_pen=non_pen))
+with(E3PL_data_C2, E3PL_sgvem_lasso(data,model,samp=50,forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,constrain=constrain,non_pen=non_pen))}
 }
 \references{
 Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimation for Exploratory Item Factor Analysis. \emph{Psychometrika}. https://doi.org/10.1007/s11336-022-09874-6

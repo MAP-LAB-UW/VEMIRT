@@ -12,12 +12,12 @@
 #'   \item{sd_b}{stardard errors of item difficulty parameters, a vector of length \eqn{J}}
 #'
 #' @author Jiaying Xiao <jxiao6@uw.edu>
-#' @seealso \code{\link{C2PL_gvem}},\code{\link{importanceSampling}}
+#' @seealso \code{\link{C2PL_gvem}}, \code{\link{C2PL_iw}}
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' gvem_result <- gvem_2PLCFA(exampleData_2pl, exampleIndic_cfa2pl)
+#' gvem_result <- with(C2PL_data, C2PL_gvem(data, model))
 #' C2PL_bs(gvem_result, boots=10)}
 C2PL_bs <- function(gvem_result,boots=5){
   domain <- dim(gvem_result$ra)[2]
@@ -44,6 +44,6 @@ C2PL_bs <- function(gvem_result,boots=5){
   #bootstrap correction: 2*gvem - boots
   boots_a<-2*gvem_result$ra - boots_a
   boots_b<-2*gvem_result$rb - boots_b
-  return(list(boots_a=boots_a,boots_b=boots_b,sd_a=sd_a,sd_b=sd_b))
+  new.vemirt_FA(list(boots_a=boots_a,boots_b=boots_b,sd_a=sd_a,sd_b=sd_b))
 }
 

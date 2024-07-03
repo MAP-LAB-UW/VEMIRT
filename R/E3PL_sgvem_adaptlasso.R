@@ -67,12 +67,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' E3PL_sgvem_adaptlasso(exampleData_3pl, exampleIndic_efa3pl_c1,samp=50,
-#' forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,
-#' constrain="C1",non_pen=NULL,gamma=2)
-#' E3PL_sgvem_adaptlasso(exampleData_3pl, exampleIndic_efa3pl_c2,samp=50,
-#' forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,
-#' constrain="C2",non_pen=19,gamma=2)}
+#' with(E3PL_data_C1, E3PL_sgvem_adaptlasso(data, model,samp=50,forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,constrain=constrain,non_pen=non_pen,gamma=2))
+#' with(E3PL_data_C2, E3PL_sgvem_adaptlasso(data, model,samp=50,forgetrate=0.51,mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,constrain=constrain,non_pen=non_pen,gamma=2))}
+
 #main function for gvem_2PLEFA_adaptlasso
 E3PL_sgvem_adaptlasso<-function(u,indic,samp=50,forgetrate=0.51,
                                   mu_b,sigma2_b,Alpha,Beta,max.iter=5000,constrain="C1",non_pen=NULL,gamma=2){
@@ -100,7 +97,7 @@ E3PL_sgvem_adaptlasso<-function(u,indic,samp=50,forgetrate=0.51,
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(result)
+  new.vemirt_FA(result)
 }
 
 
@@ -281,7 +278,7 @@ sgvem_3PLEFA_adaptive_const1_all<-function(u,domain,indic,samp,forgetrate,mu_b,s
     }
   }
   #create weights: use CFA
-  wa=sgvem_3PLCFA(u,indic,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)$ra
+  wa=C3PL_sgvem(u,indic,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)$ra
   weights = abs(wa)^gamma+1e-05
   rl<-vector("list",length(lbd))
   gic<-NULL
@@ -341,7 +338,7 @@ sgvem_3PLEFA_adaptive_const1_all<-function(u,domain,indic,samp,forgetrate,mu_b,s
     }
   }
   id=which.min(gic)
-  rs=sgvem_3PLCFA(u,rl[[id]]$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+  rs=C3PL_sgvem(u,rl[[id]]$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
   rs$lbd=lbd[id]
   #rs$id=id
   return(rs)
@@ -527,7 +524,7 @@ sgvem_3PLEFA_adaptive_const2_all<-function(u,domain,samp,forgetrate,
     }
   }
   #create weights: use CFA
-  wa=sgvem_3PLCFA(u,indic,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)$ra
+  wa=C3PL_sgvem(u,indic,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)$ra
   weights = abs(wa)^gamma+1e-05
   rl<-vector("list",length(lbd))
   gic<-NULL
@@ -585,7 +582,7 @@ sgvem_3PLEFA_adaptive_const2_all<-function(u,domain,samp,forgetrate,
     }
   }
   id=which.min(gic)
-  rs=sgvem_3PLCFA(u, rl[[id]]$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
+  rs=C3PL_sgvem(u, rl[[id]]$Q_mat,samp,forgetrate,mu_b,sigma2_b,Alpha,Beta,max.iter)
   rs$lbd=lbd[id]
   #rs$id=id
   return(rs)

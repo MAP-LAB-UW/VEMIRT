@@ -29,8 +29,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' E2PL_gvem_rot(exampleData_2pl, domain=5,max.iter=3000)
-#' E2PL_gvem_rot(exampleData_2pl, domain=5,rot="cfQ")}
+#' E2PL_gvem_rot(E2PL_data_C1$data, domain=5,max.iter=3000)
+#' E2PL_gvem_rot(E2PL_data_C1$data, domain=5,rot="cfQ")}
 E2PL_gvem_rot <- function(u, domain,max.iter=5000,rot="Promax") {
   start=Sys.time()
   u=data.matrix(u)
@@ -141,7 +141,7 @@ E2PL_gvem_rot <- function(u, domain,max.iter=5000,rot="Promax") {
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
-              sig_i = SIGMA,n=n,rk=rk,Q_mat=Q_mat,GIC=gic,AIC=aic,
-              BIC=bic,ur_a=ur_a))
+  new.vemirt_FA(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
+                     sig_i = SIGMA,n=n,rk=rk,Q_mat=Q_mat,GIC=gic,AIC=aic,
+                     BIC=bic,ur_a=ur_a))
 }

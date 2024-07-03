@@ -72,8 +72,8 @@ Exploratory M2PL Analysis with Adaptive Lasso Penalty
 }
 \examples{
 \dontrun{
-E2PL_gvem_adaptlasso(exampleData_2pl, exampleIndic_efa2pl_c1,constrain="C1",non_pen=NULL,gamma=2)
-E2PL_gvem_adaptlasso(exampleData_2pl, exampleIndic_efa2pl_c2,constrain="C2",non_pen=61,gamma=2)}
+with(E2PL_data_C1, E2PL_gvem_adaptlasso(data, model, constrain = constrain, non_pen = non_pen, gamma=2))
+with(E2PL_data_C2, E2PL_gvem_adaptlasso(data, model, constrain = constrain, non_pen = non_pen, gamma=2))}
 }
 \references{
 Cho, A. E., Xiao, J., Wang, C., & Xu, G. (2022). Regularized Variational Estimation for Exploratory Item Factor Analysis. \emph{Psychometrika}. https://doi.org/10.1007/s11336-022-09874-6

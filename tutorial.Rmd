@@ -1,7 +1,7 @@
 ---
 title: Variational Estimation for Multidimensional Item Response Theory Using `VEMIRT`
 author: "Weicong Lyu, Jiaying Xiao, Chun Wang, and Gongjun Xu"
-date: "April 21, 2024"
+date: "June 19, 2024"
 output:
   html_document:
     toc: true
@@ -30,6 +30,7 @@ Data required for analysis are summarized below:
 | Confirmatory Factor Analysis | $\checkmark$ | $\checkmark$ |
 | Differential Item Functioning | $\checkmark$ | $\checkmark$ | $\checkmark$ |
 
+Here we take dataset `exampleD2PL` as example. This simulated dataset is for DIF 2PL analysis. 
 Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbers of respondents and items respectively:
 ```{r}
 head(exampleDIF$Y)

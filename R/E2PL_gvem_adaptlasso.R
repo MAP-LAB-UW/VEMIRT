@@ -58,8 +58,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' E2PL_gvem_adaptlasso(exampleData_2pl, exampleIndic_efa2pl_c1,constrain="C1",non_pen=NULL,gamma=2)
-#' E2PL_gvem_adaptlasso(exampleData_2pl, exampleIndic_efa2pl_c2,constrain="C2",non_pen=61,gamma=2)}
+#' with(E2PL_data_C1, E2PL_gvem_adaptlasso(data, model, constrain = constrain, non_pen = non_pen, gamma=2))
+#' with(E2PL_data_C2, E2PL_gvem_adaptlasso(data, model, constrain = constrain, non_pen = non_pen, gamma=2))}
 
 #main function for gvem_2PLEFA_adaptlasso
 E2PL_gvem_adaptlasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL,gamma=2){
@@ -85,7 +85,7 @@ E2PL_gvem_adaptlasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL
   end=Sys.time()
   duration=end-start
   cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
-  return(result)
+  new.vemirt_FA(result)
 }
 
 #adaptive lasso with constraint 1 function
@@ -165,7 +165,7 @@ vem_2PLEFA_adaptive_const1_all<-function(u,domain,indic,gamma,max.iter){
   xi=initial[[4]]
   Sigma=initial[[5]]
   #create weights: use CFA
-  wa=gvem_2PLCFA(u,indic,max.iter)$ra
+  wa=C2PL_gvem(u,indic,max.iter)$ra
   weights = abs(wa)^gamma+1e-05
   rl<-vector("list",length(lbd))
   gic<-NULL
@@ -214,7 +214,7 @@ vem_2PLEFA_adaptive_const1_all<-function(u,domain,indic,gamma,max.iter){
     }
   }
   id=which.min(gic)
-  rs=gvem_2PLCFA(u,rl[[id]]$Q_mat,max.iter)
+  rs=C2PL_gvem(u,rl[[id]]$Q_mat,max.iter)
   rs$lbd=lbd[id]
   #rs$id=id
   return(rs)
@@ -308,7 +308,7 @@ vem_2PLEFA_adaptive_const2_all<-function(u,domain,gamma,indic,non_pen,max.iter){
   xi=initial[[4]]
   Sigma=initial[[5]]
   #create weights: use CFA
-  wa=gvem_2PLCFA(u,indic,max.iter)$ra
+  wa=C2PL_gvem(u,indic,max.iter)$ra
   weights = abs(wa)^gamma+1e-05
   rl<-vector("list",length(lbd))
   gic<-NULL
@@ -358,7 +358,7 @@ vem_2PLEFA_adaptive_const2_all<-function(u,domain,gamma,indic,non_pen,max.iter){
     }
   }
   id=which.min(gic)
-  rs=gvem_2PLCFA(u, rl[[id]]$Q_mat,max.iter)
+  rs=C2PL_gvem(u, rl[[id]]$Q_mat,max.iter)
   rs$lbd=lbd[id]
   #rs$id=id
   return(rs)

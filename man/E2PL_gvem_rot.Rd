@@ -40,8 +40,8 @@ Exploratory M2PL Analysis with Post-hoc Rotation
 }
 \examples{
 \dontrun{
-E2PL_gvem_rot(exampleData_2pl, domain=5,max.iter=3000)
-E2PL_gvem_rot(exampleData_2pl, domain=5,rot="cfQ")}
+E2PL_gvem_rot(E2PL_data_C1$data, domain=5,max.iter=3000)
+E2PL_gvem_rot(E2PL_data_C1$data, domain=5,rot="cfQ")}
 }
 \seealso{
 \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_adaptlasso}}
