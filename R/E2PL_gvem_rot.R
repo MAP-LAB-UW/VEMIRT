@@ -140,7 +140,7 @@ E2PL_gvem_rot <- function(u, domain,max.iter=5000,rot="Promax") {
   }
   end=Sys.time()
   duration=end-start
-  cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
                      sig_i = SIGMA,n=n,rk=rk,Q_mat=Q_mat,GIC=gic,AIC=aic,
                      BIC=bic,ur_a=ur_a))

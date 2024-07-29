@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{summary.vemirt_DIF}
 \alias{summary.vemirt_DIF}
-\title{Summarize D2PL Items}
+\title{Summarize DIF 2PL Items}
 \usage{
 summary(x, criterion = NULL, max = 99999L, digits = 3, ...)
 }
@@ -12,7 +12,7 @@ summary(x, criterion = NULL, max = 99999L, digits = 3, ...)
 \item{criterion}{Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)}
 }
 \description{
-Summarize D2PL Items
+Summarize DIF 2PL Items
 }
 \seealso{
 \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}

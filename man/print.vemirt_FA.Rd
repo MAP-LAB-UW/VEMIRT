@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{print.vemirt_FA}
 \alias{print.vemirt_FA}
-\title{Print D2PL Items by Group}
+\title{Print Parameter Estimates from Explanatory or Confirmatory Analysis}
 \usage{
 print(x)
 }
@@ -10,7 +10,7 @@ print(x)
 \item{x}{An object of class \code{vemirt_FA}}
 }
 \description{
-Print D2PL Items by Group
+Print Parameter Estimates from Explanatory or Confirmatory Analysis
 }
 \seealso{
 \code{\link{C2PL_gvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}, \code{\link{C3PL_sgvem}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_IS}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_rot}}, \code{\link{coef.vemirt_FA}}

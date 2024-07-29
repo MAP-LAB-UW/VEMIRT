@@ -92,7 +92,7 @@ E3PL_sgvem_lasso<-function(u,indic,samp=50,forgetrate=0.51,
   }
   end=Sys.time()
   duration=end-start
-  cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(result)
 }
 

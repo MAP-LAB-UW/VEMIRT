@@ -53,7 +53,7 @@ software packages, especially when the number of latent factors exceeds four.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://map-lab-uw.github.io/VEMIRT/}
+  \item \url{https://MAP-LAB-UW.github.io/VEMIRT/}
 }
 
 }

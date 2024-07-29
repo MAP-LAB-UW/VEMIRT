@@ -1,4 +1,6 @@
-url: https://map-lab-uw.github.io/VEMIRT/
+url: https://MAP-LAB-UW.github.io/VEMIRT/
 template:
   bootstrap: 5
+  bootswatch: pulse
+  math-rendering: katex
 

@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# VEMIRT:  Variational Expectation Maximization for High-dimensional IRT Models
+# VEMIRT:  Variational Expectation Maximization for High-dimensional IRT Models <img src="man/figures/logo.png" align="right" height="120" alt="" />
 
 <!-- badges: start -->
 <!-- badges: end -->

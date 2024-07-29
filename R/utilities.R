@@ -117,7 +117,7 @@ new.vemirt_DIF <- function(niter0, all, N, criterion) {
   structure(lst(niter0, all, N, best, fit = all[[best]]), class = 'vemirt_DIF')
 }
 
-#' Extract Parameter Estimates from D2PL Analysis
+#' Extract Parameter Estimates from DIF 2PL Analysis
 #'
 #' @param object An object of class \code{vemirt_DIF}
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
@@ -134,7 +134,7 @@ coef.vemirt_DIF <- function(object, criterion = NULL, ...) {
     object$all[[best.vemirt_DIF(object$all, object$N, criterion)]]
 }
 
-#' Print D2PL Items by Group
+#' Print DIF 2PL Items by Group
 #'
 #' @param x An object of class \code{vemirt_DIF}
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
@@ -168,7 +168,7 @@ print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...)
   invisible(fit)
 }
 
-#' Summarize D2PL Items
+#' Summarize DIF 2PL Items
 #'
 #' @param x An object of class \code{vemirt_DIF}
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
@@ -226,7 +226,7 @@ coef.vemirt_FA <- function(object, ...) {
   coefs
 }
 
-#' Print D2PL Items by Group
+#' Print Parameter Estimates from Explanatory or Confirmatory Analysis
 #'
 #' @param x An object of class \code{vemirt_FA}
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{print.vemirt_DIF}
 \alias{print.vemirt_DIF}
-\title{Print D2PL Items by Group}
+\title{Print DIF 2PL Items by Group}
 \usage{
 print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 }
@@ -12,7 +12,7 @@ print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 \item{criterion}{Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)}
 }
 \description{
-Print D2PL Items by Group
+Print DIF 2PL Items by Group
 }
 \seealso{
 \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}

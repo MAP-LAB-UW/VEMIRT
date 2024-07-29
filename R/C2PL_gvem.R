@@ -183,7 +183,7 @@ C2PL_gvem <- function(u,indic,max.iter=5000,SE.est=FALSE) {
   }
   end=Sys.time()
   duration=end-start
-  cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,
                      mu_i = MU,sig_i = SIGMA,n=n,Q_mat=Q_mat,GIC=gic,AIC=aic,
                      BIC=bic,SE=se))

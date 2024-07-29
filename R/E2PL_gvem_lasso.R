@@ -78,7 +78,7 @@ E2PL_gvem_lasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL){
   }
   end=Sys.time()
   duration=end-start
-  cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(result)
 }
 

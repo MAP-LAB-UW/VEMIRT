@@ -262,7 +262,7 @@ E3PL_sgvem_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha
   }
   end=Sys.time()
   duration=end-start
-  cat(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
               reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
               sig_i = SIGMA,n=n,Q_mat=Q_mat,rk=rk,GIC=gic,AIC=aic,
