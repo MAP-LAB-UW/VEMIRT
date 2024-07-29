@@ -50,6 +50,13 @@ software packages, especially when the number of latent factors exceeds four.
 }
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://map-lab-uw.github.io/VEMIRT/}
+}
+
+}
 \author{
 \strong{Maintainer}: Weicong Lyu \email{wlyu4@uw.edu} (\href{https://orcid.org/0000-0002-8159-2161}{ORCID})
 
