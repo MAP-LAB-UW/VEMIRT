@@ -34,3 +34,7 @@ Depends:
 LazyData: true
 RoxygenNote: 7.3.2
 URL: https://MAP-LAB-UW.github.io/VEMIRT/
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

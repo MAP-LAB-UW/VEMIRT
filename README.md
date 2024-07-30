@@ -10,13 +10,13 @@ The goal of `VEMIRT` is to provide computationally efficient tools for
 high-dimensional data, large sample sizes, large item banks, and complex
 designs. The package contains several example datasets and functions for
 
-- Parallel Analysis
-- Exploratory and Confirmatory M2PL Analysis
-- Exploratory and Confirmatory M3PL Analysis
-- Standard error estimates for Confirmatory M2PL Analysis
+- Parallel analysis
+- Exploratory and confirmatory M2PL analysis
+- Exploratory and confirmatory M3PL analysis
+- Standard error estimates for confirmatory M2PL analysis
 - Bootstrap sampling and importance sampling correction for M2PL
-  Analysis
-- Differential item functioning detection in M2PL Analysis
+  analysis
+- Differential item functioning detection for confirmatory M2PL analysis
 
 ## Installation
 
@@ -33,9 +33,17 @@ To install this package from source:
     have up to date compilers (or if not they can be updated easily).
 
 2)  Install the `devtools` package (if necessary), and install the
-    package from [GitHub](https://github.com/) with:
+    package from [GitHub](https://github.com/) with
 
 ``` r
 devtools::install_github("MAP-LAB-UW/VEMIRT")
 torch::install_torch()
+```
+
+## Tutorial
+
+After installing the `VEMIRT` package, open its tutorial by running
+
+``` r
+vignette("VEMIRT")
 ```
