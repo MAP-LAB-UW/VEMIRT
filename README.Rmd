@@ -35,7 +35,8 @@ To install this package from source:
 
 2) Install the `devtools` package (if necessary), and install the package from [GitHub](https://github.com/) with
 ``` {r eval = F}
-devtools::install_github("MAP-LAB-UW/VEMIRT")
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("MAP-LAB-UW/VEMIRT", build_vignettes = T)
 torch::install_torch()
 ```
 
