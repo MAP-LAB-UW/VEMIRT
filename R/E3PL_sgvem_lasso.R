@@ -69,7 +69,7 @@
 E3PL_sgvem_lasso<-function(u,indic,samp=50,forgetrate=0.51,
                              mu_b,sigma2_b,Alpha,Beta,max.iter=5000,
                              constrain="C1",non_pen=NULL){
-  start=Sys.time()
+  #start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)
   domain=dim(indic)[2]
@@ -90,9 +90,9 @@ E3PL_sgvem_lasso<-function(u,indic,samp=50,forgetrate=0.51,
   if(result$n==max.iter){
     warning("The maximum number of EM cycles reached!",call.=FALSE)
   }
-  end=Sys.time()
-  duration=end-start
-  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  #end=Sys.time()
+  #duration=end-start
+  #message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(result)
 }
 

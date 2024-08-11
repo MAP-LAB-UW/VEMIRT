@@ -32,7 +32,7 @@
 #' E2PL_gvem_rot(E2PL_data_C1$data, domain=5,max.iter=3000)
 #' E2PL_gvem_rot(E2PL_data_C1$data, domain=5,rot="cfQ")}
 E2PL_gvem_rot <- function(u, domain,max.iter=5000,rot="Promax") {
-  start=Sys.time()
+  #start=Sys.time()
   u=data.matrix(u)
   person=dim(u)[1]
   item=dim(u)[2]
@@ -138,9 +138,9 @@ E2PL_gvem_rot <- function(u, domain,max.iter=5000,rot="Promax") {
   if(n==max.iter){
     warning("The maximum number of EM cycles reached!",call.=FALSE)
   }
-  end=Sys.time()
-  duration=end-start
-  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  #end=Sys.time()
+  #duration=end-start
+  #message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
                      sig_i = SIGMA,n=n,rk=rk,Q_mat=Q_mat,GIC=gic,AIC=aic,
                      BIC=bic,ur_a=ur_a))

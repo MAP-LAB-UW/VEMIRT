@@ -42,7 +42,7 @@
 #' E3PL_sgvem_rot(E3PL_data_C1$data, 3,samp=50,forgetrate=0.51,
 #' mu_b=0,sigma2_b=4,Alpha=10,Beta=40,max.iter=5000,rot="Promax")}
 E3PL_sgvem_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000,rot="Promax") {
-  start=Sys.time()
+  #start=Sys.time()
   u=data.matrix(u)
   person=dim(u)[1]
   item=dim(u)[2]
@@ -260,9 +260,9 @@ E3PL_sgvem_rot <- function(u,domain, samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha
   if(n==max.iter){
     warning("The maximum number of EM cycles reached!",call.=FALSE)
   }
-  end=Sys.time()
-  duration=end-start
-  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  #end=Sys.time()
+  #duration=end-start
+  #message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
               reta = eta,reps=xi,rsigma = Sigma,mu_i = MU,
               sig_i = SIGMA,n=n,Q_mat=Q_mat,rk=rk,GIC=gic,AIC=aic,

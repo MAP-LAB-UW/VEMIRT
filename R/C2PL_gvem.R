@@ -34,7 +34,7 @@
 #' \dontrun{
 #' with(C2PL_data, C2PL_gvem(data, model))}
 C2PL_gvem <- function(u,indic,max.iter=5000,SE.est=FALSE) {
-  start=Sys.time()
+  #start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)
   domain=dim(indic)[2]
@@ -181,9 +181,9 @@ C2PL_gvem <- function(u,indic,max.iter=5000,SE.est=FALSE) {
   if(n==max.iter){
     warning("The maximum number of EM cycles reached!",call.=FALSE)
   }
-  end=Sys.time()
-  duration=end-start
-  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  #end=Sys.time()
+  #duration=end-start
+  #message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,reta = eta,reps=xi,rsigma = Sigma,
                      mu_i = MU,sig_i = SIGMA,n=n,Q_mat=Q_mat,GIC=gic,AIC=aic,
                      BIC=bic,SE=se))

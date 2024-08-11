@@ -18,17 +18,7 @@ init.D2PL_em <- function(Y, D, X, level, iter, eps, ...) {
     lst(z, s)
   }
 
-  lambda <- 0
-  params.old <- NULL
-  for (i in 1:iter) {
-    estep.D2PL_em()
-    niter.init <- c(niter.init, mstep.D2PL_em())
-    params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
-    if (!is.null(params.old) && all(distance(params, params.old) < eps))
-      break
-    params.old <- params
-  }
-  keep(Y, D, X, level, iter, eps, grid, N, n, J, K, G, U, Sigma, Mu, a, a.mask, b, gamma, Y.mask, gamma.mask, beta, beta.mask, ab.mask, P, niter.init)
+  keep(Y, D, X, level, iter, eps, grid, N, n, J, K, G, U, Sigma, Mu, a, a.mask, b, gamma, Y.mask, gamma.mask, beta, beta.mask, ab.mask, niter.init)
   init.new()
 }
 
@@ -56,16 +46,10 @@ estep.D2PL_em <- function() {
 
     Mu <- (z * w)$sum(2)
     Sigma <- sym(((z$unsqueeze(4) %*% z$unsqueeze(3)) * w$unsqueeze(4))$sum(2) - Mu$unsqueeze(3) %*% Mu$unsqueeze(2))
-    if (!exists('init')) {
-      mu <- Mu[1]$clone()
-      Mu$sub_(mu)
-      sigma <- Sigma[1]$diag()$sqrt()
-      Sigma <- sym(Sigma / sigma / sigma$unsqueeze(2))
-    } else {
-      Mu$fill_(0)
-      sigma <- Sigma$diagonal(dim1 = -1, dim2 = -2)$sqrt()$view(c(-1, K, 1))
-      Sigma <- sym(Sigma / sigma / t(sigma))
-    }
+    x <- if (lambda == 0) 1:G else 1
+    Mu[x] <- 0
+    sigma <- Sigma[x]$diagonal(dim1 = -1, dim2 = -2)$sqrt()$view(c(-1, K, 1))
+    Sigma[x] <- sym(Sigma[x] / sigma / t(sigma))
   })
 }
 
@@ -126,59 +110,51 @@ mstep.D2PL_em <- function() {
 
 est.D2PL_em <- function(e, lambda) {
   list2env(e, environment())
-  if (lambda == 0)
-    niter <- matrix(0, 1, 2)
-  else {
-    niter <- c()
-    params.old <- NULL
-    for (i in 1:iter) {
-      estep.D2PL_em()
-      niter <- c(niter, mstep.D2PL_em())
-      params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
-      if (!is.null(params.old) && all(distance(params, params.old) < eps))
-        break
-      params.old <- params
-    }
-    lambda <- 0
-    gamma.mask <- gamma != 0
-    beta.mask <- beta != 0
-    for (i in 1:iter) {
-      params.old <- params
-      estep.D2PL_em()
-      niter <- c(niter, mstep.D2PL_em())
-      params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
-      if (all(distance(params, params.old) < eps))
-        break
-    }
+  niter <- c()
+  params.old <- NULL
+  for (i in 1:iter) {
+    estep.D2PL_em()
+    niter <- c(niter, mstep.D2PL_em())
+    params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
+    if (!is.null(params.old) && all(distance(params, params.old) < eps))
+      break
+    params.old <- params
+  }
+  lambda <- 0
+  gamma.mask <- gamma != 0
+  beta.mask <- beta != 0
+  for (i in 1:iter) {
+    params.old <- params
+    estep.D2PL_em()
+    niter <- c(niter, mstep.D2PL_em())
+    params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
+    if (all(distance(params, params.old) < eps))
+      break
   }
   final.D2PL_em()
 }
 
 est.D2PL_emm <- function(e, lambda) {
   list2env(e, environment())
-  if (lambda == 0)
-    niter <- matrix(0, 1, 2)
-  else {
-    niter <- matrix(nrow = 0, ncol = 2)
-    lambda.bak <- lambda
-    gamma.mask.bak <- gamma.mask
-    beta.mask.bak <- beta.mask
-    params.old <- NULL
-    for (i in 1:iter) {
-      estep.D2PL_em()
-      j <- mstep.D2PL_em()
-      lambda <- 0
-      gamma.mask <- gamma != 0
-      beta.mask <- beta != 0
-      niter <- rbind(niter, c(j, mstep.D2PL_em()))
-      params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
-      if (!is.null(params.old) && all(distance(params, params.old) < eps))
-        break
-      params.old <- params
-      lambda <- lambda.bak
-      gamma.mask <- gamma.mask.bak
-      beta.mask <- beta.mask.bak
-    }
+  niter <- matrix(nrow = 0, ncol = 2)
+  lambda.bak <- lambda
+  gamma.mask.bak <- gamma.mask
+  beta.mask.bak <- beta.mask
+  params.old <- NULL
+  for (i in 1:iter) {
+    estep.D2PL_em()
+    j <- mstep.D2PL_em()
+    lambda <- 0
+    gamma.mask <- gamma != 0
+    beta.mask <- beta != 0
+    niter <- rbind(niter, c(j, mstep.D2PL_em()))
+    params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
+    if (!is.null(params.old) && all(distance(params, params.old) < eps))
+      break
+    params.old <- params
+    lambda <- lambda.bak
+    gamma.mask <- gamma.mask.bak
+    beta.mask <- beta.mask.bak
   }
   final.D2PL_em()
 }

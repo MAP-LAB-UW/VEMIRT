@@ -156,7 +156,7 @@ print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...)
     } else {
       dat <- do.call(rbind, lapply(2:K, function(k) {
         dif <- as.data.frame(t(ifelse(cbind(fit$gamma[k, , ], fit$beta[k, ]) != 0, 'X', '')))
-        rownames(dif) <- paste0(c(paste0('a', 1:(nrow(dif) - 1), ','), 'b'), k)
+        rownames(dif) <- paste0(k, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
         colnames(dif) <- paste0(1:ncol(dif))
         dif
       }))
@@ -221,8 +221,10 @@ coef.vemirt_FA <- function(object, ...) {
   else
     cbind(object$boots_a, object$boots_b)
   )
-  rownames(coefs) <- paste('Item', 1:nrow(coefs))
+  rownames(coefs) <- paste0('Item', 1:nrow(coefs))
   colnames(coefs) <- c(paste0('a', 1:(ncol(coefs) - 1)), 'b')
+  if (!is.null(object$rc))
+    coefs <- cbind(coefs, c = object$rc)
   coefs
 }
 

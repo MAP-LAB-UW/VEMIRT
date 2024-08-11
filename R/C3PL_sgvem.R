@@ -44,7 +44,7 @@
 #' \dontrun{
 #' with(C3PL_data, C3PL_sgvem(data, model, samp=50, forgetrate=0.51, mu_b=0, sigma2_b=4, Alpha=10, Beta=40))}
 C3PL_sgvem <- function(u,indic,samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,max.iter=5000) {
-  start=Sys.time()
+  #start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)
   domain=dim(indic)[2]
@@ -180,9 +180,9 @@ C3PL_sgvem <- function(u,indic,samp=50,forgetrate=0.51,mu_b,sigma2_b,Alpha,Beta,
   if(n==max.iter){
     warning("The maximum number of EM cycles reached!",call.=FALSE)
   }
-  end=Sys.time()
-  duration=end-start
-  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  #end=Sys.time()
+  #duration=end-start
+  #message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(list(ra=new_a,rb=new_b,rc=new_c,rs = new_s,
               reta = eta,reps=xi,rsigma = rsigma,mu_i = MU,sig_i = SIGMA,n=n,
               Q_mat=Q_mat,GIC=gic,AIC=aic,

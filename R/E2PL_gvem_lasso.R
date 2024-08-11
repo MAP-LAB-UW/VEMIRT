@@ -57,7 +57,7 @@
 
 #main function for gvem_2PLEFA_lasso
 E2PL_gvem_lasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL){
-  start=Sys.time()
+  #start=Sys.time()
   u=data.matrix(u)
   indic=data.matrix(indic)
   domain=dim(indic)[2]
@@ -76,9 +76,9 @@ E2PL_gvem_lasso<-function(u,indic,max.iter=5000,constrain="C1",non_pen=NULL){
   if(result$n==max.iter){
     warning("The maximum number of EM cycles reached!",call.=FALSE)
   }
-  end=Sys.time()
-  duration=end-start
-  message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
+  #end=Sys.time()
+  #duration=end-start
+  #message(paste("Total Execution Time:", round(duration[[1]], 2),  units(duration)),"\n")
   new.vemirt_FA(result)
 }
 
