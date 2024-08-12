@@ -46,7 +46,7 @@ estep.D2PL_em <- function() {
 
     Mu <- (z * w)$sum(2)
     Sigma <- sym(((z$unsqueeze(4) %*% z$unsqueeze(3)) * w$unsqueeze(4))$sum(2) - Mu$unsqueeze(3) %*% Mu$unsqueeze(2))
-    x <- if (lambda == 0) 1:G else 1
+    x <- if (get0('lambda.bak', ifnotfound = 1) == 0) 1:G else 1
     Mu[x] <- 0
     sigma <- Sigma[x]$diagonal(dim1 = -1, dim2 = -2)$sqrt()$view(c(-1, K, 1))
     Sigma[x] <- sym(Sigma[x] / sigma / t(sigma))
@@ -111,6 +111,9 @@ mstep.D2PL_em <- function() {
 est.D2PL_em <- function(e, lambda) {
   list2env(e, environment())
   niter <- c()
+  lambda.bak <- lambda
+  gamma.mask.bak <- gamma.mask
+  beta.mask.bak <- beta.mask
   params.old <- NULL
   for (i in 1:iter) {
     estep.D2PL_em()
@@ -161,6 +164,9 @@ est.D2PL_emm <- function(e, lambda) {
 
 final.D2PL_em <- function() {
   with(parent.frame(), {
+    lambda <- lambda.bak
+    gamma.mask <- gamma.mask.bak
+    beta.mask <- beta.mask.bak
     ll <- as.array(P$nansum(2)$log()$sum())
     l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
     c(lst(niter, ll, l0), lapply(lst(Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
