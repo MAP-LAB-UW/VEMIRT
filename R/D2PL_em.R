@@ -46,7 +46,7 @@ estep.D2PL_em <- function() {
 
     Mu <- (z * w)$sum(2)
     Sigma <- sym(((z$unsqueeze(4) %*% z$unsqueeze(3)) * w$unsqueeze(4))$sum(2) - Mu$unsqueeze(3) %*% Mu$unsqueeze(2))
-    x <- if (get0('lambda.bak', ifnotfound = 1) == 0) 1:G else 1
+    x <- if (lambda.bak == 0) 1:G else 1
     Mu[x] <- 0
     sigma <- Sigma[x]$diagonal(dim1 = -1, dim2 = -2)$sqrt()$view(c(-1, K, 1))
     Sigma[x] <- sym(Sigma[x] / sigma / t(sigma))
@@ -88,18 +88,19 @@ mstep.D2PL_em <- function() {
         gammabeta <- torch_cat(list(gamma, beta$unsqueeze(3)), 3) - (dd$pinverse()$masked_fill(!gammabeta.mask, 0) %*% torch_cat(list(d.gamma, d.beta), 3)$unsqueeze(4))$squeeze(4)
         gamma <- gammabeta[.., 1:-2]$masked_fill_(!gamma.mask, 0)
         beta <- gammabeta[.., -1]$masked_fill_(!beta.mask, 0)
-        pars <- lapply(lst(a, b, gamma, beta), torch_clone)
+        #pars <- lapply(lst(a, b, gamma, beta), torch_clone)
       } else {
         dd.gamma <- diagonal(dd.gamma)
         dd.beta <- dd.beta$view(c(G, -1))
         gamma <- -prox(d.gamma - dd.gamma * gamma, lambda) / dd.gamma
         beta <- -prox(d.beta$squeeze(3) - dd.beta * beta, lambda) / dd.beta
-        pars <- lapply(lst(gamma, beta), function(x) {
-          torch_tensor(x != 0, torch_int())
-        })
+        #pars <- c(lapply(lst(a, b), torch_clone), lapply(lst(gamma, beta), function(x) {
+        #  torch_tensor(x != 0, torch_int())
+        #}))
       }
 
       xi <- ((((a + gamma)$view(c(G, 1, J, 1, K)) %*% z$view(c(G, -1, 1, K, 1)))$view(c(G, -1, J)) - (b - beta)$unsqueeze(2))[X])$masked_fill(!Y.mask, NaN)
+      pars <- lapply(lst(a, b, gamma, beta), torch_clone)
       if (!is.null(pars.old) && all(distance(pars, pars.old) < eps))
         break
       pars.old <- pars
@@ -112,8 +113,6 @@ est.D2PL_em <- function(e, lambda) {
   list2env(e, environment())
   niter <- c()
   lambda.bak <- lambda
-  gamma.mask.bak <- gamma.mask
-  beta.mask.bak <- beta.mask
   params.old <- NULL
   for (i in 1:iter) {
     estep.D2PL_em()
@@ -164,9 +163,6 @@ est.D2PL_emm <- function(e, lambda) {
 
 final.D2PL_em <- function() {
   with(parent.frame(), {
-    lambda <- lambda.bak
-    gamma.mask <- gamma.mask.bak
-    beta.mask <- beta.mask.bak
     ll <- as.array(P$nansum(2)$log()$sum())
     l0 <- as.array(sum(gamma != 0) + sum(beta != 0))
     c(lst(niter, ll, l0), lapply(lst(Sigma, Mu, a, b, gamma, beta), as.array), IC(ll, l0, N, c))
