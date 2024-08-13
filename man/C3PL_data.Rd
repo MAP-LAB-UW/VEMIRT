@@ -18,6 +18,9 @@ A list of components of the data set:
 C3PL_data
 }
 \description{
-Responses are simulated based on a within-item M3PL model with 3 factors. The true factor correlations are set as 0.1.
+Responses are simulated based on an M3PL model with 2 factors. The true factor correlations are set as 0.8.
+}
+\author{
+Weicong Lyu <wlyu4@uw.edu>
 }
 \keyword{datasets}

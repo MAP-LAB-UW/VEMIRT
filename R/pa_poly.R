@@ -98,5 +98,5 @@ pa_poly=function(data,n.iter=10,figure=TRUE){
     legend("topright",legend=c("Actual Data", "Simulated Data"),cex=0.8, col=colors,
            pch=plotchar, lty=linetype)
   }
-  return(eigen_parallel)
+  invisible(eigen_parallel)
 }

@@ -18,6 +18,9 @@ A list of components of the data set:
 C2PL_data
 }
 \description{
-Responses are simulated based on a between-item M2PL model with 5 factors. The true factor correlations are set as 0.1.
+Responses are simulated based on an M2PL model with 2 factors. The true factor correlations are set as 0.8.
+}
+\author{
+Weicong Lyu <wlyu4@uw.edu>
 }
 \keyword{datasets}

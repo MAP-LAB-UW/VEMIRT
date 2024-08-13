@@ -216,10 +216,12 @@ new.vemirt_FA <- function(raw) {
 #' @seealso \code{\link{C2PL_gvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}, \code{\link{C3PL_sgvem}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_IS}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_rot}}, \code{\link{print.vemirt_FA}}
 #' @export
 coef.vemirt_FA <- function(object, ...) {
-  coefs <- as.data.frame(if (is.null(object$boots_a))
-    cbind(object$ra, object$rb)
-  else
+  coefs <- as.data.frame(if (!is.null(object$boots_a))
     cbind(object$boots_a, object$boots_b)
+  else if (!is.null(object$new_a))
+    cbind(object$new_a, object$new_b)
+  else
+    cbind(object$ra, object$rb)
   )
   rownames(coefs) <- paste0('Item', 1:nrow(coefs))
   colnames(coefs) <- c(paste0('a', 1:(ncol(coefs) - 1)), 'b')

@@ -3,7 +3,7 @@
 \docType{data}
 \name{E2PL_data_C2}
 \alias{E2PL_data_C2}
-\title{Simulated Data Set for Exploratory M2PL Analysis Under C2 Constraints}
+\title{Simulated Data Set for Exploratory M2PL Analysis Under C2 Constraint}
 \format{
 A list of components of the data set:
 \tabular{ll}{
@@ -13,13 +13,18 @@ A list of components of the data set:
 \tab\cr
 \code{constrain}\tab Constraint for model identification (\code{'C2'})\cr
 \tab\cr
-\code{non_pen}\tab Index of an item that is associated with all the factors
+\code{non_pen}\tab Index of an item that is associated with all the factors\cr
+\tab\cr
+\code{params}\tab True parameters used for generating the item responses
 }
 }
 \usage{
 E2PL_data_C2
 }
 \description{
-Responses are simulated based on a between-item M2PL model with 5 factors. The true factor correlations are set as 0.1.
+Responses are simulated based on an M2PL model with 3 factors. The true factor correlations are set as 0.5.
+}
+\author{
+Weicong Lyu <wlyu4@uw.edu>
 }
 \keyword{datasets}

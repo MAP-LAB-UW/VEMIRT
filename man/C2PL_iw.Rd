@@ -42,7 +42,7 @@ a list containing the following objects:
   \item{ur_a}{item discrimination parameters before conducting the rotation, a \eqn{J \times K} \code{matrix}, for exploratory analysis only}
   \item{new_a}{item discrimination parameters estimated by IW-GVEM, a \eqn{J \times K} \code{matrix}}
   \item{new_b}{item difficulty parameters estimated by IW-GVEM, vector of length \eqn{J}}
-  \item{new_Sigma_theta}{population variance-covariance matrix estimated by IV-GVEM, a \eqn{K \times K} matrix}
+  \item{new_Sigma_theta}{population variance-covariance matrix estimated by IW-GVEM, a \eqn{K \times K} matrix}
   \item{best_lr}{The learning rate used for importance sampling}
   \item{best_lb}{The lower bound value for importance sampling}
 }
@@ -59,7 +59,7 @@ EFA_result <- with(E2PL_data_C1, E2PL_gvem_lasso(data, model, constrain = constr
 E2PL_iw(E2PL_data_C1$data, EFA_result)}
 }
 \seealso{
-\code{\link{C2PL_gvem}}, \code{\link{E2PL_gvem_rot}},\code{\link{C2PL_bs}}
+\code{\link{C2PL_gvem}}, \code{\link{E2PL_gvem_rot}}, \code{\link{C2PL_bs}}
 }
 \author{
 Jiaying Xiao <jxiao6@uw.edu>

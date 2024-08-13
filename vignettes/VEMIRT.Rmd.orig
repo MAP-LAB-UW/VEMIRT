@@ -1,16 +1,21 @@
 ---
-title: Variational Estimation for Multidimensional Item Response Theory Using `VEMIRT`
+title: Variational Estimation for Multidimensional Item Response Theory Using VEMIRT
 output:
   rmarkdown::html_vignette:
     toc: true
     pandoc_args:
       - "--preserve-tabs"
       - "--lua-filter=merge-code-blocks.lua"
+bibliography: references.bib
+csl: apa.csl
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{VEMIRT}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+<!-- Run knitr::knit("VEMIRT.Rmd.orig", output = "VEMIRT.Rmd") to build the vignette -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -42,65 +47,33 @@ Data required for analysis are summarized below:
 | Differential Item Functioning | $\checkmark$ | $\checkmark$ | $\checkmark$ |
 
 Here we take dataset `D2PL_data` as an example. This simulated dataset is for DIF 2PL analysis.
-Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbers of respondents and items respectively. In this data example, $N=`r nrow(D2PL_data$data)`$ and $J=`r ncol(D2PL_data$data)`$.
+Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbers of respondents and items respectively. Currently, DIF functions allow responses to have missing data, which should be coded as `NA`. In this example, there are $N=`r nrow(D2PL_data$data)`$ respondents and $J=`r ncol(D2PL_data$data)`$ items.
 ```{r}
 head(D2PL_data$data)
 ```
 
-CFA relies on a $J$ by $D$ binary loading indicator matrix specifying latent dimensions each item loads on, where $D$ is the number of latent dimensions. In this example $D=`r ncol(D2PL_data$model)`$.
+CFA and DIF rely on a $J$ by $D$ binary loading indicator matrix specifying latent dimensions each item loads on, where $D$ is the number of latent dimensions. The latent traits have $D=`r ncol(D2PL_data$model)`$ dimensions here.
 ```{r}
 D2PL_data$model
 ```
 
-DIF analysis additionally needs an $N$ dimensional group membership vector, whose elements are integers from $1$ to $G$, where $G$ is the number of groups. Here $G=`r max(D2PL_data$group)`$.
+DIF analysis additionally needs an $N$ dimensional group membership vector, whose elements are integers from $1$ to $G$, where $G$ is the number of groups. There are $G=`r max(D2PL_data$group)`$ groups in this example.
 ```{r}
 table(D2PL_data$group)
 ```
 
 
-<!-- `VEMIRT` provides simulated data set `exampleDIF` as an example: -->
-<!-- ```{r} -->
-<!-- str(exampleDIF) -->
-<!-- ``` -->
-<!-- `Y` is an $N$ by $J$ binary response matrix, where $N$ and $J$ are the numbers of respondents and items respectively: -->
-<!-- ```{r} -->
-<!-- head(exampleDIF$Y) -->
-<!-- ``` -->
-<!-- `D` is a $J$ by $D$ binary loading indicator matrix specifying latent dimensions each item loads on, where $D$ is the number of latent dimensions: -->
-<!-- ```{r} -->
-<!-- exampleDIF$D -->
-<!-- ``` -->
-<!-- `X` is an $N$ dimensional vector of integers from $1$ to $G$, where $G$ is the number of groups: -->
-<!-- ```{r} -->
-<!-- table(exampleDIF$X) -->
-<!-- ``` -->
-<!-- The first `j` items of the data have DIF on both slopes and intercepts: -->
-<!-- ```{r} -->
-<!-- exampleDIF$j -->
-<!-- with(exampleDIF$params, cbind(a[1, , ], a[2, , ], a[3, , ])) -->
-<!-- exampleDIF$params$b -->
-<!-- ``` -->
-<!-- `params$theta` is the respondent latent traits: -->
-<!-- ```{r} -->
-<!-- head(exampleDIF$params$theta) -->
-<!-- ``` -->
-<!-- Only `Y`, `D` and `X` are needed for DIF analysis, while `j` and `params` are the parameters used for generating the item responses. -->
-
-
 # Data Output
-C2PL standard errors
-C2PL_iw DIF missing data
+All the functions output estimates of item parameters and some other related parameters. In addition, `C2PL_gvem` and `C2PL_bs` are able to provide the standard errors of item parameter estimates.
 
 
 # Exploratory Factor Analysis
 ## Parallel Analysis
-Parallel analysis can be conducted to determine the number of factors. Users can specify the number of simulated datasets and by default it is 10.
-```{r eval = F}
-pa_poly(E2PL_data_C1$data, n.iter = 5)
+Parallel analysis can be conducted to determine the number of factors. Users can specify the number of simulated datasets, which takes `n.iter = 10` by default.
+```{r cache = T}
+pa_poly(D2PL_data$data, n.iter = 5)
 ```
-```{r cache = T, echo = F, message = F, warning = F}
-result <- pa_poly(E2PL_data_C1$data, n.iter = 5)
-```
+
 
 ## M2PL Model
 `VEMIRT` provides the following functions to conduct EFA for the M2PL model:
@@ -110,22 +83,35 @@ result <- pa_poly(E2PL_data_C1$data, n.iter = 5)
 | `E2PL_gvem_rot` | GVEM with post-doc rotation |
 | `E2PL_gvem_lasso` | GVEM with lasso penalty |
 | `E2PL_gvem_adaptlasso` | GVEM with adaptive lasso penalty |
+| `E2PL_iw` | GVEM with importance sampling |
 
-Currently these functions do not estimate the standard errors of item parameters.
+Currently these functions do not estimate the standard errors of item parameters. The following examples use two simulated datasets, `E2PL_data_C1` and `E2PL_data_C2`, both having $N=`r nrow(E2PL_data_C1$data)`$ respondents, $J=`r ncol(E2PL_data_C1$data)`$ items and $D=`r ncol(E2PL_data_C1$model)`$ dimensions, but items load on different dimensions.
 
-`E2PL_gvem_rot` needs the item responses and the number of factors (`domain`), and applies the promax rotation by default. Another choice is `cfQ`, which performs the CF-Quartimax rotation.
-
-*** The following example uses a simulated dataset which ...
-
-```{r cache = T, message = F}
-E2PL_gvem_rot(E2PL_data_C1$data, domain = 5)
+`E2PL_gvem_rot` needs the item responses and the number of factors (`domain`), and applies the promax rotation (`rot = "Promax"`) by default. Another choice is `rot = "cfQ"`, which performs the CF-Quartimax rotation.
+```{r cache = T}
+E2PL_gvem_rot(E2PL_data_C1$data, domain = 3)
 ```
 
-Both `E2PL_gvem_lasso` and `E2PL_gvem_adaptlasso` need item responses, constraint setting (`constrain`), and a binary matrix specifying constraints on the sub-matrix of the factor loading structure (`model`). `constrain` should be either `"C1"` or `"C2"` to ensure identifiability. Under `"C1"`, a $D\times D$ sub-matrix of `model` should be an identity matrix, indicating that each of these $D$ items loads solely on one factor. Under `"C2"`, a $D\times D$ sub-matrix of `model` should be a lower triangular matrix whose diagonal elements are all one, indicating that each of these $D$ items loads on one factor and potentially other factors as well; non-zero elements other than the diagonal are penalized. For identification under `"C2"`, another argument `non_pen` should be provided, which specifies an anchor item that loads on all the factors. `E2PL_gvem_adaptlasso` needs an additional tuning parameter `gamma` (by default `gamma = 2`). *** Please refer to Ma et al for algorithmic details. Print model and show it has an identity matrix C1 and C2 data same only different constraints
-```{r cache = T, message = F}
-with(E2PL_data_C1, E2PL_gvem_adaptlasso(data, model, constrain = "C1", gamma = 2))
-with(E2PL_data_C2, E2PL_gvem_lasso(data, model, constrain = "C2", non_pen = 61))
+Both `E2PL_gvem_lasso` and `E2PL_gvem_adaptlasso` need item responses, constraint setting (`constrain`), and a binary matrix specifying constraints on the sub-matrix of the factor loading structure (`indic`). `constrain` should be either `"C1"` or `"C2"` to ensure identifiability. Under `"C1"`, a $D\times D$ sub-matrix of `indic` should be an identity matrix, indicating that each of these $D$ items loads solely on one factor. Notice that the first `r ncol(E2PL_data_C1$model)` rows of `E2PL_data_C1$data` form an identity matrix.
+```{r}
+E2PL_data_C1$model
 ```
+Under `"C2"`, a $D\times D$ sub-matrix of `indic` should be a lower triangular matrix whose diagonal elements are all one, indicating that each of these $D$ items loads on one factor and potentially other factors as well; non-zero elements other than the diagonal are penalized. For identification under `"C2"`, another argument `non_pen` should be provided, which specifies an anchor item that loads on all the factors. In the following example, the first `r ncol(E2PL_data_C1$model) - 1` rows and any other row form such a lower triangular matrix, so `non_pen` can take any integer from $`r ncol(E2PL_data_C1$model)`$ to $`r nrow(E2PL_data_C1$model)`$.
+```{r}
+E2PL_data_C2$model
+```
+`E2PL_gvem_adaptlasso` needs an additional tuning parameter, which takes `gamma = 2` by default. Users are referred to @cho2024 for algorithmic details.
+```{r cache = T}
+result <- with(E2PL_data_C1, E2PL_gvem_lasso(data, model, constrain = "C1"))
+result
+with(E2PL_data_C2, E2PL_gvem_adaptlasso(data, model, constrain = "C2", non_pen = 3))
+```
+
+GVEM is known to produce biased estimates for discrimination parameters, and `E2PL_iw` helps reduce the bias through importance sampling [@ma2024].
+```{r}
+E2PL_iw(E2PL_data_C1$data, result)
+```
+
 
 ## M3PL Model
 `VEMIRT` provides the following functions to conduct EFA for the M3PL model:
@@ -136,10 +122,12 @@ with(E2PL_data_C2, E2PL_gvem_lasso(data, model, constrain = "C2", non_pen = 61))
 | `E3PL_sgvem_lasso` | Stochastic GVEM with lasso penalty |
 | `E3PL_sgvem_adaptlasso` | Stochastic GVEM with adaptive lasso penalty |
 
-The usage of these functions is similar to those for M2PL models, but some additional arguments are required: the size of the subsample for each iteration (`samp`), the forget rate for the stochastic algorithm (`forgetrate`), the mean and the variance of the prior distribution of item difficulty parameters (`mu_b` and `sigma2_b`), the $\alpha$ and $\beta$ parameters of the prior distribution of guessing parameters (`Alpha` and `Beta`).  *** Below is an example using default  *** Cite Cho Ma Chenchen
-```{r cache = T, message = F}
-with(E3PL_data_C1, E3PL_sgvem_lasso(data, model, samp = 50, forgetrate = 0.51, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C1"))
-with(E3PL_data_C2, E3PL_sgvem_adaptlasso(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C2", non_pen = 19, gamma = 2))
+The following examples use two simulated datasets, `E3PL_data_C1` and `E3PL_data_C2`, both having $N=`r nrow(E3PL_data_C1$data)`$ respondents, $J=`r ncol(E3PL_data_C1$data)`$ items and $D=`r ncol(E3PL_data_C1$model)`$ dimensions, but items load on different dimensions.
+
+The usage of these functions is similar to those for M2PL models, but some additional arguments are required: the size of the subsample for each iteration (`samp = 50` by default), the forget rate for the stochastic algorithm (`forgetrate = 0.51` by default), the mean and the variance of the normal distribution as a prior for item difficulty parameters (`mu_b` and `sigma2_b`), the $\alpha$ and $\beta$ parameters of the beta distribution as a prior for guessing parameters (`Alpha` and `Beta`). Still, `E3PL_sgvem_adaptlasso` needs a tuning parameter, which takes `gamma = 2` by default. Users are referred to @cho2024 for algorithmic details. In the following examples, the priors for difficulty parameters and guessing parameters are $N(0,2^2)$ and $\beta(10,40)$ respectively.
+```{r cache = T}
+with(E3PL_data_C1, E3PL_sgvem_adaptlasso(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C1"))
+with(E3PL_data_C2, E3PL_sgvem_lasso(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C2", non_pen = 3))
 ```
 
 
@@ -153,17 +141,22 @@ with(E3PL_data_C2, E3PL_sgvem_adaptlasso(data, model, mu_b = 0, sigma2_b = 4, Al
 | `C2PL_bs` | GVEM with bootstrap |
 | `C2PL_iw` | GVEM with importance sampling |
 
-A binary loading indicator matrix needs to be provided for CFA. `C2PL_gvem` can produce biased estimates while the other two functions help reduce the bias. Also, only `C2PL_gvem` and `C2PL_bs` are able to provide the standard errors of item parameters.
-```{r cache = T, message = F}
+A binary loading indicator matrix needs to be provided for CFA. `C2PL_gvem` can produce biased estimates while the other two functions help reduce the bias. Also, only `C2PL_gvem` and `C2PL_bs` are able to provide the standard errors of item parameters. Users are referred to @cho2021 for `C2PL_gvem` and @ma2024 for `C2PL_iw`.
+
+The following examples use a simulated dataset, `C2PL_data`, which has $N=`r nrow(C2PL_data$data)`$ respondents, $J=`r ncol(C2PL_data$data)`$ items and $D=`r ncol(C2PL_data$model)`$ dimensions.
+```{r cache = T}
 result <- with(C2PL_data, C2PL_gvem(data, model))
+result
 C2PL_bs(result)
 C2PL_iw(C2PL_data$data, result)
 ```
 
 ## M3PL Model
-`C3PL_sgvem` conducts CFA for M3PL models. Its usage is similar to that of `E3PL_sgvem_*` except that a binary loading indicator matrix is needed additionally. ** Below is an example using default
-```{r cache = T, message = F}
-with(C3PL_data, C3PL_sgvem(data, model, samp = 50, forgetrate = 0.51, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40))
+`C3PL_sgvem` conducts CFA for M3PL models. Its usage is similar to that of `E3PL_sgvem_*` except that a binary loading indicator matrix is needed additionally. Users are referred to @cho2021 for algorithmic details.
+
+The following example uses a simulated dataset, `C3PL_data`, which has $N=`r nrow(C3PL_data$data)`$ respondents, $J=`r ncol(C3PL_data$data)`$ items and $D=`r ncol(C3PL_data$model)`$ dimensions. The priors for difficulty parameters and guessing parameters are chosen to be $N(0,2^2)$ and $\beta(10,40)$ respectively.
+```{r cache = T}
+with(C3PL_data, C3PL_sgvem(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40))
 ```
 
 
@@ -176,23 +169,22 @@ with(C3PL_data, C3PL_sgvem(data, model, samp = 50, forgetrate = 0.51, mu_b = 0, 
 | `D2PL_em` | EM with lasso penalty |
 | `D2PL_gvem` | GVEM with lasso penalty |
 
-We recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `IWGVEMM` is recommended for `D2PL_gvem` because this method has an additional importance sampling step which helps improve accuracy. ** Under review *** introduce meaning of a and b We don't recommend lrt because it is time-consuming. Please refer to Wang et al(2023)
-```{r cache = T, echo = F, results = F}
-result <- with(D2PL_data, D2PL_gvem(data, model, group, 'IWGVEMM', seq(0.2, 0.7, by = 0.1)))
-```
-```{r eval = F}
-result <- with(D2PL_data, D2PL_gvem(data, model, group, 'IWGVEMM', seq(0.2, 0.7, by = 0.1)))
+We recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `IWGVEMM` is the default choice and is recommended for `D2PL_gvem` because this method has an additional importance sampling step which helps improve accuracy. We do not recommend `D2PL_lrt` because it is time-consuming. Users are referred to @wang2023 for `D2PL_em`.
+```{r cache = T, results = F}
+result <- with(D2PL_data, D2PL_gvem(data, model, group, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1)))
 ```
 ```{r}
 result
 ```
-
-DIF items are flagged by `X`. By default, `gvemm_DIF` chooses the best tuning parameter using the generalized information criterion (GIC), *** and in this case GIC chooses lambda=xxx. but AIC and BIC can be used too:
+Item parameters are ordered by groups and group 1 is the reference group. DIF items are flagged by `X`. By default, `D2PL_gvem` chooses the best tuning parameter using the generalized information criterion (GIC), and in this example `r coef(result)$lambda0` is chosen, but AIC and BIC can be used too:
 ```{r}
 print(result, 'AIC')
 ```
-The message warns us that the optimal tuning parameter may be out of the range specified for estimation. ***Users should expand the specified range of Lambda0.
-Finally, other parameter estimates can be obtained too:
+The message warns us that the optimal tuning parameter may be out of the range specified for estimation. Users should specify a wider range for the argument `Lambda0` if the current information criterion is used. Finally, other parameter estimates can be obtained too:
 ```{r}
 str(coef(result, 'BIC'))
 ```
+
+
+# References
+<div id = "refs"></div>
