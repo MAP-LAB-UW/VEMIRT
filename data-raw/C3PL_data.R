@@ -15,5 +15,3 @@ Y <- t(matrix(rbinom(N * J, 1, c + (1 - c) * plogis(a %*% t(theta) - b)), nrow =
 
 C3PL_data <- list(data = Y, model = D, params = list(a = a, b = b, c = c, theta = theta))
 usethis::use_data(C3PL_data, overwrite = TRUE)
-
-#fit <- VEMIRT::C3PL_sgvem(Y, D, mu_b = 0, sigma2_b = 1, Alpha = 5, Beta = 20)

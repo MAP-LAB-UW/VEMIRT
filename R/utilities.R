@@ -127,7 +127,7 @@ new.vemirt_DIF <- function(niter0, all, N, criterion) {
 #' @author Weicong Lyu <wlyu4@uw.edu>
 #' @seealso \code{\link{em_D2PL}}, \code{\link{gvemm_D2PL}}, \code{\link{lrt_D2PL}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
-coef.vemirt_DIF <- function(object, criterion = NULL, ...) {
+coef.vemirt_DIF <- function(object, criterion = NULL) {
   if (length(criterion) != 1)
     object$fit
   else
@@ -164,7 +164,8 @@ print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...)
     }
     if (K > 1 || length(x$all) != 1 || fit$lambda0 != 0)
       cat(sep = '', '* lambda0 = ', fit$lambda0, '\n')
-  }
+  } else
+    dat <- fit
   invisible(fit)
 }
 
@@ -174,19 +175,18 @@ print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...)
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
 #'
 #' @author Weicong Lyu <wlyu4@uw.edu>
-#' @usage summary(x, criterion = NULL, max = 99999L, digits = 3, ...)
+#' @usage summary(x, criterion = NULL)
 #'
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}
+#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
 #' @export
-summary.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...) {
-  fit <- coef.vemirt_DIF(x, criterion)
+summary.vemirt_DIF <- function(object, criterion = NULL) {
+  fit <- coef.vemirt_DIF(object, criterion)
   if (is.null(fit$tau)) {
     K <- nrow(fit$beta)
     if (K == 1) {
       dat <- as.data.frame(t(cbind(fit$a, as.matrix(fit$b))))
       rownames(dat) <- c(paste0('a', 1:(nrow(dat) - 1)), 'b')
       colnames(dat) <- paste0(1:ncol(dat))
-      print(dat, max = max, digits = digits, ...)
     } else {
       dat <- (Reduce(`+`, lapply(2:nrow(fit$beta), function(k) {
         dif <- t((cbind(fit$gamma[k, , ], fit$beta[k, ]) != 0) + 0)
@@ -194,12 +194,39 @@ summary.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ..
         colnames(dif) <- paste0(1:ncol(dif))
         dif
       })) != 0) + 0
-      print(as.data.frame(ifelse(dat, 'X', '')), max = max, ...)
+      dat <- structure(list(fit = fit, dif = dat), class = 'vemirt_DIF_summary')
     }
-    if (K > 1 || length(x$all) != 1 || fit$lambda0 != 0)
-      cat(sep = '', '* lambda0 = ', fit$lambda0, '\n')
-  }
+  } else
+    dat <- fit
   invisible(dat)
+}
+
+#' Extract DIF 2PL Items
+#'
+#' @param object An object of class \code{vemirt_DIF_summary}
+#'
+#' @usage coef(object)
+#'
+#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @seealso \code{\link{summary.vemirt_DIF}}, \code{\link{print.vemirt_DIF_summary}}
+#' @export
+coef.vemirt_DIF_summary <- function(object) {
+  object$dif
+}
+
+#' Print Summary of DIF 2PL Items
+#'
+#' @param x An object of class \code{vemirt_DIF_summary}
+#'
+#' @usage print(x, max = 99999L, ...)
+#'
+#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @seealso \code{\link{summary.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}
+#' @export
+print.vemirt_DIF_summary <- function(x, max = 99999L, ...) {
+  print(as.data.frame(ifelse(x$dif, 'X', '')), max = max, ...)
+  cat(sep = '', '* lambda0 = ', x$fit$lambda0, '\n')
+  invisible(x)
 }
 
 new.vemirt_FA <- function(raw) {
@@ -215,7 +242,7 @@ new.vemirt_FA <- function(raw) {
 #' @author Weicong Lyu <wlyu4@uw.edu>
 #' @seealso \code{\link{C2PL_gvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}, \code{\link{C3PL_sgvem}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_IS}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_rot}}, \code{\link{print.vemirt_FA}}
 #' @export
-coef.vemirt_FA <- function(object, ...) {
+coef.vemirt_FA <- function(object) {
   coefs <- as.data.frame(if (!is.null(object$boots_a))
     cbind(object$boots_a, object$boots_b)
   else if (!is.null(object$new_a))

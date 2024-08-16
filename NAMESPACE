@@ -2,8 +2,10 @@
 
 S3method("%*%",torch_tensor)
 S3method(coef,vemirt_DIF)
+S3method(coef,vemirt_DIF_summary)
 S3method(coef,vemirt_FA)
 S3method(print,vemirt_DIF)
+S3method(print,vemirt_DIF_summary)
 S3method(print,vemirt_FA)
 S3method(summary,vemirt_DIF)
 S3method(t,torch_tensor)

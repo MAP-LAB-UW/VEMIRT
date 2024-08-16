@@ -1,4 +1,4 @@
-#' VEMIRT: A package for high-dimensional IRT models
+#' VEMIRT: A Package for High-Dimensional IRT Models
 #'
 #' VEMIRT is created to assist researchers to conduct exploratory and confirmatory
 #' multidimensional item response theory (MIRT) analysis and cooresponding item

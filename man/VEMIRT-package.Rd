@@ -4,7 +4,7 @@
 \name{VEMIRT-package}
 \alias{VEMIRT}
 \alias{VEMIRT-package}
-\title{VEMIRT: A package for high-dimensional IRT models}
+\title{VEMIRT: A Package for High-Dimensional IRT Models}
 \description{
 VEMIRT is created to assist researchers to conduct exploratory and confirmatory
 multidimensional item response theory (MIRT) analysis and cooresponding item
@@ -53,7 +53,8 @@ software packages, especially when the number of latent factors exceeds four.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://MAP-LAB-UW.github.io/VEMIRT/}
+  \item \url{https://MAP-LAB-UW.github.io/VEMIRT}
+  \item \url{https://github.com/MAP-LAB-UW/VEMIRT}
 }
 
 }

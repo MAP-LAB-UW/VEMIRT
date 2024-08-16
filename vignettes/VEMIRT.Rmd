@@ -3,9 +3,6 @@ title: Variational Estimation for Multidimensional Item Response Theory Using VE
 output:
   rmarkdown::html_vignette:
     toc: true
-    pandoc_args:
-      - "--preserve-tabs"
-      - "--lua-filter=merge-code-blocks.lua"
 bibliography: references.bib
 csl: apa.csl
 link-citations: true
@@ -15,7 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<!-- Run knitr::knit("VEMIRT.Rmd.orig", output = "VEMIRT.Rmd") to build the vignette -->
+<!-- Run knitr::knit("VEMIRT.Rmd.orig", output = "VEMIRT.Rmd") to prebuild the vignette -->
 
 
 
@@ -23,7 +20,8 @@ vignette: >
 In this tutorial, we illustrate how to conduct multidimensional item response theory (MIRT) analysis of multidimensional two parameter logistic (M2PL) and multidimensional three parameter logistic (M3PL) models, and differential item functioning (DIF) analysis of M2PL models using the `VEMIRT` package in `R`, which can be installed with
 
 ``` r
-devtools::install_github("MAP-LAB-UW/VEMIRT")
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("MAP-LAB-UW/VEMIRT", build_vignettes = T)
 torch::install_torch()
 ```
 The package requires a C++ compiler to work properly, and users are referred to https://github.com/MAP-LAB-UW/VEMIRT for more information.
@@ -48,20 +46,20 @@ Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbe
 
 ``` r
 head(D2PL_data$data)
-#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18]
-#> [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0     1     0     1     1     1
-#> [2,]    0    0    0    0    1    0    0    0    0     0     0     0     0     1     0     0     0     0
-#> [3,]    0    0    0    0    0    0    1    0    0     0     0     0     0     0     0     0     1     0
-#> [4,]    0    0    1    0    1    0    0    0    0     1     1     1     1     1     1     1     0     1
-#> [5,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0     0     1     0     0
-#> [6,]    1    1    1    1    1    0    1    1    1     1     1     1     1     1     1     1     1     1
-#>      [,19] [,20]
-#> [1,]     1     0
-#> [2,]     0     0
-#> [3,]     1     0
-#> [4,]     0     0
-#> [5,]     0     0
-#> [6,]     0     1
+#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19]
+#> [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0     1     0     1     1     1     1
+#> [2,]    0    0    0    0    1    0    0    0    0     0     0     0     0     1     0     0     0     0     0
+#> [3,]    0    0    0    0    0    0    1    0    0     0     0     0     0     0     0     0     1     0     1
+#> [4,]    0    0    1    0    1    0    0    0    0     1     1     1     1     1     1     1     0     1     0
+#> [5,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0     0     1     0     0     0
+#> [6,]    1    1    1    1    1    0    1    1    1     1     1     1     1     1     1     1     1     1     0
+#>      [,20]
+#> [1,]     0
+#> [2,]     0
+#> [3,]     0
+#> [4,]     0
+#> [5,]     0
+#> [6,]     1
 ```
 
 CFA and DIF rely on a $J$ by $D$ binary loading indicator matrix specifying latent dimensions each item loads on, where $D$ is the number of latent dimensions. The latent traits have $D=2$ dimensions here.
@@ -278,71 +276,71 @@ with(E2PL_data_C2, E2PL_gvem_adaptlasso(data, model, constrain = "C2", non_pen =
 #>             a1    a2   a3       b
 #> Item1   1.6019 0.000 0.00  1.7409
 #> Item2   0.4230 2.419 0.00 -1.1530
-#> Item3   0.0000 2.645 1.00 -1.2417
+#> Item3   0.0000 2.649 1.00 -1.2417
 #> Item4   1.9203 0.000 0.00 -0.8737
 #> Item5  -1.2687 2.575 0.00 -0.8181
-#> Item6  -0.1981 0.983 1.30  0.1904
+#> Item6  -0.1981 0.988 1.30  0.1904
 #> Item7   1.3404 0.000 0.00 -0.9736
 #> Item8  -0.8955 2.214 0.00  0.4638
-#> Item9  -0.2045 0.903 1.12  1.1810
+#> Item9  -0.2045 0.908 1.12  1.1810
 #> Item10  1.5077 0.000 0.00  1.0795
 #> Item11 -1.2717 2.493 0.00  0.8623
-#> Item12 -0.3468 1.243 1.32 -0.6612
+#> Item12 -0.3468 1.248 1.32 -0.6612
 #> Item13  2.0240 0.000 0.00  0.0465
 #> Item14 -1.1050 2.213 0.00  1.5660
-#> Item15 -0.2273 1.158 1.39 -1.3111
+#> Item15 -0.2273 1.163 1.39 -1.3111
 #> Item16  1.8359 0.000 0.00 -1.9954
 #> Item17 -1.3386 2.723 0.00  0.5314
-#> Item18 -0.3741 1.030 1.27  0.5081
+#> Item18 -0.3741 1.035 1.27  0.5081
 #> Item19  1.6743 0.000 0.00  0.1161
 #> Item20 -0.9951 2.069 0.00  0.3137
-#> Item21 -0.4841 1.325 1.34  0.1086
+#> Item21 -0.4841 1.330 1.34  0.1086
 #> Item22  1.8836 0.000 0.00 -0.6795
 #> Item23 -0.7954 2.335 0.00  1.0436
-#> Item24  0.0000 0.726 1.26  0.0521
+#> Item24  0.0000 0.731 1.26  0.0521
 #> Item25  1.5476 0.000 0.00  0.3304
 #> Item26 -1.2496 2.608 0.00 -0.0336
-#> Item27 -0.3240 1.225 1.30  0.5954
+#> Item27 -0.3240 1.230 1.30  0.5954
 #> Item28  1.8113 0.000 0.00 -1.5157
 #> Item29 -1.2838 2.500 0.00 -1.0119
-#> Item30 -0.0444 0.696 1.23 -0.1758
+#> Item30 -0.0444 0.701 1.23 -0.1758
 ```
 
 GVEM is known to produce biased estimates for discrimination parameters, and `E2PL_iw` helps reduce the bias through importance sampling [@ma2024].
 
 ``` r
 E2PL_iw(E2PL_data_C1$data, result)
-#>           a1     a2   a3        b
-#> Item1  1.810  0.000 0.00  1.94223
-#> Item2  0.000  2.176 0.00 -1.51968
-#> Item3  0.000  0.000 1.83 -1.49384
-#> Item4  2.179  0.000 0.00 -1.04375
-#> Item5  0.000  1.944 0.00 -0.96973
-#> Item6  0.000  0.000 1.86  0.27348
-#> Item7  1.573  0.000 0.00 -1.14856
-#> Item8  0.000  1.833 0.00  0.58769
-#> Item9  0.000  0.000 1.66  1.38781
-#> Item10 1.707  0.000 0.00  1.25531
-#> Item11 0.000  1.887 0.00  1.03709
-#> Item12 0.000  0.000 1.96 -0.77355
-#> Item13 2.214  0.000 0.00  0.00325
-#> Item14 0.000  1.699 0.00  1.77978
-#> Item15 0.000  0.000 2.09 -1.51117
-#> Item16 2.025  0.000 0.00 -2.17348
-#> Item17 0.000  2.057 0.00  0.66512
-#> Item18 0.000  0.000 1.80  0.65949
-#> Item19 2.055 -0.201 0.00  0.12103
-#> Item20 0.000  1.597 0.00  0.39144
-#> Item21 0.000  0.000 1.97  0.17337
-#> Item22 2.111  0.000 0.00 -0.82262
-#> Item23 0.496  1.804 0.00  1.23893
-#> Item24 0.000  0.000 1.78  0.09109
-#> Item25 1.782  0.000 0.00  0.41073
-#> Item26 0.000  2.022 0.00  0.01978
-#> Item27 0.000  0.000 1.99  0.75986
-#> Item28 2.054  0.000 0.00 -1.71589
-#> Item29 0.000  1.881 0.00 -1.19066
-#> Item30 0.000 -0.195 1.81 -0.15619
+#>          a1     a2   a3        b
+#> Item1  1.82  0.000 0.00  1.93892
+#> Item2  0.00  2.176 0.00 -1.51429
+#> Item3  0.00  0.000 1.83 -1.50028
+#> Item4  2.18  0.000 0.00 -1.06272
+#> Item5  0.00  1.943 0.00 -0.95791
+#> Item6  0.00  0.000 1.86  0.24090
+#> Item7  1.57  0.000 0.00 -1.15989
+#> Item8  0.00  1.834 0.00  0.61006
+#> Item9  0.00  0.000 1.66  1.38268
+#> Item10 1.71  0.000 0.00  1.25149
+#> Item11 0.00  1.885 0.00  1.04897
+#> Item12 0.00  0.000 1.96 -0.79208
+#> Item13 2.21  0.000 0.00 -0.00846
+#> Item14 0.00  1.697 0.00  1.78234
+#> Item15 0.00  0.000 2.09 -1.51844
+#> Item16 2.03  0.000 0.00 -2.17690
+#> Item17 0.00  2.057 0.00  0.68606
+#> Item18 0.00  0.000 1.80  0.64290
+#> Item19 2.05 -0.162 0.00  0.10766
+#> Item20 0.00  1.598 0.00  0.42147
+#> Item21 0.00  0.000 1.97  0.13218
+#> Item22 2.11  0.000 0.00 -0.84737
+#> Item23 0.49  1.805 0.00  1.24074
+#> Item24 0.00  0.000 1.78  0.05249
+#> Item25 1.78  0.000 0.00  0.37440
+#> Item26 0.00  2.022 0.00  0.00687
+#> Item27 0.00  0.000 1.99  0.74305
+#> Item28 2.05  0.000 0.00 -1.72294
+#> Item29 0.00  1.880 0.00 -1.18368
+#> Item30 0.00 -0.105 1.81 -0.20663
 ```
 
 
@@ -361,69 +359,71 @@ The usage of these functions is similar to those for M2PL models, but some addit
 
 ``` r
 with(E3PL_data_C1, E3PL_sgvem_adaptlasso(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C1"))
-#>           a1    a2    a3       b     c
-#> Item1  0.676 0.000 0.000  0.2143 0.185
-#> Item2  0.000 1.178 0.000 -1.2409 0.189
-#> Item3  0.000 0.000 1.233 -1.1741 0.187
-#> Item4  1.582 0.000 0.000 -0.6716 0.180
-#> Item5  0.000 1.334 0.000 -0.9959 0.186
-#> Item6  0.000 0.000 1.187  0.0524 0.182
-#> Item7  1.326 0.000 0.000 -0.9660 0.184
-#> Item8  0.000 1.106 0.000  0.1740 0.182
-#> Item9  0.000 0.000 0.787  0.7223 0.181
-#> Item10 1.053 0.000 0.000  0.6972 0.176
-#> Item11 0.000 1.218 0.000  0.8015 0.170
-#> Item12 0.000 0.000 1.044 -0.8038 0.188
-#> Item13 1.681 0.000 0.000  0.4800 0.162
-#> Item14 0.000 0.879 0.000  1.0287 0.175
-#> Item15 0.000 0.000 1.156 -1.0842 0.188
-#> Item16 1.321 0.000 0.000 -1.5105 0.187
-#> Item17 0.000 1.384 0.000  0.1955 0.174
-#> Item18 0.000 0.000 0.999  0.4001 0.181
-#> Item19 1.316 0.000 0.000 -0.1379 0.178
-#> Item20 0.000 1.095 0.000  0.2130 0.181
-#> Item21 0.000 0.000 1.219  0.1317 0.177
-#> Item22 1.570 0.000 0.000 -0.3656 0.176
-#> Item23 0.000 1.106 0.000  0.9467 0.176
-#> Item24 0.000 0.000 0.916 -0.5306 0.188
-#> Item25 1.266 0.000 0.000  0.2358 0.175
-#> Item26 0.000 1.237 0.000  0.2547 0.179
-#> Item27 0.000 0.000 0.951  0.0625 0.183
-#> Item28 1.264 0.000 0.000 -1.1832 0.187
-#> Item29 0.000 1.082 0.000 -0.8909 0.186
-#> Item30 0.000 0.000 0.969 -0.2414 0.184
+#> Warning: The maximum number of EM cycles reached!
+#> Warning: The maximum number of EM cycles reached!
+#>           a1   a2    a3       b     c
+#> Item1  0.824 0.00 0.000  0.2221 0.185
+#> Item2  0.000 1.27 0.000 -1.1569 0.188
+#> Item3  0.000 0.00 1.531 -1.2687 0.187
+#> Item4  1.884 0.00 0.000 -0.6809 0.181
+#> Item5  0.000 1.39 0.000 -0.9603 0.188
+#> Item6  0.000 0.00 1.531  0.0323 0.179
+#> Item7  1.576 0.00 0.000 -0.9503 0.184
+#> Item8  0.000 1.15 0.000  0.2288 0.184
+#> Item9  0.000 0.00 0.981  0.7210 0.178
+#> Item10 1.244 0.00 0.000  0.6862 0.176
+#> Item11 0.000 1.32 0.000  0.8267 0.174
+#> Item12 0.000 0.00 1.302 -0.8383 0.187
+#> Item13 1.937 0.00 0.000  0.5078 0.162
+#> Item14 0.000 1.01 0.000  1.0492 0.176
+#> Item15 0.000 0.00 1.419 -1.1223 0.187
+#> Item16 1.564 0.00 0.000 -1.5017 0.187
+#> Item17 0.000 1.47 0.000  0.2434 0.178
+#> Item18 0.000 0.00 1.151  0.4002 0.179
+#> Item19 1.578 0.00 0.000 -0.1455 0.178
+#> Item20 0.000 1.12 0.000  0.2213 0.184
+#> Item21 0.000 0.00 1.577  0.0950 0.174
+#> Item22 1.866 0.00 0.000 -0.4013 0.177
+#> Item23 0.000 1.23 0.000  0.9747 0.179
+#> Item24 0.000 0.00 1.189 -0.5513 0.186
+#> Item25 1.503 0.00 0.000  0.2557 0.177
+#> Item26 0.000 1.30 0.000  0.2660 0.183
+#> Item27 0.000 0.00 1.217  0.0448 0.182
+#> Item28 1.498 0.00 0.000 -1.1697 0.187
+#> Item29 0.000 1.20 0.000 -0.8706 0.187
+#> Item30 0.000 0.00 1.244 -0.2850 0.184
 with(E3PL_data_C2, E3PL_sgvem_lasso(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C2", non_pen = 3))
-#>           a1      a2    a3       b     c
-#> Item1  0.723  0.0000 0.000  0.2189 0.183
-#> Item2  0.000  1.4434 0.000 -1.2271 0.184
-#> Item3  0.000  0.0000 1.747 -1.0344 0.180
-#> Item4  1.359  0.4904 0.000 -0.6996 0.182
-#> Item5  0.000  1.2588 0.000 -0.9828 0.185
-#> Item6  0.000  0.0000 1.326  0.0676 0.180
-#> Item7  1.129  0.4361 0.000 -0.9701 0.184
-#> Item8  0.000  1.1038 0.000  0.2006 0.178
-#> Item9  0.000  0.0000 0.900  0.7266 0.177
-#> Item10 0.961  0.2400 0.000  0.6745 0.176
-#> Item11 0.000  1.2458 0.000  0.8241 0.166
-#> Item12 0.000  0.0000 1.227 -0.8149 0.185
-#> Item13 1.387  0.5849 0.000  0.5008 0.164
-#> Item14 0.000  0.8685 0.000  1.0466 0.171
-#> Item15 0.000  0.0000 1.320 -1.1458 0.187
-#> Item16 1.055  0.5033 0.000 -1.5064 0.187
-#> Item17 0.000  1.2996 0.000  0.1806 0.174
-#> Item18 0.000  0.0926 0.958  0.4522 0.178
-#> Item19 1.140  0.4091 0.000 -0.1483 0.179
-#> Item20 0.000  1.0545 0.000  0.1911 0.180
-#> Item21 0.000 -0.1765 1.523  0.0830 0.174
-#> Item22 1.334  0.4620 0.000 -0.3634 0.177
-#> Item23 0.000  1.0375 0.000  0.9409 0.174
-#> Item24 0.000  0.0000 1.065 -0.5860 0.187
-#> Item25 1.182  0.2990 0.000  0.2592 0.175
-#> Item26 0.000  1.2200 0.000  0.2216 0.177
-#> Item27 0.000  0.0262 1.090  0.0952 0.182
-#> Item28 1.272  0.2065 0.000 -1.1771 0.185
-#> Item29 0.000  1.0981 0.000 -0.9526 0.185
-#> Item30 0.000  0.0000 1.064 -0.2589 0.183
+#>           a1     a2    a3       b     c
+#> Item1  0.716 0.0000 0.000  0.1848 0.184
+#> Item2  0.000 1.6328 0.000 -1.2424 0.184
+#> Item3  0.000 0.0000 1.737 -1.0087 0.179
+#> Item4  1.336 0.5179 0.000 -0.7203 0.182
+#> Item5  0.000 1.4377 0.000 -0.9989 0.185
+#> Item6  0.000 0.0000 1.288  0.0595 0.180
+#> Item7  1.113 0.4590 0.000 -0.9681 0.184
+#> Item8  0.000 1.2972 0.000  0.1770 0.179
+#> Item9  0.000 0.0000 0.896  0.7047 0.178
+#> Item10 0.931 0.2317 0.000  0.6889 0.176
+#> Item11 0.000 1.4404 0.000  0.7989 0.168
+#> Item12 0.000 0.0000 1.203 -0.8368 0.186
+#> Item13 1.377 0.5979 0.000  0.5104 0.163
+#> Item14 0.000 0.9938 0.000  1.0340 0.172
+#> Item15 0.000 0.0000 1.283 -1.1360 0.187
+#> Item16 1.057 0.5547 0.000 -1.5126 0.187
+#> Item17 0.000 1.5168 0.000  0.1848 0.172
+#> Item18 0.000 0.1215 0.954  0.4423 0.178
+#> Item19 1.096 0.4350 0.000 -0.1511 0.179
+#> Item20 0.000 1.1924 0.000  0.2106 0.180
+#> Item21 0.000 0.0000 1.329  0.1301 0.174
+#> Item22 1.336 0.4624 0.000 -0.3802 0.177
+#> Item23 0.000 1.2371 0.000  0.9373 0.173
+#> Item24 0.000 0.0000 1.057 -0.5256 0.186
+#> Item25 1.155 0.2704 0.000  0.2513 0.175
+#> Item26 0.000 1.3993 0.000  0.2171 0.176
+#> Item27 0.000 0.0558 1.073  0.0427 0.183
+#> Item28 1.182 0.2371 0.000 -1.2105 0.186
+#> Item29 0.000 1.2586 0.000 -0.9502 0.185
+#> Item30 0.000 0.0000 1.040 -0.2977 0.185
 ```
 
 
@@ -446,7 +446,7 @@ result <- with(C2PL_data, C2PL_gvem(data, model))
 result
 #>          a1   a2       b
 #> Item1  1.91 0.00  0.8789
-#> Item2  0.00 1.71 -2.1324
+#> Item2  0.00 1.71 -2.1325
 #> Item3  1.85 0.00  0.4760
 #> Item4  0.00 2.03 -1.2061
 #> Item5  1.89 0.00 -0.6088
@@ -467,26 +467,26 @@ result
 #> Item20 0.00 1.62 -1.4178
 C2PL_bs(result)
 #>          a1   a2       b
-#> Item1  2.22 0.00  1.0157
-#> Item2  0.00 2.04 -2.3936
-#> Item3  2.22 0.00  0.5224
-#> Item4  0.00 2.34 -1.3797
-#> Item5  2.23 0.00 -0.6784
-#> Item6  0.00 1.74  1.2075
-#> Item7  1.67 0.00 -1.9693
-#> Item8  0.00 2.05 -0.3202
-#> Item9  1.55 0.00  0.3334
-#> Item10 0.00 1.74 -0.5015
-#> Item11 2.24 0.00 -0.4104
-#> Item12 0.00 1.99 -0.1192
-#> Item13 1.46 0.00  0.6153
-#> Item14 0.00 1.69 -2.3542
-#> Item15 2.11 0.00  0.0356
-#> Item16 0.00 1.71  0.9975
-#> Item17 2.24 0.00  0.1562
-#> Item18 0.00 1.81  0.4763
-#> Item19 2.06 0.00 -0.7782
-#> Item20 0.00 1.84 -1.5228
+#> Item1  2.19 0.00  0.9542
+#> Item2  0.00 2.05 -2.3435
+#> Item3  2.09 0.00  0.5665
+#> Item4  0.00 2.38 -1.3555
+#> Item5  2.22 0.00 -0.6731
+#> Item6  0.00 1.66  1.2325
+#> Item7  1.62 0.00 -1.9500
+#> Item8  0.00 2.00 -0.3105
+#> Item9  1.51 0.00  0.3396
+#> Item10 0.00 1.63 -0.4173
+#> Item11 2.21 0.00 -0.4012
+#> Item12 0.00 1.86 -0.1082
+#> Item13 1.43 0.00  0.5435
+#> Item14 0.00 1.52 -2.3258
+#> Item15 2.07 0.00  0.0380
+#> Item16 0.00 1.64  1.0678
+#> Item17 2.33 0.00  0.0801
+#> Item18 0.00 1.88  0.5184
+#> Item19 2.09 0.00 -0.8113
+#> Item20 0.00 1.79 -1.4681
 C2PL_iw(C2PL_data$data, result)
 #>          a1   a2       b
 #> Item1  2.16 0.00  1.0352
@@ -554,10 +554,7 @@ with(C3PL_data, C3PL_sgvem(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta
 We recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `IWGVEMM` is the default choice and is recommended for `D2PL_gvem` because this method has an additional importance sampling step which helps improve accuracy. We do not recommend `D2PL_lrt` because it is time-consuming. Users are referred to @wang2023 for `D2PL_em`.
 
 ``` r
-result <- with(D2PL_data, D2PL_gvem(data, model, group, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1)))
-```
-
-``` r
+result <- with(D2PL_data, D2PL_gvem(data, model, group, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1), verbose = F))
 result
 #>      1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
 #> 2:a1                                                   
@@ -568,7 +565,7 @@ result
 #> 3:b  X X X X X X                                       
 #> * lambda0 = 0.5
 ```
-Item parameters are ordered by groups and group 1 is the reference group. DIF items are flagged by `X`. By default, `D2PL_gvem` chooses the best tuning parameter using the generalized information criterion (GIC), and in this example 0.5 is chosen, but AIC and BIC can be used too:
+Item parameters are ordered by groups and group 1 is the reference group. DIF items are flagged by `X`. By default, `D2PL_gvem` chooses the best tuning parameter using the generalized information criterion (GIC), and in this example 0.5 is chosen, but AIC and BIC can be used too.
 
 ``` r
 print(result, 'AIC')
@@ -604,6 +601,82 @@ str(coef(result, 'BIC'))
 #>  $ AIC    : num 23177
 #>  $ BIC    : num 23241
 #>  $ GIC    : num 23328
+```
+
+
+# Package Evaluation
+Here we show two examples on how to test the `VEMIRT` package by simulating data, estimating the model using `VEMIRT`, and then checking accuracy.
+
+``` r
+library(abind)
+library(mvtnorm)
+set.seed(1)
+```
+
+## Confirmatory 2PL Model
+
+``` r
+Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
+J <- 10
+N <- 1000
+model <- cbind(rep(1:0, J / 2), rep(0:1, J / 2))
+a <- matrix(runif(J * 2, 1, 3), ncol = 2) * model
+b <- rnorm(J)
+theta <- rmvnorm(N, rep(0, 2), Sigma)
+data <- t(matrix(rbinom(N * J, 1, plogis(a %*% t(theta) - b)), nrow = J))
+
+result.gvem <- C2PL_gvem(data, model)
+result.iw <- C2PL_iw(data, result.gvem)
+
+rmse <- function(x, y) {
+  sqrt(mean((x - y) ^ 2))
+}
+c(a = rmse(a[model == 1], coef(result.gvem)[, 1:2][model == 1]), b = rmse(b, coef(result.gvem)$b))
+#>         a         b 
+#> 0.6039514 0.1318309
+c(a = rmse(a[model == 1], coef(result.iw)[, 1:2][model == 1]), b = rmse(b, coef(result.iw)$b))
+#>          a          b 
+#> 0.40411993 0.09705373
+```
+
+
+## DIF 2PL Model
+
+``` r
+Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
+J <- 10
+j <- J * 0.4
+n <- 500
+group <- rep(1:3, each = n)
+model <- cbind(rep(1:0, J / 2), rep(0:1, J / 2))
+a <- matrix(runif(J * 2, 1, 3), ncol = 2) * model
+a <- unname(abind(a, a, a, along = 0))
+a[-1, 1:(j / 2), ] <- a[-1, 1:(j / 2), ] + c(0.5, 0.9)
+a[-1, (j / 2 + 1):j, ] <- a[-1, (j / 2 + 1):j, ] - c(0.5, 0.9)
+a[-1, , ] <- a[-1, , ] * abind(model, model, along = 0)
+b <- rnorm(J)
+b <- unname(rbind(b, b, b))
+b[-1, 1:(j / 2)] <- b[-1, 1:(j / 2)] - c(0.3, 0.8)
+b[-1, (j / 2 + 1):j] <- b[-1, (j / 2 + 1):j] + c(0.3, 0.8)
+theta <- rmvnorm(n * 3, rep(0, 2), Sigma)
+data <- t(sapply(1:(n * 3), function(n) {
+  rbinom(J, 1, plogis(a[group[n], , ] %*% theta[n, ] - b[group[n], ]))
+}))
+
+result.iw <- D2PL_gvem(data, model, group, verbose = F)
+result.iw.gic <- summary(result.iw, 1)
+result.iw.bic <- summary(result.iw, 'BIC')
+
+count <- function(j, result) {
+  pos <- colSums(result) > 0
+  c(`True Positive` = mean(pos[1:j]), `False Positive` = mean(pos[-(1:j)]))
+}
+count(j, coef(result.iw.gic))
+#>  True Positive False Positive 
+#>           0.75           0.00
+count(j, coef(result.iw.bic))
+#>  True Positive False Positive 
+#>      1.0000000      0.1666667
 ```
 
 

@@ -9,14 +9,15 @@ D2PL_gvem(
   model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
   method = "IWGVEMM",
-  Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.2, 0.8, by = 0.1),
+  Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1),
   criterion = "GIC",
   iter = 200,
   eps = 0.001,
   c = 1,
   S = 10,
   M = 10,
-  lr = 0.1
+  lr = 0.1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ D2PL_gvem(
 \item{M}{Sample size for approximating a tighter lower bound (\code{'IWGVEMM'} only)}
 
 \item{lr}{Learning rate for the Adam optimizer (\code{'IWGVEMM'} only)}
+
+\item{verbose}{Whether to show the progress}
 }
 \value{
 An object of class \code{vemirt_DIF}, which is a list containing the following elements:

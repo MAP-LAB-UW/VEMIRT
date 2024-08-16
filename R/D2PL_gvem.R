@@ -20,9 +20,12 @@ init.D2PL_gvem <- function(Y, D, X, iter, eps, ...) {
   a.mask <- torch_tensor(D != 0)
   a <- a.mask * 1
   b <- torch_zeros(J)
-  gamma.mask <- torch_stack(c(torch_zeros_like(a.mask), replicate(G - 1, a.mask)))
+  mask <- groupsum(n, Y.mask$float()) > 0
+  gamma.mask <- torch_stack(replicate(G, a.mask)) * mask$unsqueeze(3)
+  gamma.mask[1] <- 0
   gamma <- gamma.mask * 0
-  beta.mask <- torch_cat(list(torch_zeros(1, J), torch_ones(G - 1, J)))$bool()
+  beta.mask <- mask$clone()
+  beta.mask[1] <- 0
   beta <- beta.mask * 0
 
   lambda <- 0
@@ -247,6 +250,7 @@ final.D2PL_gvem <- function() {
 #' @param S Sample size for approximating the expected lower bound (\code{'IWGVEMM'} only)
 #' @param M Sample size for approximating a tighter lower bound (\code{'IWGVEMM'} only)
 #' @param lr Learning rate for the Adam optimizer (\code{'IWGVEMM'} only)
+#' @param verbose Whether to show the progress
 #'
 #' @return An object of class \code{vemirt_DIF}, which is a list containing the following elements:
 #'   \item{N}{Number of respondents}
@@ -279,7 +283,7 @@ final.D2PL_gvem <- function() {
 #' @examples
 #' \dontrun{
 #' with(D2PL_data, D2PL_gvem(data, model, group))}
-D2PL_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.2, 0.8, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 1, S = 10, M = 10, lr = 0.1) {
+D2PL_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'IWGVEMM', Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1), criterion = 'GIC', iter = 200, eps = 1e-3, c = 1, S = 10, M = 10, lr = 0.1, verbose = TRUE) {
   fn <- switch(method,
                GVEM = list(init.D2PL_gvem, est.D2PL_gvem),
                IWGVEMM = list(init.D2PL_iwgvemm, est.D2PL_iwgvemm),
@@ -294,17 +298,18 @@ D2PL_gvem <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(d
     X <- as.integer(X)
   if (min(X) == 0)
     X <- X + 1
+  output <- if (verbose) stderr() else nullfile()
 
-  cat('Fitting the model without regularization for initial values...\n')
+  cat(file = output, 'Fitting the model without regularization for initial values...\n')
   init <- fn[[1]](Y, D, X, iter, eps, S, M, lr, c)
-  cat('Fitting the model with different lambdas...\n')
-  pb <- txtProgressBar(0, length(Lambda0), style = 3)
+  cat(file = output, 'Fitting the model with different lambdas...\n')
+  if (verbose) pb <- txtProgressBar(file = output, 0, length(Lambda0), style = 3)
   results <- lapply(Lambda0, function(lambda0) {
     lambda <- sqrt(N) * lambda0
     result <- fn[[2]](init(), lambda)
-    setTxtProgressBar(pb, pb$getVal() + 1)
+    if (verbose) setTxtProgressBar(pb, pb$getVal() + 1)
     c(lst(lambda0, lambda), result)
   })
-  close(pb)
+  if (verbose) close(pb)
   new.vemirt_DIF(init('niter.init'), results, N, criterion)
 }

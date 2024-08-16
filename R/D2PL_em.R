@@ -181,6 +181,7 @@ final.D2PL_em <- function() {
 #' @param iter Maximum number of iterations
 #' @param eps Termination criterion on numerical accuracy
 #' @param c Constant for computing GIC
+#' @param verbose Whether to show the progress
 #'
 #' @return An object of class \code{vemirt_DIF}, which is a list containing the following elements:
 #'   \item{N}{Number of respondents}
@@ -210,7 +211,7 @@ final.D2PL_em <- function() {
 #' @examples
 #' \dontrun{
 #' with(D2PL_data, D2PL_em(data, model, group))}
-D2PL_em <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'EMM', Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.2, 0.8, by = 0.1), level = 10, criterion = 'BIC', iter = 200, eps = 1e-3, c = 1) {
+D2PL_em <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(data)), method = 'EMM', Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1), level = 10, criterion = 'BIC', iter = 200, eps = 1e-3, c = 1, verbose = TRUE) {
   fn <- switch(method,
                EM = list(init.D2PL_em, est.D2PL_em),
                EMM = list(init.D2PL_em, est.D2PL_emm),
@@ -225,17 +226,18 @@ D2PL_em <- function(data, model = matrix(1, ncol(data)), group = rep(1, nrow(dat
     X <- as.integer(X)
   if (min(X) == 0)
     X <- X + 1
+  output <- if (verbose) stderr() else nullfile()
 
-  cat('Fitting the model without regularization for initial values...\n')
+  cat(file = output, 'Fitting the model without regularization for initial values...\n')
   init <- fn[[1]](Y, D, X, level, iter, eps, c)
-  cat('Fitting the model with different lambdas...\n')
-  pb <- txtProgressBar(0, length(Lambda0), style = 3)
+  cat(file = output, 'Fitting the model with different lambdas...\n')
+  if (verbose) pb <- txtProgressBar(file = output, 0, length(Lambda0), style = 3)
   results <- lapply(Lambda0, function(lambda0) {
     lambda <- sqrt(N) * lambda0
     result <- fn[[2]](init(), lambda)
-    setTxtProgressBar(pb, pb$getVal() + 1)
+    if (verbose) setTxtProgressBar(pb, pb$getVal() + 1)
     c(lst(lambda0, lambda), result)
   })
-  close(pb)
+  if (verbose) close(pb)
   new.vemirt_DIF(init('niter.init'), results, N, criterion)
 }

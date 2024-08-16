@@ -9,12 +9,13 @@ D2PL_em(
   model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
   method = "EMM",
-  Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.2, 0.8, by = 0.1),
+  Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1),
   level = 10,
   criterion = "BIC",
   iter = 200,
   eps = 0.001,
-  c = 1
+  c = 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ D2PL_em(
 \item{eps}{Termination criterion on numerical accuracy}
 
 \item{c}{Constant for computing GIC}
+
+\item{verbose}{Whether to show the progress}
 }
 \value{
 An object of class \code{vemirt_DIF}, which is a list containing the following elements:

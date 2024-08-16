@@ -4,18 +4,18 @@
 \alias{summary.vemirt_DIF}
 \title{Summarize DIF 2PL Items}
 \usage{
-summary(x, criterion = NULL, max = 99999L, digits = 3, ...)
+summary(x, criterion = NULL)
 }
 \arguments{
-\item{x}{An object of class \code{vemirt_DIF}}
-
 \item{criterion}{Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)}
+
+\item{x}{An object of class \code{vemirt_DIF}}
 }
 \description{
 Summarize DIF 2PL Items
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}
+\code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
 }
 \author{
 Weicong Lyu <wlyu4@uw.edu>

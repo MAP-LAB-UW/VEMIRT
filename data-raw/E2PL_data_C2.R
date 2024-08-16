@@ -16,6 +16,3 @@ D[-(1:3), ] <- 1
 
 E2PL_data_C2 <- list(data = Y, model = D, constrain = 'C2', non_pen = 3, params = list(a = a, b = b, theta = theta))
 usethis::use_data(E2PL_data_C2, overwrite = TRUE)
-
-
-fit <- VEMIRT::E2PL_gvem_lasso(Y, D, constrain = 'C2', non_pen = 3, max.iter = 10000)
