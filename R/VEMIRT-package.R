@@ -24,11 +24,13 @@
 #'   \item \code{\link{C2PL_gvem}} conducts GVEM for confirmatory M2PL analysis
 #'   \item \code{\link{C2PL_bs}} conducts bootstrap sampling to correct bias and produce standard errors for confirmatory M2PL analysis
 #'   \item \code{\link{C2PL_iw}} conducts importance sampling to correct bias for M2PL analysis
+#'   \item \code{\link{C2PL_iw2}} conducts IW-GVEM for confirmatory M2PL analysis (alternative implementation to \code{\link{C2PL_iw}})
 #'   \item \code{\link{C3PL_sgvem}} conducts stochastic GVEM for confirmatory M3PL analysis
 #' }
 #' @section Differential item functioning analysis:
 #' \itemize{
 #'   \item \code{\link{D2PL_em}} conducts DIF analysis for M2PL models using EM algorithms
+#'   \item \code{\link{D2PL_pair_em}} conducts DIF analysis for 2PL models using EM algorithms with group pairwise truncated \eqn{L_1} penalty
 #'   \item \code{\link{D2PL_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms
 #'   \item \code{\link{D2PL_lrt}} conducts DIF analysis for M2PL models using the likelihood ratio test
 #' }

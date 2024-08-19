@@ -20,17 +20,17 @@ init.D2PL_gvem <- function(Y, D, X, iter, eps, ...) {
   a.mask <- torch_tensor(D != 0)
   a <- a.mask * 1
   b <- torch_zeros(J)
-  mask <- groupsum(n, Y.mask$float()) > 0
-  gamma.mask <- torch_stack(replicate(G, a.mask)) * mask$unsqueeze(3)
+  group.mask <- groupsum(n, Y.mask$float()) > 0
+  gamma.mask <- torch_stack(replicate(G, a.mask)) * group.mask$unsqueeze(3)
   gamma.mask[1] <- 0
   gamma <- gamma.mask * 0
-  beta.mask <- mask$clone()
+  beta.mask <- group.mask$clone()
   beta.mask[1] <- 0
   beta <- beta.mask * 0
 
   lambda <- 0
   niter.init <- mstep.D2PL_gvem()
-  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init, p, z0)
+  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, group.mask, eta, niter.init, p, z0)
   init.new()
 }
 
@@ -263,8 +263,8 @@ final.D2PL_gvem <- function() {
 #'   \item{ ...$niter}{Number(s) of iterations}
 #'   \item{ ...$SIGMA}{Person-level posterior covariance matrices}
 #'   \item{ ...$MU}{Person-level posterior mean vectors}
-#'   \item{ ...$Sigma}{Group-level posterior covariance matrices}
-#'   \item{ ...$Mu}{Group-level posterior mean vectors}
+#'   \item{ ...$Sigma}{Group-level covariance matrices}
+#'   \item{ ...$Mu}{Group-level mean vectors}
 #'   \item{ ...$a}{Slopes for group 1}
 #'   \item{ ...$b}{Intercepts for group 1}
 #'   \item{ ...$gamma}{D2PL parameters for the slopes}
@@ -277,7 +277,7 @@ final.D2PL_gvem <- function() {
 #'   \item{ ...$GIC}{Generalized Information Criterion: \code{-2*ll+c*l0*log(N)*log(log(N))}}
 #'
 #' @author Weicong Lyu <wlyu4@uw.edu>
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+#' @seealso \code{\link{D2PL_pair_em}}, \code{\link{D2PL_em}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 #'
 #' @examples

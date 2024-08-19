@@ -59,8 +59,8 @@ An object of class \code{vemirt_DIF}, which is a list containing the following e
   \item{ ...$niter}{Number(s) of iterations}
   \item{ ...$SIGMA}{Person-level posterior covariance matrices}
   \item{ ...$MU}{Person-level posterior mean vectors}
-  \item{ ...$Sigma}{Group-level posterior covariance matrices}
-  \item{ ...$Mu}{Group-level posterior mean vectors}
+  \item{ ...$Sigma}{Group-level covariance matrices}
+  \item{ ...$Mu}{Group-level mean vectors}
   \item{ ...$a}{Slopes for group 1}
   \item{ ...$b}{Intercepts for group 1}
   \item{ ...$gamma}{D2PL parameters for the slopes}
@@ -80,7 +80,7 @@ GVEM Algorithms for DIF Detection in M2PL Models
 with(D2PL_data, D2PL_gvem(data, model, group))}
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+\code{\link{D2PL_pair_em}}, \code{\link{D2PL_em}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
 Weicong Lyu <wlyu4@uw.edu>

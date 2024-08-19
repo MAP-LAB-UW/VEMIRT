@@ -32,7 +32,7 @@ Likelihood Ratio Test for DIF Detection in M2PL Models
 with(D2PL_data, D2PL_lrt(data, model, group))}
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}
+\code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}
 }
 \author{
 Ruoyi Zhu <zhux0445@uw.edu>

@@ -15,7 +15,7 @@ summary(x, criterion = NULL)
 Summarize DIF 2PL Items
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
+\code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
 }
 \author{
 Weicong Lyu <wlyu4@uw.edu>

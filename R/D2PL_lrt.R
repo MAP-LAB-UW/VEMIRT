@@ -14,7 +14,7 @@
 #'   \item{beta}{D2PL parameters for the intercepts}
 #'
 #' @author Ruoyi Zhu <zhux0445@uw.edu>
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}
+#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}
 #' @export
 #'
 #' @examples

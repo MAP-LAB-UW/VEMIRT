@@ -84,13 +84,15 @@ init.new <- function() {
 }
 
 check.vemirt_DIF <- function(all, fit, var) {
-  var.range <- range(sapply(all, `[[`, var))
-  if (var.range[1] < var.range[2]) {
-    x <- fit[[var]]
-    if (x > 0 && x == var.range[1])
-      warning('Optimal ', var, ' may be less than ', x, '.')
-    if (fit$l0 > 0 && x == var.range[2])
-      warning('Optimal ', var, ' may be greater than ', x, '.')
+  if (!is.null(fit[[var]])) {
+    var.range <- range(sapply(all, `[[`, var))
+    if (var.range[1] < var.range[2]) {
+      x <- fit[[var]]
+      if (x > 0 && x == var.range[1])
+        warning('Optimal ', var, ' may be less than ', x, '.')
+      if (x < Inf && fit$l0 > 0 && x == var.range[2])
+        warning('Optimal ', var, ' may be greater than ', x, '.')
+    }
   }
 }
 
@@ -103,12 +105,8 @@ best.vemirt_DIF <- function(all, N, criterion) {
     })
   best <- which.min(ic)
   fit <- all[[best]]
-  if (!is.null(fit$lambda0))
-    check.vemirt_DIF(all, fit, 'lambda0')
-  else {
-    check.vemirt_DIF(all, fit, 'lambda')
-    check.vemirt_DIF(all, fit, 'tau')
-  }
+  check.vemirt_DIF(all, fit, 'lambda0')
+  check.vemirt_DIF(all, fit, 'tau')
   best
 }
 
@@ -125,7 +123,7 @@ new.vemirt_DIF <- function(niter0, all, N, criterion) {
 #' @usage coef(object, criterion = NULL)
 #'
 #' @author Weicong Lyu <wlyu4@uw.edu>
-#' @seealso \code{\link{em_D2PL}}, \code{\link{gvemm_D2PL}}, \code{\link{lrt_D2PL}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 coef.vemirt_DIF <- function(object, criterion = NULL) {
   if (length(criterion) != 1)
@@ -142,30 +140,44 @@ coef.vemirt_DIF <- function(object, criterion = NULL) {
 #' @usage print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 #'
 #' @author Weicong Lyu <wlyu4@uw.edu>
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...) {
   fit <- coef.vemirt_DIF(x, criterion)
-  if (is.null(fit$tau)) {
-    K <- nrow(fit$beta)
-    if (K == 1) {
-      dat <- as.data.frame(t(cbind(fit$a, as.matrix(fit$b))))
-      rownames(dat) <- c(paste0('a', 1:(nrow(dat) - 1)), 'b')
-      colnames(dat) <- paste0(1:ncol(dat))
-      print(dat, max = max, digits = digits, ...)
-    } else {
-      dat <- do.call(rbind, lapply(2:K, function(k) {
-        dif <- as.data.frame(t(ifelse(cbind(fit$gamma[k, , ], fit$beta[k, ]) != 0, 'X', '')))
-        rownames(dif) <- paste0(k, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
+  pair <- !is.null(fit$tau)
+  G <- nrow(if (pair) fit$b else fit$beta)
+  if (is.null(G) || G == 1) {
+    dat <- as.data.frame(t(cbind(fit$a, as.vector(fit$b))))
+    rownames(dat) <- c(paste0('a', 1:(nrow(dat) - 1)), 'b')
+    colnames(dat) <- paste0(1:ncol(dat))
+    if (!is.null(fit$SE.a) && !is.null(fit$SE.b)) {
+      dat.SE <- as.data.frame(t(cbind(fit$SE.a, as.vector(fit$SE.b))))
+      rownames(dat.SE) <- paste0('SE(', c(paste0('a', 1:(nrow(dat.SE) - 1)), 'b'), ')')
+      colnames(dat.SE) <- paste0(1:ncol(dat.SE))
+      dat <- rbind(dat, dat.SE)
+    }
+    print(dat, max = max, digits = digits, ...)
+  } else if (pair) {
+    dat <- do.call(rbind, lapply(1:(G - 1), function(m) {
+      do.call(rbind, lapply((m + 1):G, function(n) {
+        dif <- as.data.frame(t(ifelse(cbind(fit$d.a[m, n, ], fit$d.b[m, n, ]) != 0, 'X', '')))
+        rownames(dif) <- paste0(m, ',', n, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
         colnames(dif) <- paste0(1:ncol(dif))
         dif
       }))
-      print(dat, max = max, ...)
-    }
-    if (K > 1 || length(x$all) != 1 || fit$lambda0 != 0)
-      cat(sep = '', '* lambda0 = ', fit$lambda0, '\n')
-  } else
-    dat <- fit
+    }))
+    print(dat, max = max, ...)
+    cat(sep = '', '* lambda0 = ', fit$lambda0, ', tau = ', fit$tau, '\n')
+  } else {
+    dat <- do.call(rbind, lapply(2:G, function(g) {
+      dif <- as.data.frame(t(ifelse(cbind(fit$gamma[g, , ], fit$beta[g, ]) != 0, 'X', '')))
+      rownames(dif) <- paste0(g, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
+      colnames(dif) <- paste0(1:ncol(dif))
+      dif
+    }))
+    print(dat, max = max, ...)
+    cat(sep = '', '* lambda0 = ', fit$lambda0, '\n')
+  }
   invisible(fit)
 }
 
@@ -177,28 +189,38 @@ print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...)
 #' @author Weicong Lyu <wlyu4@uw.edu>
 #' @usage summary(x, criterion = NULL)
 #'
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
+#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
 #' @export
 summary.vemirt_DIF <- function(object, criterion = NULL) {
   fit <- coef.vemirt_DIF(object, criterion)
-  if (is.null(fit$tau)) {
-    K <- nrow(fit$beta)
-    if (K == 1) {
-      dat <- as.data.frame(t(cbind(fit$a, as.matrix(fit$b))))
-      rownames(dat) <- c(paste0('a', 1:(nrow(dat) - 1)), 'b')
+  pair <- !is.null(fit$tau)
+  G <- nrow(if (pair) fit$b else fit$beta)
+  if (is.null(G) || G == 1) {
+    dat <- as.data.frame(t(cbind(as.vector(fit$a), as.vector(fit$b))))
+    rownames(dat) <- c(paste0('a', 1:(nrow(dat) - 1)), 'b')
+    colnames(dat) <- paste0(1:ncol(dat))
+    if (!is.null(fit$SE.a) && !is.null(fit$SE.b)) {
+      dat.SE <- as.data.frame(t(cbind(as.vector(fit$SE.a), as.vector(fit$SE.b))))
+      rownames(dat.SE) <- paste0('SE(', c(paste0('a', 1:(nrow(dat.SE) - 1)), 'b'), ')')
+      colnames(dat.SE) <- paste0(1:ncol(dat.SE))
+      dat <- rbind(dat, dat.SE)
+    }
+  } else {
+    if (pair) {
+      dat <- sapply(1:dim(fit$d.a)[3], function(j) {
+        dif <- c('a1' = any(fit$d.a[, , j] != 0), 'b' = any(fit$d.b[, , j] != 0))
+      }) + 0
       colnames(dat) <- paste0(1:ncol(dat))
-    } else {
-      dat <- (Reduce(`+`, lapply(2:nrow(fit$beta), function(k) {
-        dif <- t((cbind(fit$gamma[k, , ], fit$beta[k, ]) != 0) + 0)
+    } else
+      dat <- (Reduce(`+`, lapply(2:G, function(g) {
+        dif <- t((cbind(fit$gamma[g, , ], fit$beta[g, ]) != 0) + 0)
         rownames(dif) <- c(paste0('a', 1:(nrow(dif) - 1)), 'b')
         colnames(dif) <- paste0(1:ncol(dif))
         dif
       })) != 0) + 0
-      dat <- structure(list(fit = fit, dif = dat), class = 'vemirt_DIF_summary')
-    }
-  } else
-    dat <- fit
-  invisible(dat)
+    dat <- structure(list(pair = pair, fit = fit, dif = dat), class = 'vemirt_DIF_summary')
+  }
+  dat
 }
 
 #' Extract DIF 2PL Items
@@ -225,7 +247,10 @@ coef.vemirt_DIF_summary <- function(object) {
 #' @export
 print.vemirt_DIF_summary <- function(x, max = 99999L, ...) {
   print(as.data.frame(ifelse(x$dif, 'X', '')), max = max, ...)
-  cat(sep = '', '* lambda0 = ', x$fit$lambda0, '\n')
+  if (x$pair)
+    cat(sep = '', '* lambda0 = ', x$fit$lambda0, ', tau = ', x$fit$tau, '\n')
+  else
+    cat(sep = '', '* lambda0 = ', x$fit$lambda0, '\n')
   invisible(x)
 }
 
@@ -250,7 +275,7 @@ coef.vemirt_FA <- function(object) {
   else
     cbind(object$ra, object$rb)
   )
-  rownames(coefs) <- paste0('Item', 1:nrow(coefs))
+  rownames(coefs) <- 1:nrow(coefs)
   colnames(coefs) <- c(paste0('a', 1:(ncol(coefs) - 1)), 'b')
   if (!is.null(object$rc))
     coefs <- cbind(coefs, c = object$rc)

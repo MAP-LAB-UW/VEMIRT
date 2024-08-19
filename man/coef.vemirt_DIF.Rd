@@ -15,7 +15,7 @@ coef(object, criterion = NULL)
 Extract Parameter Estimates from DIF 2PL Analysis
 }
 \seealso{
-\code{\link{em_D2PL}}, \code{\link{gvemm_D2PL}}, \code{\link{lrt_D2PL}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+\code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
 Weicong Lyu <wlyu4@uw.edu>

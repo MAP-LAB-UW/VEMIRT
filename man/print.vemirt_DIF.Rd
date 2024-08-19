@@ -15,7 +15,7 @@ print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 Print DIF 2PL Items by Group
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+\code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
 Weicong Lyu <wlyu4@uw.edu>

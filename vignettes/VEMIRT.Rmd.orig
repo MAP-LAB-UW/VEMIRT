@@ -45,7 +45,7 @@ Data required for analysis are summarized below:
 | Differential Item Functioning | $\checkmark$ | $\checkmark$ | $\checkmark$ |
 
 Here we take dataset `D2PL_data` as an example. This simulated dataset is for DIF 2PL analysis.
-Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbers of respondents and items respectively. Currently, DIF functions allow responses to have missing data, which should be coded as `NA`. In this example, there are $N=`r nrow(D2PL_data$data)`$ respondents and $J=`r ncol(D2PL_data$data)`$ items.
+Responses should be an $N$ by $J$ binary matrix, where $N$ and $J$ are the numbers of respondents and items respectively. Currently, all DIF functions and `C2PL_iw2` allow responses to have missing data, which should be coded as `NA`. In this example, there are $N=`r nrow(D2PL_data$data)`$ respondents and $J=`r ncol(D2PL_data$data)`$ items.
 ```{r}
 head(D2PL_data$data)
 ```
@@ -62,7 +62,7 @@ table(D2PL_data$group)
 
 
 # Data Output
-All the functions output estimates of item parameters and some other related parameters. In addition, `C2PL_gvem` and `C2PL_bs` are able to provide the standard errors of item parameter estimates.
+All the functions output estimates of item parameters and some other related parameters. In addition, `C2PL_gvem`, `C2PL_bs` and `C2PL_iw2` are able to provide the standard errors of item parameter estimates.
 
 
 # Exploratory Factor Analysis
@@ -81,7 +81,7 @@ pa_poly(D2PL_data$data, n.iter = 5)
 | `E2PL_gvem_rot` | GVEM with post-doc rotation |
 | `E2PL_gvem_lasso` | GVEM with lasso penalty |
 | `E2PL_gvem_adaptlasso` | GVEM with adaptive lasso penalty |
-| `E2PL_iw` | GVEM with importance sampling |
+| `E2PL_iw` | Importance sampling for GVEM |
 
 Currently these functions do not estimate the standard errors of item parameters. The following examples use two simulated datasets, `E2PL_data_C1` and `E2PL_data_C2`, both having $N=`r nrow(E2PL_data_C1$data)`$ respondents, $J=`r ncol(E2PL_data_C1$data)`$ items and $D=`r ncol(E2PL_data_C1$model)`$ dimensions, but items load on different dimensions.
 
@@ -136,10 +136,11 @@ with(E3PL_data_C2, E3PL_sgvem_lasso(data, model, mu_b = 0, sigma2_b = 4, Alpha =
 | Function | Description |
 | :-: | :-: |
 | `C2PL_gvem` | GVEM |
-| `C2PL_bs` | GVEM with bootstrap |
-| `C2PL_iw` | GVEM with importance sampling |
+| `C2PL_bs` | Bootstrap for GVEM |
+| `C2PL_iw` | Importance sampling for GVEM |
+| `C2PL_iw2` | IW-GVEM |
 
-A binary loading indicator matrix needs to be provided for CFA. `C2PL_gvem` can produce biased estimates while the other two functions help reduce the bias. Also, only `C2PL_gvem` and `C2PL_bs` are able to provide the standard errors of item parameters. Users are referred to @cho2021 for `C2PL_gvem` and @ma2024 for `C2PL_iw`.
+A binary loading indicator matrix needs to be provided for CFA. `C2PL_gvem` can produce biased estimates while the other two functions help reduce the bias. Also, `C2PL_gvem`, `C2PL_bs` and `C2PL_iw2` are able to provide the standard errors of item parameters. `C2PL_iw` and `C2PL_iw2` apply almost the same algorithm but have different implementations. More specifically, `C2PL_iw2` calls `D2PL_gvem` for estimation, and unlike `C2PL_iw` which uses stochastic gradient descent by resampling posteriors of latent traits in each iteration, `C2PL_iw2` only samples posteriors once and tends to be less stable but more accurate. Users are referred to @cho2021 for `C2PL_gvem` and @ma2024 for `C2PL_iw` and `C2PL_iw2`.
 
 The following examples use a simulated dataset, `C2PL_data`, which has $N=`r nrow(C2PL_data$data)`$ respondents, $J=`r ncol(C2PL_data$data)`$ items and $D=`r ncol(C2PL_data$model)`$ dimensions.
 ```{r cache = T}
@@ -147,6 +148,7 @@ result <- with(C2PL_data, C2PL_gvem(data, model))
 result
 C2PL_bs(result)
 C2PL_iw(C2PL_data$data, result)
+with(C2PL_data, C2PL_iw2(data, model, SE.level = 10))
 ```
 
 ## M3PL Model
@@ -165,18 +167,27 @@ with(C3PL_data, C3PL_sgvem(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta
 | :-: | :-: |
 | `D2PL_lrt` | Likelihood ratio test |
 | `D2PL_em` | EM with lasso penalty |
+| `D2PL_pair_em` | EM with group pairwise truncated lasso penalty |
 | `D2PL_gvem` | GVEM with lasso penalty |
 
-We recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `IWGVEMM` is the default choice and is recommended for `D2PL_gvem` because this method has an additional importance sampling step which helps improve accuracy. We do not recommend `D2PL_lrt` because it is time-consuming. Users are referred to @wang2023 for `D2PL_em`.
+Currently `D2PL_pair_em` supports unidimensional latent trait only, but it is strongly recommended when $D=1$ because it produces the most accurate estimates and allows comparison between every pair of groups. `D2PL_pair_em` requires item responses and group membership as input. It does not require the loading indicator and assumes every item loads on the same single dimension. In the following example, the responses are generated from two-dimensional latent traits that have a correlation of $0.8$, and we treat them as one dimension. Note that the truncated lasso ($L_1$) penalty becomes lasso penalty when `tau` takes `Inf`.
+```{r cache = T}
+with(D2PL_data, D2PL_pair_em(data, group, Lambda0 = seq(1, 1.5, by = 0.1), Tau = c(Inf, seq(0.002, 0.01, by = 0.002)), verbose = FALSE))
+```
+Results are ordered by pairs of groups and DIF parameters are flagged by `X`.
+
+If `D2PL_pair_em` does not fit the need, we recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `EMM` and `IWGVEMM` are the default choices and are recommended for `D2PL_em` and `D2PL_gvem` respectively because these methods are more accurate. Specifically, `IWGVEMM` has an additional importance sampling step after the GVEM estimation. We do not recommend `D2PL_lrt` because it is time-consuming. Users are referred to @wang2023 for `D2PL_em`.
 ```{r cache = T}
 result <- with(D2PL_data, D2PL_gvem(data, model, group, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1), verbose = F))
 result
 ```
-Item parameters are ordered by groups and group 1 is the reference group. DIF items are flagged by `X`. By default, `D2PL_gvem` chooses the best tuning parameter using the generalized information criterion (GIC), and in this example `r coef(result)$lambda0` is chosen, but AIC and BIC can be used too.
+Results are ordered by groups and group 1 is the reference group. DIF parameters are flagged by `X`.
+
+By default, both `D2PL_em` and `D2PL_pair_em` choose the best tuning parameters using the Bayesian information criterion (BIC), while `D2PL_gvem` uses the generalized information criterion (GIC) with $c=1$. In the example above `r coef(result)$lambda0` is chosen, but AIC and BIC can be used too.
 ```{r}
 print(result, 'AIC')
 ```
-The message warns us that the optimal tuning parameter may be out of the range specified for estimation. Users should specify a wider range for the argument `Lambda0` if the current information criterion is used. Finally, other parameter estimates can be obtained too:
+The message warns us that the optimal tuning parameter may be out of the range specified for estimation. Users should specify a wider range for the corresponding argument if the current information criterion is used. Finally, other parameter estimates can be obtained too:
 ```{r}
 str(coef(result, 'BIC'))
 ```
@@ -187,11 +198,11 @@ Here we show two examples on how to test the `VEMIRT` package by simulating data
 ```{r}
 library(abind)
 library(mvtnorm)
-set.seed(1)
 ```
 
 ## Confirmatory 2PL Model
 ```{r cache = T}
+set.seed(1)
 Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
 J <- 10
 N <- 1000
@@ -203,46 +214,51 @@ data <- t(matrix(rbinom(N * J, 1, plogis(a %*% t(theta) - b)), nrow = J))
 
 result.gvem <- C2PL_gvem(data, model)
 result.iw <- C2PL_iw(data, result.gvem)
+result.iw2 <- C2PL_iw2(data, model)
 
 rmse <- function(x, y) {
   sqrt(mean((x - y) ^ 2))
 }
 c(a = rmse(a[model == 1], coef(result.gvem)[, 1:2][model == 1]), b = rmse(b, coef(result.gvem)$b))
 c(a = rmse(a[model == 1], coef(result.iw)[, 1:2][model == 1]), b = rmse(b, coef(result.iw)$b))
+c(a = rmse(a[model == 1], coef(result.iw2)$a[model == 1]), b = rmse(b, coef(result.iw2)$b))
 ```
 
 
 ## DIF 2PL Model
 ```{r cache = T}
+set.seed(1)
 Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
 J <- 10
 j <- J * 0.4
-n <- 500
+n <- 300
 group <- rep(1:3, each = n)
 model <- cbind(rep(1:0, J / 2), rep(0:1, J / 2))
 a <- matrix(runif(J * 2, 1, 3), ncol = 2) * model
 a <- unname(abind(a, a, a, along = 0))
-a[-1, 1:(j / 2), ] <- a[-1, 1:(j / 2), ] + c(0.5, 0.9)
-a[-1, (j / 2 + 1):j, ] <- a[-1, (j / 2 + 1):j, ] - c(0.5, 0.9)
+a[-1, 1:(j / 2), ] <- a[-1, 1:(j / 2), ] + c(0.5, 1)
+a[-1, (j / 2 + 1):j, ] <- a[-1, (j / 2 + 1):j, ] - c(0.5, 1)
 a[-1, , ] <- a[-1, , ] * abind(model, model, along = 0)
 b <- rnorm(J)
 b <- unname(rbind(b, b, b))
-b[-1, 1:(j / 2)] <- b[-1, 1:(j / 2)] - c(0.3, 0.8)
-b[-1, (j / 2 + 1):j] <- b[-1, (j / 2 + 1):j] + c(0.3, 0.8)
+b[-1, 1:(j / 2)] <- b[-1, 1:(j / 2)] - c(0.5, 1)
+b[-1, (j / 2 + 1):j] <- b[-1, (j / 2 + 1):j] + c(0.5, 1)
 theta <- rmvnorm(n * 3, rep(0, 2), Sigma)
 data <- t(sapply(1:(n * 3), function(n) {
   rbinom(J, 1, plogis(a[group[n], , ] %*% theta[n, ] - b[group[n], ]))
 }))
 
 result.iw <- D2PL_gvem(data, model, group, verbose = F)
-result.iw.gic <- summary(result.iw, 1)
+result.iw.gic_0.5 <- summary(result.iw, 0.5)
+result.iw.gic_1 <- summary(result.iw, 1)
 result.iw.bic <- summary(result.iw, 'BIC')
 
 count <- function(j, result) {
   pos <- colSums(result) > 0
   c(`True Positive` = mean(pos[1:j]), `False Positive` = mean(pos[-(1:j)]))
 }
-count(j, coef(result.iw.gic))
+count(j, coef(result.iw.gic_0.5))
+count(j, coef(result.iw.gic_1))
 count(j, coef(result.iw.bic))
 ```
 

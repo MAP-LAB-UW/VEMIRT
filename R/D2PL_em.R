@@ -86,18 +86,20 @@ mstep.D2PL_em <- function() {
         dd.gammabeta <- groupsum(n, (Z * W.dd)$nansum(2))
         dd <- torch_cat(list(torch_cat(list(dd.gamma, dd.gammabeta$unsqueeze(4)), 4), torch_cat(list(dd.gammabeta$unsqueeze(3), dd.beta), 4)), 3)$masked_fill(!gammabeta.mask, 0)
         gammabeta <- torch_cat(list(gamma, beta$unsqueeze(3)), 3) - (dd$pinverse()$masked_fill(!gammabeta.mask, 0) %*% torch_cat(list(d.gamma, d.beta), 3)$unsqueeze(4))$squeeze(4)
-        gamma <- gammabeta[.., 1:-2]$masked_fill_(!gamma.mask, 0)
-        beta <- gammabeta[.., -1]$masked_fill_(!beta.mask, 0)
-        #pars <- lapply(lst(a, b, gamma, beta), torch_clone)
+        gamma <- gammabeta[.., 1:-2]
+        beta <- gammabeta[.., -1]
+        # pars <- lapply(lst(a, b, gamma, beta), torch_clone)
       } else {
         dd.gamma <- diagonal(dd.gamma)
         dd.beta <- dd.beta$view(c(G, -1))
         gamma <- -prox(d.gamma - dd.gamma * gamma, lambda) / dd.gamma
         beta <- -prox(d.beta$squeeze(3) - dd.beta * beta, lambda) / dd.beta
-        #pars <- c(lapply(lst(a, b), torch_clone), lapply(lst(gamma, beta), function(x) {
+        # pars <- c(lapply(lst(gamma, beta), function(x) {
         #  torch_tensor(x != 0, torch_int())
-        #}))
+        # }))
       }
+      gamma$masked_fill_(!gamma.mask, 0)
+      beta$masked_fill_(!beta.mask, 0)
 
       xi <- ((((a + gamma)$view(c(G, 1, J, 1, K)) %*% z$view(c(G, -1, 1, K, 1)))$view(c(G, -1, J)) - (b - beta)$unsqueeze(2))[X])$masked_fill(!Y.mask, NaN)
       pars <- lapply(lst(a, b, gamma, beta), torch_clone)
@@ -153,6 +155,8 @@ est.D2PL_emm <- function(e, lambda) {
     params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
     if (!is.null(params.old) && all(distance(params, params.old) < eps))
       break
+    if (!is.null(params.old))
+      print(distance(params, params.old))
     params.old <- params
     lambda <- lambda.bak
     gamma.mask <- gamma.mask.bak
@@ -192,8 +196,8 @@ final.D2PL_em <- function() {
 #'   \item{ ...$lambda0}{Corresponding element in \code{Lambda0}}
 #'   \item{ ...$lambda}{\code{sqrt(N) * lambda0}}
 #'   \item{ ...$niter}{Number(s) of iterations}
-#'   \item{ ...$Sigma}{Group-level posterior covariance matrices}
-#'   \item{ ...$Mu}{Group-level posterior mean vectors}
+#'   \item{ ...$Sigma}{Group-level covariance matrices}
+#'   \item{ ...$Mu}{Group-level mean vectors}
 #'   \item{ ...$a}{Slopes for group 1}
 #'   \item{ ...$b}{Intercepts for group 1}
 #'   \item{ ...$gamma}{D2PL parameters for the slopes}
@@ -205,7 +209,7 @@ final.D2PL_em <- function() {
 #'   \item{ ...$GIC}{Generalized Information Criterion: \code{-2*ll+c*l0*log(N)*log(log(N))}}
 #'
 #' @author Weicong Lyu <wlyu4@uw.edu>
-#' @seealso \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+#' @seealso \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 #'
 #' @examples
