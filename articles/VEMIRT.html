@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VEMIRT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,25 +130,18 @@ high-dimensional latent traits.</p>
 <p>Here we take dataset <code>D2PL_data</code> as an example. This
 simulated dataset is for DIF 2PL analysis. Responses should be an <span class="math inline">N</span> by <span class="math inline">J</span>
 binary matrix, where <span class="math inline">N</span> and <span class="math inline">J</span> are the numbers of respondents and items
-respectively. Currently, DIF functions allow responses to have missing
-data, which should be coded as <code>NA</code>. In this example, there
-are <span class="math inline">N=1500</span> respondents and <span class="math inline">J=20</span> items.</p>
+respectively. Currently, all DIF functions and <code>C2PL_iw2</code>
+allow responses to have missing data, which should be coded as
+<code>NA</code>. In this example, there are <span class="math inline">N=1500</span> respondents and <span class="math inline">J=20</span> items.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">D2PL_data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19]</span></span>
-<span><span class="co">#&gt; [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0     1     0     1     1     1     1</span></span>
-<span><span class="co">#&gt; [2,]    0    0    0    0    1    0    0    0    0     0     0     0     0     1     0     0     0     0     0</span></span>
-<span><span class="co">#&gt; [3,]    0    0    0    0    0    0    1    0    0     0     0     0     0     0     0     0     1     0     1</span></span>
-<span><span class="co">#&gt; [4,]    0    0    1    0    1    0    0    0    0     1     1     1     1     1     1     1     0     1     0</span></span>
-<span><span class="co">#&gt; [5,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0     0     1     0     0     0</span></span>
-<span><span class="co">#&gt; [6,]    1    1    1    1    1    0    1    1    1     1     1     1     1     1     1     1     1     1     0</span></span>
-<span><span class="co">#&gt;      [,20]</span></span>
-<span><span class="co">#&gt; [1,]     0</span></span>
-<span><span class="co">#&gt; [2,]     0</span></span>
-<span><span class="co">#&gt; [3,]     0</span></span>
-<span><span class="co">#&gt; [4,]     0</span></span>
-<span><span class="co">#&gt; [5,]     0</span></span>
-<span><span class="co">#&gt; [6,]     1</span></span></code></pre></div>
+<span><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19] [,20]</span></span>
+<span><span class="co">#&gt; [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0     1     0     1     1     1     1     0</span></span>
+<span><span class="co">#&gt; [2,]    0    0    0    0    1    0    0    0    0     0     0     0     0     1     0     0     0     0     0     0</span></span>
+<span><span class="co">#&gt; [3,]    0    0    0    0    0    0    1    0    0     0     0     0     0     0     0     0     1     0     1     0</span></span>
+<span><span class="co">#&gt; [4,]    0    0    1    0    1    0    0    0    0     1     1     1     1     1     1     1     0     1     0     0</span></span>
+<span><span class="co">#&gt; [5,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0     0     1     0     0     0     0</span></span>
+<span><span class="co">#&gt; [6,]    1    1    1    1    1    0    1    1    1     1     1     1     1     1     1     1     1     1     0     1</span></span></code></pre></div>
 <p>CFA and DIF rely on a <span class="math inline">J</span> by <span class="math inline">D</span> binary loading indicator matrix specifying
 latent dimensions each item loads on, where <span class="math inline">D</span> is the number of latent dimensions. The
 latent traits have <span class="math inline">D=2</span> dimensions
@@ -191,9 +184,9 @@ groups in this example.</p>
 <h2 id="data-output">Data Output<a class="anchor" aria-label="anchor" href="#data-output"></a>
 </h2>
 <p>All the functions output estimates of item parameters and some other
-related parameters. In addition, <code>C2PL_gvem</code> and
-<code>C2PL_bs</code> are able to provide the standard errors of item
-parameter estimates.</p>
+related parameters. In addition, <code>C2PL_gvem</code>,
+<code>C2PL_bs</code> and <code>C2PL_iw2</code> are able to provide the
+standard errors of item parameter estimates.</p>
 </div>
 <div class="section level2">
 <h2 id="exploratory-factor-analysis">Exploratory Factor Analysis<a class="anchor" aria-label="anchor" href="#exploratory-factor-analysis"></a>
@@ -236,7 +229,7 @@ for the M2PL model:</p>
 </tr>
 <tr class="even">
 <td align="center"><code>E2PL_iw</code></td>
-<td align="center">GVEM with importance sampling</td>
+<td align="center">Importance sampling for GVEM</td>
 </tr>
 </tbody>
 </table>
@@ -251,37 +244,37 @@ factors (<code>domain</code>), and applies the promax rotation
 <code>rot = "cfQ"</code>, which performs the CF-Quartimax rotation.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/E2PL_gvem_rot.html">E2PL_gvem_rot</a></span><span class="op">(</span><span class="va">E2PL_data_C1</span><span class="op">$</span><span class="va">data</span>, domain <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt;              a1      a2       a3       b</span></span>
-<span><span class="co">#&gt; Item1   0.10594  1.5952 -0.10845  1.7290</span></span>
-<span><span class="co">#&gt; Item2   1.91968  0.0721 -0.05631 -1.3236</span></span>
-<span><span class="co">#&gt; Item3   0.07972 -0.0394  1.56129 -1.2989</span></span>
-<span><span class="co">#&gt; Item4   0.19942  1.8727 -0.05273 -0.8808</span></span>
-<span><span class="co">#&gt; Item5   1.73784  0.0441 -0.11143 -0.8111</span></span>
-<span><span class="co">#&gt; Item6  -0.05117  0.0230  1.63743  0.1912</span></span>
-<span><span class="co">#&gt; Item7  -0.05174  1.3707 -0.00506 -0.9726</span></span>
-<span><span class="co">#&gt; Item8   1.52949  0.1766 -0.03231  0.4670</span></span>
-<span><span class="co">#&gt; Item9  -0.01529  0.0186  1.42425  1.1823</span></span>
-<span><span class="co">#&gt; Item10  0.04563  1.4053  0.07149  1.0613</span></span>
-<span><span class="co">#&gt; Item11  1.64560 -0.0849  0.06168  0.8636</span></span>
-<span><span class="co">#&gt; Item12  0.08978  0.0130  1.65967 -0.6542</span></span>
-<span><span class="co">#&gt; Item13  0.10412  1.8613  0.09076  0.0380</span></span>
-<span><span class="co">#&gt; Item14  1.42716 -0.1292  0.18454  1.5696</span></span>
-<span><span class="co">#&gt; Item15  0.03152  0.0564  1.78979 -1.3211</span></span>
-<span><span class="co">#&gt; Item16 -0.03327  1.7001  0.17390 -1.9581</span></span>
-<span><span class="co">#&gt; Item17  1.84224 -0.0486 -0.00188  0.5343</span></span>
-<span><span class="co">#&gt; Item18 -0.00405 -0.0918  1.60662  0.5123</span></span>
-<span><span class="co">#&gt; Item19 -0.19546  1.8230 -0.07211  0.1182</span></span>
-<span><span class="co">#&gt; Item20  1.34056 -0.0278  0.07707  0.3125</span></span>
-<span><span class="co">#&gt; Item21  0.14051 -0.0800  1.71112  0.1102</span></span>
-<span><span class="co">#&gt; Item22 -0.06479  1.9194 -0.02918 -0.6766</span></span>
-<span><span class="co">#&gt; Item23  1.55836  0.2900  0.05540  1.0387</span></span>
-<span><span class="co">#&gt; Item24 -0.20321  0.1247  1.59738  0.0535</span></span>
-<span><span class="co">#&gt; Item25  0.04718  1.4758  0.06536  0.3251</span></span>
-<span><span class="co">#&gt; Item26  1.75190 -0.0335  0.07172 -0.0327</span></span>
-<span><span class="co">#&gt; Item27  0.11757  0.0217  1.65739  0.5990</span></span>
-<span><span class="co">#&gt; Item28  0.00903  1.7688  0.05774 -1.5098</span></span>
-<span><span class="co">#&gt; Item29  1.65340 -0.0803  0.04002 -1.0095</span></span>
-<span><span class="co">#&gt; Item30 -0.20175  0.0796  1.52666 -0.1739</span></span></code></pre></div>
+<span><span class="co">#&gt;          a1      a2       a3       b</span></span>
+<span><span class="co">#&gt; 1   0.10594  1.5952 -0.10845  1.7290</span></span>
+<span><span class="co">#&gt; 2   1.91968  0.0721 -0.05631 -1.3236</span></span>
+<span><span class="co">#&gt; 3   0.07972 -0.0394  1.56129 -1.2989</span></span>
+<span><span class="co">#&gt; 4   0.19942  1.8727 -0.05273 -0.8808</span></span>
+<span><span class="co">#&gt; 5   1.73784  0.0441 -0.11143 -0.8111</span></span>
+<span><span class="co">#&gt; 6  -0.05117  0.0230  1.63743  0.1912</span></span>
+<span><span class="co">#&gt; 7  -0.05174  1.3707 -0.00506 -0.9726</span></span>
+<span><span class="co">#&gt; 8   1.52949  0.1766 -0.03231  0.4670</span></span>
+<span><span class="co">#&gt; 9  -0.01529  0.0186  1.42425  1.1823</span></span>
+<span><span class="co">#&gt; 10  0.04563  1.4053  0.07149  1.0613</span></span>
+<span><span class="co">#&gt; 11  1.64560 -0.0849  0.06168  0.8636</span></span>
+<span><span class="co">#&gt; 12  0.08978  0.0130  1.65967 -0.6542</span></span>
+<span><span class="co">#&gt; 13  0.10412  1.8613  0.09076  0.0380</span></span>
+<span><span class="co">#&gt; 14  1.42716 -0.1292  0.18454  1.5696</span></span>
+<span><span class="co">#&gt; 15  0.03152  0.0564  1.78979 -1.3211</span></span>
+<span><span class="co">#&gt; 16 -0.03327  1.7001  0.17390 -1.9581</span></span>
+<span><span class="co">#&gt; 17  1.84224 -0.0486 -0.00188  0.5343</span></span>
+<span><span class="co">#&gt; 18 -0.00405 -0.0918  1.60662  0.5123</span></span>
+<span><span class="co">#&gt; 19 -0.19546  1.8230 -0.07211  0.1182</span></span>
+<span><span class="co">#&gt; 20  1.34056 -0.0278  0.07707  0.3125</span></span>
+<span><span class="co">#&gt; 21  0.14051 -0.0800  1.71112  0.1102</span></span>
+<span><span class="co">#&gt; 22 -0.06479  1.9194 -0.02918 -0.6766</span></span>
+<span><span class="co">#&gt; 23  1.55836  0.2900  0.05540  1.0387</span></span>
+<span><span class="co">#&gt; 24 -0.20321  0.1247  1.59738  0.0535</span></span>
+<span><span class="co">#&gt; 25  0.04718  1.4758  0.06536  0.3251</span></span>
+<span><span class="co">#&gt; 26  1.75190 -0.0335  0.07172 -0.0327</span></span>
+<span><span class="co">#&gt; 27  0.11757  0.0217  1.65739  0.5990</span></span>
+<span><span class="co">#&gt; 28  0.00903  1.7688  0.05774 -1.5098</span></span>
+<span><span class="co">#&gt; 29  1.65340 -0.0803  0.04002 -1.0095</span></span>
+<span><span class="co">#&gt; 30 -0.20175  0.0796  1.52666 -0.1739</span></span></code></pre></div>
 <p>Both <code>E2PL_gvem_lasso</code> and
 <code>E2PL_gvem_adaptlasso</code> need item responses, constraint
 setting (<code>constrain</code>), and a binary matrix specifying
@@ -374,106 +367,106 @@ referred to <span class="citation">Cho et al. (<a href="#ref-cho2024">2024</a>)<
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">E2PL_data_C1</span>, <span class="fu"><a href="../reference/E2PL_gvem_lasso.html">E2PL_gvem_lasso</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, constrain <span class="op">=</span> <span class="st">"C1"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">result</span></span>
-<span><span class="co">#&gt;           a1     a2   a3       b</span></span>
-<span><span class="co">#&gt; Item1  1.572  0.000 0.00  1.7198</span></span>
-<span><span class="co">#&gt; Item2  0.000  1.923 0.00 -1.3243</span></span>
-<span><span class="co">#&gt; Item3  0.000  0.000 1.58 -1.2981</span></span>
-<span><span class="co">#&gt; Item4  1.928  0.000 0.00 -0.8756</span></span>
-<span><span class="co">#&gt; Item5  0.000  1.696 0.00 -0.8114</span></span>
-<span><span class="co">#&gt; Item6  0.000  0.000 1.62  0.1907</span></span>
-<span><span class="co">#&gt; Item7  1.337  0.000 0.00 -0.9712</span></span>
-<span><span class="co">#&gt; Item8  0.000  1.589 0.00  0.4653</span></span>
-<span><span class="co">#&gt; Item9  0.000  0.000 1.42  1.1816</span></span>
-<span><span class="co">#&gt; Item10 1.473  0.000 0.00  1.0629</span></span>
-<span><span class="co">#&gt; Item11 0.000  1.639 0.00  0.8623</span></span>
-<span><span class="co">#&gt; Item12 0.000  0.000 1.71 -0.6524</span></span>
-<span><span class="co">#&gt; Item13 1.964  0.000 0.00  0.0408</span></span>
-<span><span class="co">#&gt; Item14 0.000  1.459 0.00  1.5628</span></span>
-<span><span class="co">#&gt; Item15 0.000  0.000 1.84 -1.3199</span></span>
-<span><span class="co">#&gt; Item16 1.776  0.000 0.00 -1.9514</span></span>
-<span><span class="co">#&gt; Item17 0.000  1.807 0.00  0.5304</span></span>
-<span><span class="co">#&gt; Item18 0.000  0.000 1.55  0.5113</span></span>
-<span><span class="co">#&gt; Item19 1.812 -0.277 0.00  0.1169</span></span>
-<span><span class="co">#&gt; Item20 0.000  1.367 0.00  0.3120</span></span>
-<span><span class="co">#&gt; Item21 0.000  0.000 1.73  0.1104</span></span>
-<span><span class="co">#&gt; Item22 1.861  0.000 0.00 -0.6754</span></span>
-<span><span class="co">#&gt; Item23 0.322  1.560 0.00  1.0364</span></span>
-<span><span class="co">#&gt; Item24 0.000  0.000 1.54  0.0525</span></span>
-<span><span class="co">#&gt; Item25 1.544  0.000 0.00  0.3269</span></span>
-<span><span class="co">#&gt; Item26 0.000  1.775 0.00 -0.0335</span></span>
-<span><span class="co">#&gt; Item27 0.000  0.000 1.74  0.6011</span></span>
-<span><span class="co">#&gt; Item28 1.803  0.000 0.00 -1.5078</span></span>
-<span><span class="co">#&gt; Item29 0.000  1.633 0.00 -1.0087</span></span>
-<span><span class="co">#&gt; Item30 0.000 -0.204 1.57 -0.1730</span></span>
+<span><span class="co">#&gt;       a1     a2   a3       b</span></span>
+<span><span class="co">#&gt; 1  1.572  0.000 0.00  1.7198</span></span>
+<span><span class="co">#&gt; 2  0.000  1.923 0.00 -1.3243</span></span>
+<span><span class="co">#&gt; 3  0.000  0.000 1.58 -1.2981</span></span>
+<span><span class="co">#&gt; 4  1.928  0.000 0.00 -0.8756</span></span>
+<span><span class="co">#&gt; 5  0.000  1.696 0.00 -0.8114</span></span>
+<span><span class="co">#&gt; 6  0.000  0.000 1.62  0.1907</span></span>
+<span><span class="co">#&gt; 7  1.337  0.000 0.00 -0.9712</span></span>
+<span><span class="co">#&gt; 8  0.000  1.589 0.00  0.4653</span></span>
+<span><span class="co">#&gt; 9  0.000  0.000 1.42  1.1816</span></span>
+<span><span class="co">#&gt; 10 1.473  0.000 0.00  1.0629</span></span>
+<span><span class="co">#&gt; 11 0.000  1.639 0.00  0.8623</span></span>
+<span><span class="co">#&gt; 12 0.000  0.000 1.71 -0.6524</span></span>
+<span><span class="co">#&gt; 13 1.964  0.000 0.00  0.0408</span></span>
+<span><span class="co">#&gt; 14 0.000  1.459 0.00  1.5628</span></span>
+<span><span class="co">#&gt; 15 0.000  0.000 1.84 -1.3199</span></span>
+<span><span class="co">#&gt; 16 1.776  0.000 0.00 -1.9514</span></span>
+<span><span class="co">#&gt; 17 0.000  1.807 0.00  0.5304</span></span>
+<span><span class="co">#&gt; 18 0.000  0.000 1.55  0.5113</span></span>
+<span><span class="co">#&gt; 19 1.812 -0.277 0.00  0.1169</span></span>
+<span><span class="co">#&gt; 20 0.000  1.367 0.00  0.3120</span></span>
+<span><span class="co">#&gt; 21 0.000  0.000 1.73  0.1104</span></span>
+<span><span class="co">#&gt; 22 1.861  0.000 0.00 -0.6754</span></span>
+<span><span class="co">#&gt; 23 0.322  1.560 0.00  1.0364</span></span>
+<span><span class="co">#&gt; 24 0.000  0.000 1.54  0.0525</span></span>
+<span><span class="co">#&gt; 25 1.544  0.000 0.00  0.3269</span></span>
+<span><span class="co">#&gt; 26 0.000  1.775 0.00 -0.0335</span></span>
+<span><span class="co">#&gt; 27 0.000  0.000 1.74  0.6011</span></span>
+<span><span class="co">#&gt; 28 1.803  0.000 0.00 -1.5078</span></span>
+<span><span class="co">#&gt; 29 0.000  1.633 0.00 -1.0087</span></span>
+<span><span class="co">#&gt; 30 0.000 -0.204 1.57 -0.1730</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">E2PL_data_C2</span>, <span class="fu"><a href="../reference/E2PL_gvem_adaptlasso.html">E2PL_gvem_adaptlasso</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, constrain <span class="op">=</span> <span class="st">"C2"</span>, non_pen <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;             a1    a2   a3       b</span></span>
-<span><span class="co">#&gt; Item1   1.6019 0.000 0.00  1.7409</span></span>
-<span><span class="co">#&gt; Item2   0.4230 2.419 0.00 -1.1530</span></span>
-<span><span class="co">#&gt; Item3   0.0000 2.649 1.00 -1.2417</span></span>
-<span><span class="co">#&gt; Item4   1.9203 0.000 0.00 -0.8737</span></span>
-<span><span class="co">#&gt; Item5  -1.2687 2.575 0.00 -0.8181</span></span>
-<span><span class="co">#&gt; Item6  -0.1981 0.988 1.30  0.1904</span></span>
-<span><span class="co">#&gt; Item7   1.3404 0.000 0.00 -0.9736</span></span>
-<span><span class="co">#&gt; Item8  -0.8955 2.214 0.00  0.4638</span></span>
-<span><span class="co">#&gt; Item9  -0.2045 0.908 1.12  1.1810</span></span>
-<span><span class="co">#&gt; Item10  1.5077 0.000 0.00  1.0795</span></span>
-<span><span class="co">#&gt; Item11 -1.2717 2.493 0.00  0.8623</span></span>
-<span><span class="co">#&gt; Item12 -0.3468 1.248 1.32 -0.6612</span></span>
-<span><span class="co">#&gt; Item13  2.0240 0.000 0.00  0.0465</span></span>
-<span><span class="co">#&gt; Item14 -1.1050 2.213 0.00  1.5660</span></span>
-<span><span class="co">#&gt; Item15 -0.2273 1.163 1.39 -1.3111</span></span>
-<span><span class="co">#&gt; Item16  1.8359 0.000 0.00 -1.9954</span></span>
-<span><span class="co">#&gt; Item17 -1.3386 2.723 0.00  0.5314</span></span>
-<span><span class="co">#&gt; Item18 -0.3741 1.035 1.27  0.5081</span></span>
-<span><span class="co">#&gt; Item19  1.6743 0.000 0.00  0.1161</span></span>
-<span><span class="co">#&gt; Item20 -0.9951 2.069 0.00  0.3137</span></span>
-<span><span class="co">#&gt; Item21 -0.4841 1.330 1.34  0.1086</span></span>
-<span><span class="co">#&gt; Item22  1.8836 0.000 0.00 -0.6795</span></span>
-<span><span class="co">#&gt; Item23 -0.7954 2.335 0.00  1.0436</span></span>
-<span><span class="co">#&gt; Item24  0.0000 0.731 1.26  0.0521</span></span>
-<span><span class="co">#&gt; Item25  1.5476 0.000 0.00  0.3304</span></span>
-<span><span class="co">#&gt; Item26 -1.2496 2.608 0.00 -0.0336</span></span>
-<span><span class="co">#&gt; Item27 -0.3240 1.230 1.30  0.5954</span></span>
-<span><span class="co">#&gt; Item28  1.8113 0.000 0.00 -1.5157</span></span>
-<span><span class="co">#&gt; Item29 -1.2838 2.500 0.00 -1.0119</span></span>
-<span><span class="co">#&gt; Item30 -0.0444 0.701 1.23 -0.1758</span></span></code></pre></div>
+<span><span class="co">#&gt;         a1    a2   a3       b</span></span>
+<span><span class="co">#&gt; 1   1.6019 0.000 0.00  1.7409</span></span>
+<span><span class="co">#&gt; 2   0.4230 2.419 0.00 -1.1530</span></span>
+<span><span class="co">#&gt; 3   0.0000 2.647 1.00 -1.2417</span></span>
+<span><span class="co">#&gt; 4   1.9203 0.000 0.00 -0.8737</span></span>
+<span><span class="co">#&gt; 5  -1.2687 2.575 0.00 -0.8181</span></span>
+<span><span class="co">#&gt; 6  -0.1981 0.986 1.30  0.1904</span></span>
+<span><span class="co">#&gt; 7   1.3404 0.000 0.00 -0.9736</span></span>
+<span><span class="co">#&gt; 8  -0.8955 2.214 0.00  0.4638</span></span>
+<span><span class="co">#&gt; 9  -0.2045 0.906 1.12  1.1810</span></span>
+<span><span class="co">#&gt; 10  1.5077 0.000 0.00  1.0795</span></span>
+<span><span class="co">#&gt; 11 -1.2717 2.493 0.00  0.8623</span></span>
+<span><span class="co">#&gt; 12 -0.3468 1.246 1.32 -0.6612</span></span>
+<span><span class="co">#&gt; 13  2.0240 0.000 0.00  0.0465</span></span>
+<span><span class="co">#&gt; 14 -1.1050 2.213 0.00  1.5660</span></span>
+<span><span class="co">#&gt; 15 -0.2273 1.161 1.39 -1.3111</span></span>
+<span><span class="co">#&gt; 16  1.8359 0.000 0.00 -1.9954</span></span>
+<span><span class="co">#&gt; 17 -1.3386 2.723 0.00  0.5314</span></span>
+<span><span class="co">#&gt; 18 -0.3741 1.033 1.27  0.5081</span></span>
+<span><span class="co">#&gt; 19  1.6743 0.000 0.00  0.1161</span></span>
+<span><span class="co">#&gt; 20 -0.9951 2.069 0.00  0.3137</span></span>
+<span><span class="co">#&gt; 21 -0.4841 1.328 1.34  0.1086</span></span>
+<span><span class="co">#&gt; 22  1.8836 0.000 0.00 -0.6795</span></span>
+<span><span class="co">#&gt; 23 -0.7954 2.335 0.00  1.0436</span></span>
+<span><span class="co">#&gt; 24  0.0000 0.729 1.26  0.0521</span></span>
+<span><span class="co">#&gt; 25  1.5476 0.000 0.00  0.3304</span></span>
+<span><span class="co">#&gt; 26 -1.2496 2.608 0.00 -0.0336</span></span>
+<span><span class="co">#&gt; 27 -0.3240 1.227 1.30  0.5954</span></span>
+<span><span class="co">#&gt; 28  1.8113 0.000 0.00 -1.5157</span></span>
+<span><span class="co">#&gt; 29 -1.2838 2.500 0.00 -1.0119</span></span>
+<span><span class="co">#&gt; 30 -0.0444 0.699 1.23 -0.1758</span></span></code></pre></div>
 <p>GVEM is known to produce biased estimates for discrimination
 parameters, and <code>E2PL_iw</code> helps reduce the bias through
 importance sampling <span class="citation">(<a href="#ref-ma2024">Ma et
 al., 2024</a>)</span>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/C2PL_iw.html">E2PL_iw</a></span><span class="op">(</span><span class="va">E2PL_data_C1</span><span class="op">$</span><span class="va">data</span>, <span class="va">result</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          a1     a2   a3        b</span></span>
-<span><span class="co">#&gt; Item1  1.82  0.000 0.00  1.93892</span></span>
-<span><span class="co">#&gt; Item2  0.00  2.176 0.00 -1.51429</span></span>
-<span><span class="co">#&gt; Item3  0.00  0.000 1.83 -1.50028</span></span>
-<span><span class="co">#&gt; Item4  2.18  0.000 0.00 -1.06272</span></span>
-<span><span class="co">#&gt; Item5  0.00  1.943 0.00 -0.95791</span></span>
-<span><span class="co">#&gt; Item6  0.00  0.000 1.86  0.24090</span></span>
-<span><span class="co">#&gt; Item7  1.57  0.000 0.00 -1.15989</span></span>
-<span><span class="co">#&gt; Item8  0.00  1.834 0.00  0.61006</span></span>
-<span><span class="co">#&gt; Item9  0.00  0.000 1.66  1.38268</span></span>
-<span><span class="co">#&gt; Item10 1.71  0.000 0.00  1.25149</span></span>
-<span><span class="co">#&gt; Item11 0.00  1.885 0.00  1.04897</span></span>
-<span><span class="co">#&gt; Item12 0.00  0.000 1.96 -0.79208</span></span>
-<span><span class="co">#&gt; Item13 2.21  0.000 0.00 -0.00846</span></span>
-<span><span class="co">#&gt; Item14 0.00  1.697 0.00  1.78234</span></span>
-<span><span class="co">#&gt; Item15 0.00  0.000 2.09 -1.51844</span></span>
-<span><span class="co">#&gt; Item16 2.03  0.000 0.00 -2.17690</span></span>
-<span><span class="co">#&gt; Item17 0.00  2.057 0.00  0.68606</span></span>
-<span><span class="co">#&gt; Item18 0.00  0.000 1.80  0.64290</span></span>
-<span><span class="co">#&gt; Item19 2.05 -0.162 0.00  0.10766</span></span>
-<span><span class="co">#&gt; Item20 0.00  1.598 0.00  0.42147</span></span>
-<span><span class="co">#&gt; Item21 0.00  0.000 1.97  0.13218</span></span>
-<span><span class="co">#&gt; Item22 2.11  0.000 0.00 -0.84737</span></span>
-<span><span class="co">#&gt; Item23 0.49  1.805 0.00  1.24074</span></span>
-<span><span class="co">#&gt; Item24 0.00  0.000 1.78  0.05249</span></span>
-<span><span class="co">#&gt; Item25 1.78  0.000 0.00  0.37440</span></span>
-<span><span class="co">#&gt; Item26 0.00  2.022 0.00  0.00687</span></span>
-<span><span class="co">#&gt; Item27 0.00  0.000 1.99  0.74305</span></span>
-<span><span class="co">#&gt; Item28 2.05  0.000 0.00 -1.72294</span></span>
-<span><span class="co">#&gt; Item29 0.00  1.880 0.00 -1.18368</span></span>
-<span><span class="co">#&gt; Item30 0.00 -0.105 1.81 -0.20663</span></span></code></pre></div>
+<span><span class="co">#&gt;       a1     a2   a3        b</span></span>
+<span><span class="co">#&gt; 1  1.691  0.000 0.00  1.83578</span></span>
+<span><span class="co">#&gt; 2  0.000  2.050 0.00 -1.43331</span></span>
+<span><span class="co">#&gt; 3  0.000  0.000 1.71 -1.41071</span></span>
+<span><span class="co">#&gt; 4  2.054  0.000 0.00 -0.97772</span></span>
+<span><span class="co">#&gt; 5  0.000  1.821 0.00 -0.90956</span></span>
+<span><span class="co">#&gt; 6  0.000  0.000 1.74  0.22220</span></span>
+<span><span class="co">#&gt; 7  1.457  0.000 0.00 -1.07542</span></span>
+<span><span class="co">#&gt; 8  0.000  1.713 0.00  0.55165</span></span>
+<span><span class="co">#&gt; 9  0.000  0.000 1.55  1.29037</span></span>
+<span><span class="co">#&gt; 10 1.591  0.000 0.00  1.17005</span></span>
+<span><span class="co">#&gt; 11 0.000  1.765 0.00  0.96507</span></span>
+<span><span class="co">#&gt; 12 0.000  0.000 1.84 -0.74940</span></span>
+<span><span class="co">#&gt; 13 2.090  0.000 0.00  0.00996</span></span>
+<span><span class="co">#&gt; 14 0.000  1.580 0.00  1.67738</span></span>
+<span><span class="co">#&gt; 15 0.000  0.000 1.96 -1.43169</span></span>
+<span><span class="co">#&gt; 16 1.901  0.000 0.00 -2.06743</span></span>
+<span><span class="co">#&gt; 17 0.000  1.932 0.00  0.62077</span></span>
+<span><span class="co">#&gt; 18 0.000  0.000 1.68  0.59145</span></span>
+<span><span class="co">#&gt; 19 1.936 -0.198 0.00  0.12218</span></span>
+<span><span class="co">#&gt; 20 0.000  1.487 0.00  0.38298</span></span>
+<span><span class="co">#&gt; 21 0.000  0.000 1.85  0.11532</span></span>
+<span><span class="co">#&gt; 22 1.987  0.000 0.00 -0.77193</span></span>
+<span><span class="co">#&gt; 23 0.421  1.684 0.00  1.14567</span></span>
+<span><span class="co">#&gt; 24 0.000  0.000 1.66  0.03928</span></span>
+<span><span class="co">#&gt; 25 1.666  0.000 0.00  0.39198</span></span>
+<span><span class="co">#&gt; 26 0.000  1.900 0.00  0.01361</span></span>
+<span><span class="co">#&gt; 27 0.000  0.000 1.86  0.68531</span></span>
+<span><span class="co">#&gt; 28 1.929  0.000 0.00 -1.62027</span></span>
+<span><span class="co">#&gt; 29 0.000  1.758 0.00 -1.11384</span></span>
+<span><span class="co">#&gt; 30 0.000 -0.125 1.69 -0.24131</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="m3pl-model">M3PL Model<a class="anchor" aria-label="anchor" href="#m3pl-model"></a>
@@ -523,71 +516,70 @@ following examples, the priors for difficulty parameters and guessing
 parameters are <span class="math inline">N(0,2^2)</span> and <span class="math inline">\beta(10,40)</span> respectively.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">E3PL_data_C1</span>, <span class="fu"><a href="../reference/E3PL_sgvem_adaptlasso.html">E3PL_sgvem_adaptlasso</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, mu_b <span class="op">=</span> <span class="fl">0</span>, sigma2_b <span class="op">=</span> <span class="fl">4</span>, Alpha <span class="op">=</span> <span class="fl">10</span>, Beta <span class="op">=</span> <span class="fl">40</span>, constrain <span class="op">=</span> <span class="st">"C1"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: The maximum number of EM cycles reached!</span></span>
-<span><span class="co">#&gt; Warning: The maximum number of EM cycles reached!</span></span>
-<span><span class="co">#&gt;           a1   a2    a3       b     c</span></span>
-<span><span class="co">#&gt; Item1  0.824 0.00 0.000  0.2221 0.185</span></span>
-<span><span class="co">#&gt; Item2  0.000 1.27 0.000 -1.1569 0.188</span></span>
-<span><span class="co">#&gt; Item3  0.000 0.00 1.531 -1.2687 0.187</span></span>
-<span><span class="co">#&gt; Item4  1.884 0.00 0.000 -0.6809 0.181</span></span>
-<span><span class="co">#&gt; Item5  0.000 1.39 0.000 -0.9603 0.188</span></span>
-<span><span class="co">#&gt; Item6  0.000 0.00 1.531  0.0323 0.179</span></span>
-<span><span class="co">#&gt; Item7  1.576 0.00 0.000 -0.9503 0.184</span></span>
-<span><span class="co">#&gt; Item8  0.000 1.15 0.000  0.2288 0.184</span></span>
-<span><span class="co">#&gt; Item9  0.000 0.00 0.981  0.7210 0.178</span></span>
-<span><span class="co">#&gt; Item10 1.244 0.00 0.000  0.6862 0.176</span></span>
-<span><span class="co">#&gt; Item11 0.000 1.32 0.000  0.8267 0.174</span></span>
-<span><span class="co">#&gt; Item12 0.000 0.00 1.302 -0.8383 0.187</span></span>
-<span><span class="co">#&gt; Item13 1.937 0.00 0.000  0.5078 0.162</span></span>
-<span><span class="co">#&gt; Item14 0.000 1.01 0.000  1.0492 0.176</span></span>
-<span><span class="co">#&gt; Item15 0.000 0.00 1.419 -1.1223 0.187</span></span>
-<span><span class="co">#&gt; Item16 1.564 0.00 0.000 -1.5017 0.187</span></span>
-<span><span class="co">#&gt; Item17 0.000 1.47 0.000  0.2434 0.178</span></span>
-<span><span class="co">#&gt; Item18 0.000 0.00 1.151  0.4002 0.179</span></span>
-<span><span class="co">#&gt; Item19 1.578 0.00 0.000 -0.1455 0.178</span></span>
-<span><span class="co">#&gt; Item20 0.000 1.12 0.000  0.2213 0.184</span></span>
-<span><span class="co">#&gt; Item21 0.000 0.00 1.577  0.0950 0.174</span></span>
-<span><span class="co">#&gt; Item22 1.866 0.00 0.000 -0.4013 0.177</span></span>
-<span><span class="co">#&gt; Item23 0.000 1.23 0.000  0.9747 0.179</span></span>
-<span><span class="co">#&gt; Item24 0.000 0.00 1.189 -0.5513 0.186</span></span>
-<span><span class="co">#&gt; Item25 1.503 0.00 0.000  0.2557 0.177</span></span>
-<span><span class="co">#&gt; Item26 0.000 1.30 0.000  0.2660 0.183</span></span>
-<span><span class="co">#&gt; Item27 0.000 0.00 1.217  0.0448 0.182</span></span>
-<span><span class="co">#&gt; Item28 1.498 0.00 0.000 -1.1697 0.187</span></span>
-<span><span class="co">#&gt; Item29 0.000 1.20 0.000 -0.8706 0.187</span></span>
-<span><span class="co">#&gt; Item30 0.000 0.00 1.244 -0.2850 0.184</span></span>
+<span><span class="co">#&gt; Warning: The optimal penalty parameter may be out of range.</span></span>
+<span><span class="co">#&gt;       a1    a2   a3         b     c</span></span>
+<span><span class="co">#&gt; 1  0.701 0.000 0.00  0.193274 0.185</span></span>
+<span><span class="co">#&gt; 2  0.000 1.239 0.00 -1.204550 0.188</span></span>
+<span><span class="co">#&gt; 3  0.000 0.000 1.56 -1.256606 0.185</span></span>
+<span><span class="co">#&gt; 4  0.000 1.581 0.00 -0.648586 0.182</span></span>
+<span><span class="co">#&gt; 5  0.000 1.322 0.00 -0.970917 0.187</span></span>
+<span><span class="co">#&gt; 6  0.000 0.000 1.63  0.000414 0.178</span></span>
+<span><span class="co">#&gt; 7  0.000 1.369 0.00 -0.958282 0.186</span></span>
+<span><span class="co">#&gt; 8  0.000 1.081 0.00  0.196641 0.183</span></span>
+<span><span class="co">#&gt; 9  0.000 0.000 1.06  0.689257 0.177</span></span>
+<span><span class="co">#&gt; 10 0.000 0.967 0.00  0.650307 0.179</span></span>
+<span><span class="co">#&gt; 11 0.000 1.327 0.00  0.781078 0.172</span></span>
+<span><span class="co">#&gt; 12 0.000 0.000 1.47 -0.883537 0.185</span></span>
+<span><span class="co">#&gt; 13 0.000 1.650 0.00  0.467802 0.167</span></span>
+<span><span class="co">#&gt; 14 0.000 1.035 0.00  1.038562 0.173</span></span>
+<span><span class="co">#&gt; 15 0.000 0.000 1.55 -1.147476 0.186</span></span>
+<span><span class="co">#&gt; 16 0.000 1.378 0.00 -1.494406 0.188</span></span>
+<span><span class="co">#&gt; 17 0.000 1.361 0.00  0.199264 0.177</span></span>
+<span><span class="co">#&gt; 18 0.000 0.000 1.19  0.408080 0.177</span></span>
+<span><span class="co">#&gt; 19 0.000 1.306 0.00 -0.127874 0.181</span></span>
+<span><span class="co">#&gt; 20 0.000 1.081 0.00  0.209157 0.182</span></span>
+<span><span class="co">#&gt; 21 0.000 0.000 1.66  0.062872 0.171</span></span>
+<span><span class="co">#&gt; 22 0.000 1.553 0.00 -0.381798 0.179</span></span>
+<span><span class="co">#&gt; 23 0.000 1.125 0.00  0.914922 0.179</span></span>
+<span><span class="co">#&gt; 24 0.000 0.000 1.35 -0.570153 0.184</span></span>
+<span><span class="co">#&gt; 25 0.000 1.186 0.00  0.253412 0.179</span></span>
+<span><span class="co">#&gt; 26 0.000 1.270 0.00  0.214019 0.181</span></span>
+<span><span class="co">#&gt; 27 0.000 0.000 1.32  0.024110 0.182</span></span>
+<span><span class="co">#&gt; 28 0.000 1.224 0.00 -1.105868 0.187</span></span>
+<span><span class="co">#&gt; 29 0.000 1.205 0.00 -0.938731 0.187</span></span>
+<span><span class="co">#&gt; 30 0.000 0.000 1.27 -0.294232 0.183</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">E3PL_data_C2</span>, <span class="fu"><a href="../reference/E3PL_sgvem_lasso.html">E3PL_sgvem_lasso</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, mu_b <span class="op">=</span> <span class="fl">0</span>, sigma2_b <span class="op">=</span> <span class="fl">4</span>, Alpha <span class="op">=</span> <span class="fl">10</span>, Beta <span class="op">=</span> <span class="fl">40</span>, constrain <span class="op">=</span> <span class="st">"C2"</span>, non_pen <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           a1     a2    a3       b     c</span></span>
-<span><span class="co">#&gt; Item1  0.716 0.0000 0.000  0.1848 0.184</span></span>
-<span><span class="co">#&gt; Item2  0.000 1.6328 0.000 -1.2424 0.184</span></span>
-<span><span class="co">#&gt; Item3  0.000 0.0000 1.737 -1.0087 0.179</span></span>
-<span><span class="co">#&gt; Item4  1.336 0.5179 0.000 -0.7203 0.182</span></span>
-<span><span class="co">#&gt; Item5  0.000 1.4377 0.000 -0.9989 0.185</span></span>
-<span><span class="co">#&gt; Item6  0.000 0.0000 1.288  0.0595 0.180</span></span>
-<span><span class="co">#&gt; Item7  1.113 0.4590 0.000 -0.9681 0.184</span></span>
-<span><span class="co">#&gt; Item8  0.000 1.2972 0.000  0.1770 0.179</span></span>
-<span><span class="co">#&gt; Item9  0.000 0.0000 0.896  0.7047 0.178</span></span>
-<span><span class="co">#&gt; Item10 0.931 0.2317 0.000  0.6889 0.176</span></span>
-<span><span class="co">#&gt; Item11 0.000 1.4404 0.000  0.7989 0.168</span></span>
-<span><span class="co">#&gt; Item12 0.000 0.0000 1.203 -0.8368 0.186</span></span>
-<span><span class="co">#&gt; Item13 1.377 0.5979 0.000  0.5104 0.163</span></span>
-<span><span class="co">#&gt; Item14 0.000 0.9938 0.000  1.0340 0.172</span></span>
-<span><span class="co">#&gt; Item15 0.000 0.0000 1.283 -1.1360 0.187</span></span>
-<span><span class="co">#&gt; Item16 1.057 0.5547 0.000 -1.5126 0.187</span></span>
-<span><span class="co">#&gt; Item17 0.000 1.5168 0.000  0.1848 0.172</span></span>
-<span><span class="co">#&gt; Item18 0.000 0.1215 0.954  0.4423 0.178</span></span>
-<span><span class="co">#&gt; Item19 1.096 0.4350 0.000 -0.1511 0.179</span></span>
-<span><span class="co">#&gt; Item20 0.000 1.1924 0.000  0.2106 0.180</span></span>
-<span><span class="co">#&gt; Item21 0.000 0.0000 1.329  0.1301 0.174</span></span>
-<span><span class="co">#&gt; Item22 1.336 0.4624 0.000 -0.3802 0.177</span></span>
-<span><span class="co">#&gt; Item23 0.000 1.2371 0.000  0.9373 0.173</span></span>
-<span><span class="co">#&gt; Item24 0.000 0.0000 1.057 -0.5256 0.186</span></span>
-<span><span class="co">#&gt; Item25 1.155 0.2704 0.000  0.2513 0.175</span></span>
-<span><span class="co">#&gt; Item26 0.000 1.3993 0.000  0.2171 0.176</span></span>
-<span><span class="co">#&gt; Item27 0.000 0.0558 1.073  0.0427 0.183</span></span>
-<span><span class="co">#&gt; Item28 1.182 0.2371 0.000 -1.2105 0.186</span></span>
-<span><span class="co">#&gt; Item29 0.000 1.2586 0.000 -0.9502 0.185</span></span>
-<span><span class="co">#&gt; Item30 0.000 0.0000 1.040 -0.2977 0.185</span></span></code></pre></div>
+<span><span class="co">#&gt;          a1      a2    a3       b     c</span></span>
+<span><span class="co">#&gt; 1   0.76392  0.0000 0.000  0.1785 0.182</span></span>
+<span><span class="co">#&gt; 2   0.00000  1.6588 0.000 -1.2446 0.184</span></span>
+<span><span class="co">#&gt; 3   0.00000  0.0000 1.976 -1.0711 0.180</span></span>
+<span><span class="co">#&gt; 4   1.24581  0.8245 0.000 -0.7218 0.181</span></span>
+<span><span class="co">#&gt; 5   0.01049  1.4423 0.000 -0.9784 0.186</span></span>
+<span><span class="co">#&gt; 6   0.00000  0.0000 1.466  0.0476 0.178</span></span>
+<span><span class="co">#&gt; 7   0.98663  0.5132 0.250 -0.9551 0.184</span></span>
+<span><span class="co">#&gt; 8  -0.16422  1.2864 0.000  0.1758 0.179</span></span>
+<span><span class="co">#&gt; 9   0.00000  0.0000 1.045  0.6811 0.175</span></span>
+<span><span class="co">#&gt; 10  0.85282  0.5139 0.000  0.6714 0.173</span></span>
+<span><span class="co">#&gt; 11  0.01181  1.3874 0.000  0.8111 0.170</span></span>
+<span><span class="co">#&gt; 12  0.00000  0.0000 1.382 -0.8325 0.185</span></span>
+<span><span class="co">#&gt; 13  1.20248  0.6638 0.469  0.4823 0.164</span></span>
+<span><span class="co">#&gt; 14  0.30835  0.9046 0.000  1.0465 0.172</span></span>
+<span><span class="co">#&gt; 15  0.00000  0.0000 1.414 -1.1654 0.187</span></span>
+<span><span class="co">#&gt; 16  0.98261  0.7779 0.000 -1.5429 0.187</span></span>
+<span><span class="co">#&gt; 17 -0.05072  1.5042 0.000  0.1866 0.174</span></span>
+<span><span class="co">#&gt; 18  0.00000  0.0496 1.091  0.4260 0.178</span></span>
+<span><span class="co">#&gt; 19  1.09019  0.6400 0.000 -0.1886 0.179</span></span>
+<span><span class="co">#&gt; 20 -0.13214  1.2126 0.000  0.2011 0.180</span></span>
+<span><span class="co">#&gt; 21  0.00000  0.0000 1.506  0.0723 0.175</span></span>
+<span><span class="co">#&gt; 22  1.23719  0.6685 0.121 -0.3993 0.178</span></span>
+<span><span class="co">#&gt; 23  0.00596  1.2228 0.000  0.9104 0.174</span></span>
+<span><span class="co">#&gt; 24  0.00000  0.0000 1.184 -0.5594 0.186</span></span>
+<span><span class="co">#&gt; 25  1.04542  0.5733 0.000  0.2259 0.176</span></span>
+<span><span class="co">#&gt; 26 -0.09786  1.3582 0.000  0.2286 0.179</span></span>
+<span><span class="co">#&gt; 27  0.00000 -0.0574 1.267  0.0422 0.182</span></span>
+<span><span class="co">#&gt; 28  1.09621  0.3258 0.221 -1.2578 0.187</span></span>
+<span><span class="co">#&gt; 29  0.05615  1.2087 0.000 -0.9781 0.186</span></span>
+<span><span class="co">#&gt; 30  0.00000  0.0000 1.146 -0.2867 0.184</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -610,91 +602,117 @@ for the M2PL model:</p>
 </tr>
 <tr class="even">
 <td align="center"><code>C2PL_bs</code></td>
-<td align="center">GVEM with bootstrap</td>
+<td align="center">Bootstrap for GVEM</td>
 </tr>
 <tr class="odd">
 <td align="center"><code>C2PL_iw</code></td>
-<td align="center">GVEM with importance sampling</td>
+<td align="center">Importance sampling for GVEM</td>
+</tr>
+<tr class="even">
+<td align="center"><code>C2PL_iw2</code></td>
+<td align="center">IW-GVEM</td>
 </tr>
 </tbody>
 </table>
 <p>A binary loading indicator matrix needs to be provided for CFA.
 <code>C2PL_gvem</code> can produce biased estimates while the other two
-functions help reduce the bias. Also, only <code>C2PL_gvem</code> and
-<code>C2PL_bs</code> are able to provide the standard errors of item
-parameters. Users are referred to <span class="citation">Cho et al. (<a href="#ref-cho2021">2021</a>)</span> for <code>C2PL_gvem</code> and
+functions help reduce the bias. Also, <code>C2PL_gvem</code>,
+<code>C2PL_bs</code> and <code>C2PL_iw2</code> are able to provide the
+standard errors of item parameters. <code>C2PL_iw</code> and
+<code>C2PL_iw2</code> apply almost the same algorithm but have different
+implementations. More specifically, <code>C2PL_iw2</code> calls
+<code>D2PL_gvem</code> for estimation, and unlike <code>C2PL_iw</code>
+which uses stochastic gradient descent by resampling posteriors of
+latent traits in each iteration, <code>C2PL_iw2</code> only samples
+posteriors once and tends to be less stable but more accurate. Users are
+referred to <span class="citation">Cho et al. (<a href="#ref-cho2021">2021</a>)</span> for <code>C2PL_gvem</code> and
 <span class="citation">Ma et al. (<a href="#ref-ma2024">2024</a>)</span>
-for <code>C2PL_iw</code>.</p>
+for <code>C2PL_iw</code> and <code>C2PL_iw2</code>.</p>
 <p>The following examples use a simulated dataset,
 <code>C2PL_data</code>, which has <span class="math inline">N=1000</span> respondents, <span class="math inline">J=20</span> items and <span class="math inline">D=2</span> dimensions.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">C2PL_data</span>, <span class="fu"><a href="../reference/C2PL_gvem.html">C2PL_gvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">result</span></span>
-<span><span class="co">#&gt;          a1   a2       b</span></span>
-<span><span class="co">#&gt; Item1  1.91 0.00  0.8789</span></span>
-<span><span class="co">#&gt; Item2  0.00 1.71 -2.1325</span></span>
-<span><span class="co">#&gt; Item3  1.85 0.00  0.4760</span></span>
-<span><span class="co">#&gt; Item4  0.00 2.03 -1.2061</span></span>
-<span><span class="co">#&gt; Item5  1.89 0.00 -0.6088</span></span>
-<span><span class="co">#&gt; Item6  0.00 1.57  1.1850</span></span>
-<span><span class="co">#&gt; Item7  1.46 0.00 -1.8576</span></span>
-<span><span class="co">#&gt; Item8  0.00 1.79 -0.3041</span></span>
-<span><span class="co">#&gt; Item9  1.40 0.00  0.3218</span></span>
-<span><span class="co">#&gt; Item10 0.00 1.49 -0.4536</span></span>
-<span><span class="co">#&gt; Item11 1.89 0.00 -0.3825</span></span>
-<span><span class="co">#&gt; Item12 0.00 1.71 -0.1322</span></span>
-<span><span class="co">#&gt; Item13 1.36 0.00  0.5896</span></span>
-<span><span class="co">#&gt; Item14 0.00 1.43 -2.1947</span></span>
-<span><span class="co">#&gt; Item15 1.80 0.00  0.0357</span></span>
-<span><span class="co">#&gt; Item16 0.00 1.51  0.9673</span></span>
-<span><span class="co">#&gt; Item17 1.97 0.00  0.1262</span></span>
-<span><span class="co">#&gt; Item18 0.00 1.68  0.5347</span></span>
-<span><span class="co">#&gt; Item19 1.81 0.00 -0.7190</span></span>
-<span><span class="co">#&gt; Item20 0.00 1.62 -1.4178</span></span>
+<span><span class="co">#&gt;      a1   a2       b</span></span>
+<span><span class="co">#&gt; 1  1.91 0.00  0.8789</span></span>
+<span><span class="co">#&gt; 2  0.00 1.71 -2.1324</span></span>
+<span><span class="co">#&gt; 3  1.85 0.00  0.4760</span></span>
+<span><span class="co">#&gt; 4  0.00 2.03 -1.2061</span></span>
+<span><span class="co">#&gt; 5  1.89 0.00 -0.6088</span></span>
+<span><span class="co">#&gt; 6  0.00 1.57  1.1850</span></span>
+<span><span class="co">#&gt; 7  1.46 0.00 -1.8576</span></span>
+<span><span class="co">#&gt; 8  0.00 1.79 -0.3041</span></span>
+<span><span class="co">#&gt; 9  1.40 0.00  0.3218</span></span>
+<span><span class="co">#&gt; 10 0.00 1.49 -0.4536</span></span>
+<span><span class="co">#&gt; 11 1.89 0.00 -0.3825</span></span>
+<span><span class="co">#&gt; 12 0.00 1.71 -0.1322</span></span>
+<span><span class="co">#&gt; 13 1.36 0.00  0.5896</span></span>
+<span><span class="co">#&gt; 14 0.00 1.43 -2.1947</span></span>
+<span><span class="co">#&gt; 15 1.80 0.00  0.0357</span></span>
+<span><span class="co">#&gt; 16 0.00 1.51  0.9673</span></span>
+<span><span class="co">#&gt; 17 1.97 0.00  0.1262</span></span>
+<span><span class="co">#&gt; 18 0.00 1.68  0.5347</span></span>
+<span><span class="co">#&gt; 19 1.81 0.00 -0.7190</span></span>
+<span><span class="co">#&gt; 20 0.00 1.62 -1.4178</span></span>
 <span><span class="fu"><a href="../reference/C2PL_bs.html">C2PL_bs</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          a1   a2       b</span></span>
-<span><span class="co">#&gt; Item1  2.19 0.00  0.9542</span></span>
-<span><span class="co">#&gt; Item2  0.00 2.05 -2.3435</span></span>
-<span><span class="co">#&gt; Item3  2.09 0.00  0.5665</span></span>
-<span><span class="co">#&gt; Item4  0.00 2.38 -1.3555</span></span>
-<span><span class="co">#&gt; Item5  2.22 0.00 -0.6731</span></span>
-<span><span class="co">#&gt; Item6  0.00 1.66  1.2325</span></span>
-<span><span class="co">#&gt; Item7  1.62 0.00 -1.9500</span></span>
-<span><span class="co">#&gt; Item8  0.00 2.00 -0.3105</span></span>
-<span><span class="co">#&gt; Item9  1.51 0.00  0.3396</span></span>
-<span><span class="co">#&gt; Item10 0.00 1.63 -0.4173</span></span>
-<span><span class="co">#&gt; Item11 2.21 0.00 -0.4012</span></span>
-<span><span class="co">#&gt; Item12 0.00 1.86 -0.1082</span></span>
-<span><span class="co">#&gt; Item13 1.43 0.00  0.5435</span></span>
-<span><span class="co">#&gt; Item14 0.00 1.52 -2.3258</span></span>
-<span><span class="co">#&gt; Item15 2.07 0.00  0.0380</span></span>
-<span><span class="co">#&gt; Item16 0.00 1.64  1.0678</span></span>
-<span><span class="co">#&gt; Item17 2.33 0.00  0.0801</span></span>
-<span><span class="co">#&gt; Item18 0.00 1.88  0.5184</span></span>
-<span><span class="co">#&gt; Item19 2.09 0.00 -0.8113</span></span>
-<span><span class="co">#&gt; Item20 0.00 1.79 -1.4681</span></span>
+<span><span class="co">#&gt;      a1   a2       b</span></span>
+<span><span class="co">#&gt; 1  2.22 0.00  1.0157</span></span>
+<span><span class="co">#&gt; 2  0.00 2.04 -2.3936</span></span>
+<span><span class="co">#&gt; 3  2.22 0.00  0.5224</span></span>
+<span><span class="co">#&gt; 4  0.00 2.34 -1.3797</span></span>
+<span><span class="co">#&gt; 5  2.23 0.00 -0.6784</span></span>
+<span><span class="co">#&gt; 6  0.00 1.74  1.2075</span></span>
+<span><span class="co">#&gt; 7  1.67 0.00 -1.9693</span></span>
+<span><span class="co">#&gt; 8  0.00 2.05 -0.3202</span></span>
+<span><span class="co">#&gt; 9  1.55 0.00  0.3334</span></span>
+<span><span class="co">#&gt; 10 0.00 1.74 -0.5015</span></span>
+<span><span class="co">#&gt; 11 2.24 0.00 -0.4104</span></span>
+<span><span class="co">#&gt; 12 0.00 1.99 -0.1192</span></span>
+<span><span class="co">#&gt; 13 1.46 0.00  0.6153</span></span>
+<span><span class="co">#&gt; 14 0.00 1.69 -2.3542</span></span>
+<span><span class="co">#&gt; 15 2.11 0.00  0.0356</span></span>
+<span><span class="co">#&gt; 16 0.00 1.71  0.9975</span></span>
+<span><span class="co">#&gt; 17 2.24 0.00  0.1562</span></span>
+<span><span class="co">#&gt; 18 0.00 1.81  0.4763</span></span>
+<span><span class="co">#&gt; 19 2.06 0.00 -0.7782</span></span>
+<span><span class="co">#&gt; 20 0.00 1.84 -1.5228</span></span>
 <span><span class="fu"><a href="../reference/C2PL_iw.html">C2PL_iw</a></span><span class="op">(</span><span class="va">C2PL_data</span><span class="op">$</span><span class="va">data</span>, <span class="va">result</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          a1   a2       b</span></span>
-<span><span class="co">#&gt; Item1  2.16 0.00  1.0352</span></span>
-<span><span class="co">#&gt; Item2  0.00 1.96 -2.3604</span></span>
-<span><span class="co">#&gt; Item3  2.09 0.00  0.5737</span></span>
-<span><span class="co">#&gt; Item4  0.00 2.28 -1.4103</span></span>
-<span><span class="co">#&gt; Item5  2.14 0.00 -0.7289</span></span>
-<span><span class="co">#&gt; Item6  0.00 1.80  1.3748</span></span>
-<span><span class="co">#&gt; Item7  1.70 0.00 -2.0733</span></span>
-<span><span class="co">#&gt; Item8  0.00 2.03 -0.4369</span></span>
-<span><span class="co">#&gt; Item9  1.63 0.00  0.3934</span></span>
-<span><span class="co">#&gt; Item10 0.00 1.72 -0.5925</span></span>
-<span><span class="co">#&gt; Item11 2.14 0.00 -0.4616</span></span>
-<span><span class="co">#&gt; Item12 0.00 1.95 -0.2265</span></span>
-<span><span class="co">#&gt; Item13 1.58 0.00  0.7169</span></span>
-<span><span class="co">#&gt; Item14 0.00 1.67 -2.4219</span></span>
-<span><span class="co">#&gt; Item15 2.05 0.00  0.0132</span></span>
-<span><span class="co">#&gt; Item16 0.00 1.74  1.1379</span></span>
-<span><span class="co">#&gt; Item17 2.22 0.00  0.1296</span></span>
-<span><span class="co">#&gt; Item18 0.00 1.92  0.6167</span></span>
-<span><span class="co">#&gt; Item19 2.06 0.00 -0.8566</span></span>
-<span><span class="co">#&gt; Item20 0.00 1.86 -1.6292</span></span></code></pre></div>
+<span><span class="co">#&gt;      a1   a2       b</span></span>
+<span><span class="co">#&gt; 1  2.16 0.00  1.0352</span></span>
+<span><span class="co">#&gt; 2  0.00 1.96 -2.3604</span></span>
+<span><span class="co">#&gt; 3  2.09 0.00  0.5737</span></span>
+<span><span class="co">#&gt; 4  0.00 2.28 -1.4103</span></span>
+<span><span class="co">#&gt; 5  2.14 0.00 -0.7289</span></span>
+<span><span class="co">#&gt; 6  0.00 1.80  1.3748</span></span>
+<span><span class="co">#&gt; 7  1.70 0.00 -2.0733</span></span>
+<span><span class="co">#&gt; 8  0.00 2.03 -0.4369</span></span>
+<span><span class="co">#&gt; 9  1.63 0.00  0.3934</span></span>
+<span><span class="co">#&gt; 10 0.00 1.72 -0.5925</span></span>
+<span><span class="co">#&gt; 11 2.14 0.00 -0.4616</span></span>
+<span><span class="co">#&gt; 12 0.00 1.95 -0.2265</span></span>
+<span><span class="co">#&gt; 13 1.58 0.00  0.7169</span></span>
+<span><span class="co">#&gt; 14 0.00 1.67 -2.4219</span></span>
+<span><span class="co">#&gt; 15 2.05 0.00  0.0132</span></span>
+<span><span class="co">#&gt; 16 0.00 1.74  1.1379</span></span>
+<span><span class="co">#&gt; 17 2.22 0.00  0.1296</span></span>
+<span><span class="co">#&gt; 18 0.00 1.92  0.6167</span></span>
+<span><span class="co">#&gt; 19 2.06 0.00 -0.8566</span></span>
+<span><span class="co">#&gt; 20 0.00 1.86 -1.6292</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">C2PL_data</span>, <span class="fu"><a href="../reference/C2PL_iw2.html">C2PL_iw2</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, SE.level <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            1      2     3      4      5     6      7      8      9      10     11      12     13     14     15    16    17     18</span></span>
+<span><span class="co">#&gt; a1     2.328  0.000 2.233  0.000  2.307 0.000  1.662  0.000 1.5332  0.0000  2.307  0.0000 1.4889  0.000 2.1671 0.000 2.431 0.0000</span></span>
+<span><span class="co">#&gt; a2     0.000  2.114 0.000  2.586  0.000 1.748  0.000  2.133 0.0000  1.6787  0.000  2.0354 0.0000  1.700 0.0000 1.655 0.000 1.9226</span></span>
+<span><span class="co">#&gt; b      0.954 -2.390 0.507 -1.415 -0.686 1.231 -1.966 -0.359 0.3214 -0.4958 -0.437 -0.1682 0.5991 -2.378 0.0256 0.991 0.123 0.5467</span></span>
+<span><span class="co">#&gt; SE(a1) 0.189  0.000 0.185  0.000  0.186 0.000  0.157  0.000 0.1251  0.0000  0.189  0.0000 0.1256  0.000 0.1678 0.000 0.194 0.0000</span></span>
+<span><span class="co">#&gt; SE(a2) 0.000  0.191 0.000  0.228  0.000 0.155  0.000  0.179 0.0000  0.1341  0.000  0.1601 0.0000  0.157 0.0000 0.149 0.000 0.1587</span></span>
+<span><span class="co">#&gt; SE(b)  0.119  0.172 0.108  0.141  0.110 0.109  0.138  0.105 0.0864  0.0904  0.109  0.0977 0.0886  0.150 0.0999 0.104 0.108 0.0975</span></span>
+<span><span class="co">#&gt;            19    20</span></span>
+<span><span class="co">#&gt; a1      2.172  0.00</span></span>
+<span><span class="co">#&gt; a2      0.000  1.93</span></span>
+<span><span class="co">#&gt; b      -0.796 -1.56</span></span>
+<span><span class="co">#&gt; SE(a1)  0.177  0.00</span></span>
+<span><span class="co">#&gt; SE(a2)  0.000  0.17</span></span>
+<span><span class="co">#&gt; SE(b)   0.109  0.13</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="m3pl-model-1">M3PL Model<a class="anchor" aria-label="anchor" href="#m3pl-model-1"></a>
@@ -708,27 +726,27 @@ loading indicator matrix is needed additionally. Users are referred to
 parameters and guessing parameters are chosen to be <span class="math inline">N(0,2^2)</span> and <span class="math inline">\beta(10,40)</span> respectively.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">C3PL_data</span>, <span class="fu"><a href="../reference/C3PL_sgvem.html">C3PL_sgvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, mu_b <span class="op">=</span> <span class="fl">0</span>, sigma2_b <span class="op">=</span> <span class="fl">4</span>, Alpha <span class="op">=</span> <span class="fl">10</span>, Beta <span class="op">=</span> <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          a1    a2       b     c</span></span>
-<span><span class="co">#&gt; Item1  1.16 0.000 -0.1003 0.185</span></span>
-<span><span class="co">#&gt; Item2  0.00 1.433  1.5776 0.152</span></span>
-<span><span class="co">#&gt; Item3  1.80 0.000 -0.5373 0.179</span></span>
-<span><span class="co">#&gt; Item4  0.00 1.557 -1.4996 0.187</span></span>
-<span><span class="co">#&gt; Item5  1.46 0.000 -1.6942 0.188</span></span>
-<span><span class="co">#&gt; Item6  0.00 1.409  1.6327 0.155</span></span>
-<span><span class="co">#&gt; Item7  1.29 0.000 -0.6398 0.185</span></span>
-<span><span class="co">#&gt; Item8  0.00 1.395  0.0948 0.179</span></span>
-<span><span class="co">#&gt; Item9  1.70 0.000  0.6206 0.170</span></span>
-<span><span class="co">#&gt; Item10 0.00 1.430 -0.0898 0.181</span></span>
-<span><span class="co">#&gt; Item11 1.22 0.000  0.5128 0.175</span></span>
-<span><span class="co">#&gt; Item12 0.00 0.955  1.3418 0.173</span></span>
-<span><span class="co">#&gt; Item13 1.46 0.000  1.4928 0.159</span></span>
-<span><span class="co">#&gt; Item14 0.00 1.202  0.8414 0.175</span></span>
-<span><span class="co">#&gt; Item15 1.24 0.000 -0.0937 0.183</span></span>
-<span><span class="co">#&gt; Item16 0.00 1.511  0.6968 0.168</span></span>
-<span><span class="co">#&gt; Item17 1.43 0.000 -0.4500 0.182</span></span>
-<span><span class="co">#&gt; Item18 0.00 1.758 -1.2304 0.182</span></span>
-<span><span class="co">#&gt; Item19 1.01 0.000  1.0262 0.175</span></span>
-<span><span class="co">#&gt; Item20 0.00 1.139 -0.7983 0.188</span></span></code></pre></div>
+<span><span class="co">#&gt;      a1    a2       b     c</span></span>
+<span><span class="co">#&gt; 1  1.17 0.000 -0.1471 0.185</span></span>
+<span><span class="co">#&gt; 2  0.00 1.458  1.5560 0.151</span></span>
+<span><span class="co">#&gt; 3  1.75 0.000 -0.5263 0.179</span></span>
+<span><span class="co">#&gt; 4  0.00 1.513 -1.5249 0.187</span></span>
+<span><span class="co">#&gt; 5  1.39 0.000 -1.7110 0.189</span></span>
+<span><span class="co">#&gt; 6  0.00 1.345  1.6035 0.156</span></span>
+<span><span class="co">#&gt; 7  1.28 0.000 -0.6753 0.186</span></span>
+<span><span class="co">#&gt; 8  0.00 1.393  0.1074 0.178</span></span>
+<span><span class="co">#&gt; 9  1.68 0.000  0.6113 0.172</span></span>
+<span><span class="co">#&gt; 10 0.00 1.410 -0.0895 0.181</span></span>
+<span><span class="co">#&gt; 11 1.20 0.000  0.4819 0.177</span></span>
+<span><span class="co">#&gt; 12 0.00 0.936  1.3474 0.172</span></span>
+<span><span class="co">#&gt; 13 1.44 0.000  1.4755 0.157</span></span>
+<span><span class="co">#&gt; 14 0.00 1.174  0.8267 0.175</span></span>
+<span><span class="co">#&gt; 15 1.21 0.000 -0.0748 0.181</span></span>
+<span><span class="co">#&gt; 16 0.00 1.522  0.6628 0.168</span></span>
+<span><span class="co">#&gt; 17 1.42 0.000 -0.4608 0.182</span></span>
+<span><span class="co">#&gt; 18 0.00 1.697 -1.2446 0.183</span></span>
+<span><span class="co">#&gt; 19 1.03 0.000  1.0255 0.175</span></span>
+<span><span class="co">#&gt; 20 0.00 1.140 -0.7525 0.186</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -744,32 +762,58 @@ for the M2PL model:</p>
 <tbody>
 <tr class="odd">
 <td align="center"><code>D2PL_lrt</code></td>
-<td align="center">Likelihood Ratio Test</td>
+<td align="center">Likelihood ratio test</td>
 </tr>
 <tr class="even">
 <td align="center"><code>D2PL_em</code></td>
 <td align="center">EM with lasso penalty</td>
 </tr>
 <tr class="odd">
+<td align="center"><code>D2PL_pair_em</code></td>
+<td align="center">EM with group pairwise truncated lasso penalty</td>
+</tr>
+<tr class="even">
 <td align="center"><code>D2PL_gvem</code></td>
 <td align="center">GVEM with lasso penalty</td>
 </tr>
 </tbody>
 </table>
-<p>We recommend <code>D2PL_em</code> for low-dimensional cases (e.g.,
-<span class="math inline">D\leq 3</span>) because it is more accurate;
+<p>Currently <code>D2PL_pair_em</code> supports unidimensional latent
+trait only, but it is strongly recommended when <span class="math inline">D=1</span> because it produces the most accurate
+estimates and allows comparison between every pair of groups.
+<code>D2PL_pair_em</code> requires item responses and group membership
+as input. It does not require the loading indicator and assumes every
+item loads on the same single dimension. In the following example, the
+responses are generated from two-dimensional latent traits that have a
+correlation of <span class="math inline">0.8</span>, and we treat them
+as one dimension. Note that the truncated lasso (<span class="math inline">L_1</span>) penalty becomes lasso penalty when
+<code>tau</code> takes <code>Inf</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">D2PL_data</span>, <span class="fu"><a href="../reference/D2PL_pair_em.html">D2PL_pair_em</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">group</span>, Lambda0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, Tau <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">Inf</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.002</span>, <span class="fl">0.01</span>, by <span class="op">=</span> <span class="fl">0.002</span><span class="op">)</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
+<span><span class="co">#&gt; 1,2:a1                                                   </span></span>
+<span><span class="co">#&gt; 1,2:b  X X   X X                                         </span></span>
+<span><span class="co">#&gt; 1,3:a1       X                                           </span></span>
+<span><span class="co">#&gt; 1,3:b  X X X X X X                                       </span></span>
+<span><span class="co">#&gt; 2,3:a1       X                                           </span></span>
+<span><span class="co">#&gt; 2,3:b  X   X X X X                                       </span></span>
+<span><span class="co">#&gt; * lambda0 = 1.2, tau = 0.006</span></span></code></pre></div>
+<p>Results are ordered by pairs of groups and DIF parameters are flagged
+by <code>X</code>.</p>
+<p>If <code>D2PL_pair_em</code> does not fit the need, we recommend
+<code>D2PL_em</code> for low-dimensional cases (e.g., <span class="math inline">D\leq 3</span>) because it is more accurate;
 <code>D2PL_gvem</code> is recommend for high-dimensional cases and/or
 fast estimation. Both functions require item responses, loading
 indicator, and group membership. Besides, estimation method
 (<code>method</code>) and tuning parameter vector (<code>Lambda0</code>)
-are the two most important arguments. <code>IWGVEMM</code> is the
-default choice and is recommended for <code>D2PL_gvem</code> because
-this method has an additional importance sampling step which helps
-improve accuracy. We do not recommend <code>D2PL_lrt</code> because it
-is time-consuming. Users are referred to <span class="citation">Wang et
-al. (<a href="#ref-wang2023">2023</a>)</span> for
-<code>D2PL_em</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+are the two most important arguments. <code>EMM</code> and
+<code>IWGVEMM</code> are the default choices and are recommended for
+<code>D2PL_em</code> and <code>D2PL_gvem</code> respectively because
+these methods are more accurate. Specifically, <code>IWGVEMM</code> has
+an additional importance sampling step after the GVEM estimation. We do
+not recommend <code>D2PL_lrt</code> because it is time-consuming. Users
+are referred to <span class="citation">Wang et al. (<a href="#ref-wang2023">2023</a>)</span> for <code>D2PL_em</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">D2PL_data</span>, <span class="fu"><a href="../reference/D2PL_gvem.html">D2PL_gvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, <span class="va">group</span>, method <span class="op">=</span> <span class="st">'IWGVEMM'</span>, Lambda0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.7</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">result</span></span>
 <span><span class="co">#&gt;      1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
@@ -780,47 +824,48 @@ al. (<a href="#ref-wang2023">2023</a>)</span> for
 <span><span class="co">#&gt; 3:a2       X                                           </span></span>
 <span><span class="co">#&gt; 3:b  X X X X X X                                       </span></span>
 <span><span class="co">#&gt; * lambda0 = 0.5</span></span></code></pre></div>
-<p>Item parameters are ordered by groups and group 1 is the reference
-group. DIF items are flagged by <code>X</code>. By default,
-<code>D2PL_gvem</code> chooses the best tuning parameter using the
-generalized information criterion (GIC), and in this example 0.5 is
-chosen, but AIC and BIC can be used too.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Results are ordered by groups and group 1 is the reference group. DIF
+parameters are flagged by <code>X</code>.</p>
+<p>By default, both <code>D2PL_em</code> and <code>D2PL_pair_em</code>
+choose the best tuning parameters using the Bayesian information
+criterion (BIC), while <code>D2PL_gvem</code> uses the generalized
+information criterion (GIC) with <span class="math inline">c=1</span>.
+In the example above 0.5 is chosen, but AIC and BIC can be used too.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">'AIC'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in check.vemirt_DIF(all, fit, "lambda0"): Optimal lambda0 may be less than 0.2.</span></span>
 <span><span class="co">#&gt;      1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
 <span><span class="co">#&gt; 2:a1                                                   </span></span>
-<span><span class="co">#&gt; 2:a2                                                   </span></span>
-<span><span class="co">#&gt; 2:b  X X   X X   X   X  X              X  X     X      </span></span>
+<span><span class="co">#&gt; 2:a2   X                                               </span></span>
+<span><span class="co">#&gt; 2:b  X X   X X   X      X        X     X  X     X      </span></span>
 <span><span class="co">#&gt; 3:a1 X   X   X       X                                 </span></span>
 <span><span class="co">#&gt; 3:a2   X   X   X                                       </span></span>
-<span><span class="co">#&gt; 3:b  X X X X X X   X X                          X      </span></span>
+<span><span class="co">#&gt; 3:b  X X X X X X   X X  X        X              X     X</span></span>
 <span><span class="co">#&gt; * lambda0 = 0.2</span></span></code></pre></div>
 <p>The message warns us that the optimal tuning parameter may be out of
 the range specified for estimation. Users should specify a wider range
-for the argument <code>Lambda0</code> if the current information
-criterion is used. Finally, other parameter estimates can be obtained
-too:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+for the corresponding argument if the current information criterion is
+used. Finally, other parameter estimates can be obtained too:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">'BIC'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 17</span></span>
 <span><span class="co">#&gt;  $ lambda0: num 0.4</span></span>
 <span><span class="co">#&gt;  $ lambda : num 15.5</span></span>
-<span><span class="co">#&gt;  $ niter  : num [1:2] 108 100</span></span>
-<span><span class="co">#&gt;  $ ll     : num -11577</span></span>
-<span><span class="co">#&gt;  $ l0     : int 12</span></span>
+<span><span class="co">#&gt;  $ niter  : num [1:2] 112 99</span></span>
+<span><span class="co">#&gt;  $ ll     : num -11583</span></span>
+<span><span class="co">#&gt;  $ l0     : int 11</span></span>
 <span><span class="co">#&gt;  $ SIGMA  : num [1:1500, 1:2, 1:2] 0.103 0.124 0.116 0.103 0.13 ...</span></span>
 <span><span class="co">#&gt;  $ MU     : num [1:1500, 1:2] 0.00366 -1.21956 -0.86532 0.05182 -1.44339 ...</span></span>
-<span><span class="co">#&gt;  $ Sigma  : num [1:3, 1:2, 1:2] 1 0.979 1.007 0.834 0.814 ...</span></span>
-<span><span class="co">#&gt;  $ Mu     : num [1:3, 1:2] 0 -0.0152 0.0842 0 -0.1347 ...</span></span>
-<span><span class="co">#&gt;  $ a      : num [1:20, 1:2] 2.31 0 2.13 0 1.95 ...</span></span>
-<span><span class="co">#&gt;  $ b      : num [1:20] 1.0515 0.6607 0.0834 0.82 -0.1187 ...</span></span>
+<span><span class="co">#&gt;  $ Sigma  : num [1:3, 1:2, 1:2] 1 0.978 0.991 0.836 0.833 ...</span></span>
+<span><span class="co">#&gt;  $ Mu     : num [1:3, 1:2] 0 -0.0384 0.0782 0 -0.126 ...</span></span>
+<span><span class="co">#&gt;  $ a      : num [1:20, 1:2] 2.31 0 2.11 0 1.95 ...</span></span>
+<span><span class="co">#&gt;  $ b      : num [1:20] 1.0073 0.325 0.0421 0.786 -0.1522 ...</span></span>
 <span><span class="co">#&gt;  $ gamma  : num [1:3, 1:20, 1:2] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span><span class="co">#&gt;  $ beta   : num [1:3, 1:20] 0 0 0.862 0 0.659 ...</span></span>
-<span><span class="co">#&gt;  $ RMSE   : num 0.015</span></span>
-<span><span class="co">#&gt;  $ AIC    : num 23177</span></span>
-<span><span class="co">#&gt;  $ BIC    : num 23241</span></span>
-<span><span class="co">#&gt;  $ GIC    : num 23328</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ beta   : num [1:3, 1:20] 0 0 0.835 0 0 ...</span></span>
+<span><span class="co">#&gt;  $ RMSE   : num 0.0192</span></span>
+<span><span class="co">#&gt;  $ AIC    : num 23188</span></span>
+<span><span class="co">#&gt;  $ BIC    : num 23246</span></span>
+<span><span class="co">#&gt;  $ GIC    : num 23326</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="package-evaluation">Package Evaluation<a class="anchor" aria-label="anchor" href="#package-evaluation"></a>
@@ -828,15 +873,15 @@ too:</p>
 <p>Here we show two examples on how to test the <code>VEMIRT</code>
 package by simulating data, estimating the model using
 <code>VEMIRT</code>, and then checking accuracy.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">abind</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="confirmatory-2pl-model">Confirmatory 2PL Model<a class="anchor" aria-label="anchor" href="#confirmatory-2pl-model"></a>
 </h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.85</span>, <span class="fl">0.85</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.85</span>, <span class="fl">0.85</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">J</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">0</span>, <span class="va">J</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="va">J</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -847,6 +892,7 @@ package by simulating data, estimating the model using
 <span></span>
 <span><span class="va">result.gvem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C2PL_gvem.html">C2PL_gvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span><span class="op">)</span></span>
 <span><span class="va">result.iw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C2PL_iw.html">C2PL_iw</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">result.gvem</span><span class="op">)</span></span>
+<span><span class="va">result.iw2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/C2PL_iw2.html">C2PL_iw2</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rmse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -856,41 +902,49 @@ package by simulating data, estimating the model using
 <span><span class="co">#&gt; 0.6039514 0.1318309</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">a</span><span class="op">[</span><span class="va">model</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">[</span><span class="va">model</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span>, b <span class="op">=</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">b</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw</span><span class="op">)</span><span class="op">$</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          a          b </span></span>
-<span><span class="co">#&gt; 0.40411993 0.09705373</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.40411993 0.09705373</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">a</span><span class="op">[</span><span class="va">model</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw2</span><span class="op">)</span><span class="op">$</span><span class="va">a</span><span class="op">[</span><span class="va">model</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span>, b <span class="op">=</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">b</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw2</span><span class="op">)</span><span class="op">$</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         a         b </span></span>
+<span><span class="co">#&gt; 0.1370900 0.0771889</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="dif-2pl-model">DIF 2PL Model<a class="anchor" aria-label="anchor" href="#dif-2pl-model"></a>
 </h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.85</span>, <span class="fl">0.85</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.85</span>, <span class="fl">0.85</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">J</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">j</span> <span class="op">&lt;-</span> <span class="va">J</span> <span class="op">*</span> <span class="fl">0.4</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">300</span></span>
 <span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, each <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">0</span>, <span class="va">J</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="va">J</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">J</span> <span class="op">*</span> <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="va">model</span></span>
 <span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/abind/man/abind.html" class="external-link">abind</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">a</span>, <span class="va">a</span>, along <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span></span>
-<span><span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span>, <span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span></span>
+<span><span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span>, <span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, , <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">a</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, , <span class="op">]</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/pkg/abind/man/abind.html" class="external-link">abind</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">model</span>, along <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">J</span><span class="op">)</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">b</span>, <span class="va">b</span>, <span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.8</span><span class="op">)</span></span>
-<span><span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.8</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">b</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">(</span><span class="va">j</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="va">j</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, <span class="va">Sigma</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">3</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">J</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html" class="external-link">plogis</a></span><span class="op">(</span><span class="va">a</span><span class="op">[</span><span class="va">group</span><span class="op">[</span><span class="va">n</span><span class="op">]</span>, , <span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">theta</span><span class="op">[</span><span class="va">n</span>, <span class="op">]</span> <span class="op">-</span> <span class="va">b</span><span class="op">[</span><span class="va">group</span><span class="op">[</span><span class="va">n</span><span class="op">]</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result.iw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/D2PL_gvem.html">D2PL_gvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, <span class="va">group</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
-<span><span class="va">result.iw.gic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">result.iw.gic_0.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">result.iw.gic_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">result.iw.bic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="st">'BIC'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">count</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">j</span>, <span class="va">result</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`True Positive` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">j</span><span class="op">]</span><span class="op">)</span>, `False Positive` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">j</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.gic</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.gic_0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  True Positive False Positive </span></span>
+<span><span class="co">#&gt;      1.0000000      0.1666667</span></span>
+<span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.gic_1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  True Positive False Positive </span></span>
 <span><span class="co">#&gt;           0.75           0.00</span></span>
 <span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.bic</span><span class="op">)</span><span class="op">)</span></span>
