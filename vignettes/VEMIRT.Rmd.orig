@@ -170,24 +170,23 @@ with(C3PL_data, C3PL_sgvem(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta
 | `D2PL_pair_em` | EM with group pairwise truncated lasso penalty |
 | `D2PL_gvem` | GVEM with lasso penalty |
 
-Currently `D2PL_pair_em` supports unidimensional latent trait only, but it is strongly recommended when $D=1$ because it produces the most accurate estimates and allows comparison between every pair of groups. `D2PL_pair_em` requires item responses and group membership as input. It does not require the loading indicator and assumes every item loads on the same single dimension. In the following example, the responses are generated from two-dimensional latent traits that have a correlation of $0.8$, and we treat them as one dimension. Note that the truncated lasso ($L_1$) penalty becomes lasso penalty when `tau` takes `Inf`.
+Currently `D2PL_pair_em` supports unidimensional latent trait only, but it is strongly recommended when $D=1$ because it produces the most accurate estimates and allows comparison between every pair of groups. `D2PL_pair_em` requires item responses and group membership as input. It does not require the loading indicator and assumes every item loads on the same single dimension. In the following example, the responses are generated from two-dimensional latent traits that have a correlation of $0.8$, and we treat them as one dimension. Note that the truncated lasso ($L_1$) penalty becomes lasso penalty when `tau` takes `Inf`. In the following example, DIF detection results are ordered by pairs of groups and DIF parameters are flagged by `X`.
 ```{r cache = T}
 with(D2PL_data, D2PL_pair_em(data, group, Lambda0 = seq(1, 1.5, by = 0.1), Tau = c(Inf, seq(0.002, 0.01, by = 0.002)), verbose = FALSE))
 ```
-Results are ordered by pairs of groups and DIF parameters are flagged by `X`.
 
-If `D2PL_pair_em` does not fit the need, we recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `EMM` and `IWGVEMM` are the default choices and are recommended for `D2PL_em` and `D2PL_gvem` respectively because these methods are more accurate. Specifically, `IWGVEMM` has an additional importance sampling step after the GVEM estimation. We do not recommend `D2PL_lrt` because it is time-consuming. Users are referred to @wang2023 for `D2PL_em`.
+If `D2PL_pair_em` does not fit the need, we recommend `D2PL_em` for low-dimensional cases (e.g., $D\leq 3$) because it is more accurate; `D2PL_gvem` is recommend for high-dimensional cases and/or fast estimation. Both functions require item responses, loading indicator, and group membership. Besides, estimation method (`method`) and tuning parameter vector (`Lambda0`) are the two most important arguments. `EMM` and `IWGVEMM` are the default choices and are recommended for `D2PL_em` and `D2PL_gvem` respectively because these methods are more accurate. Specifically, `IWGVEMM` has an additional importance sampling step after the GVEM estimation. We do not recommend `D2PL_lrt` because it is time-consuming. Users are referred to @wang2023 for `D2PL_em`. In the example below, results are ordered by groups and group 1 is the reference group. DIF parameters are flagged by `X`, indicating that the item parameter of this group is different from that of group 1.
 ```{r cache = T}
 result <- with(D2PL_data, D2PL_gvem(data, model, group, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1), verbose = F))
 result
 ```
-Results are ordered by groups and group 1 is the reference group. DIF parameters are flagged by `X`.
 
-By default, both `D2PL_em` and `D2PL_pair_em` choose the best tuning parameters using the Bayesian information criterion (BIC), while `D2PL_gvem` uses the generalized information criterion (GIC) with $c=1$. In the example above `r coef(result)$lambda0` is chosen, but AIC and BIC can be used too.
+By default, both `D2PL_em` and `D2PL_pair_em` choose the best tuning parameters using the Bayesian information criterion (BIC), while `D2PL_gvem` uses the generalized information criterion (GIC) with $c=1$. In the example above `r coef(result)$lambda0` is chosen, but AIC, BIC, or GIC with other values of $c$ can also be used by specifying `"AIC"`, `"BIC"`, or the value of $c$ in functions `coef`, `print` and `summary`. We suggest $c$ be from $0$ to $1$, where larger values lead to lower true and false positive rates.
 ```{r}
+summary(result, 0.5)
 print(result, 'AIC')
 ```
-The message warns us that the optimal tuning parameter may be out of the range specified for estimation. Users should specify a wider range for the corresponding argument if the current information criterion is used. Finally, other parameter estimates can be obtained too:
+The message warns us that the optimal tuning parameter for AIC may be out of the range specified for estimation. Users should specify a wider range for the corresponding argument if the current information criterion is used. Finally, other parameter estimates can be obtained too:
 ```{r}
 str(coef(result, 'BIC'))
 ```
@@ -249,7 +248,7 @@ data <- t(sapply(1:(n * 3), function(n) {
 }))
 
 result.iw <- D2PL_gvem(data, model, group, verbose = F)
-result.iw.gic_0.5 <- summary(result.iw, 0.5)
+result.iw.gic_0.3 <- summary(result.iw, 0.3)
 result.iw.gic_1 <- summary(result.iw, 1)
 result.iw.bic <- summary(result.iw, 'BIC')
 
@@ -257,7 +256,7 @@ count <- function(j, result) {
   pos <- colSums(result) > 0
   c(`True Positive` = mean(pos[1:j]), `False Positive` = mean(pos[-(1:j)]))
 }
-count(j, coef(result.iw.gic_0.5))
+count(j, coef(result.iw.gic_0.3))
 count(j, coef(result.iw.gic_1))
 count(j, coef(result.iw.bic))
 ```
