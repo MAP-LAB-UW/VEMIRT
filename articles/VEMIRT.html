@@ -135,13 +135,20 @@ allow responses to have missing data, which should be coded as
 <code>NA</code>. In this example, there are <span class="math inline">N=1500</span> respondents and <span class="math inline">J=20</span> items.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">D2PL_data</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19] [,20]</span></span>
-<span><span class="co">#&gt; [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0     1     0     1     1     1     1     0</span></span>
-<span><span class="co">#&gt; [2,]    0    0    0    0    1    0    0    0    0     0     0     0     0     1     0     0     0     0     0     0</span></span>
-<span><span class="co">#&gt; [3,]    0    0    0    0    0    0    1    0    0     0     0     0     0     0     0     0     1     0     1     0</span></span>
-<span><span class="co">#&gt; [4,]    0    0    1    0    1    0    0    0    0     1     1     1     1     1     1     1     0     1     0     0</span></span>
-<span><span class="co">#&gt; [5,]    0    0    0    0    0    0    0    0    0     1     0     0     0     0     0     1     0     0     0     0</span></span>
-<span><span class="co">#&gt; [6,]    1    1    1    1    1    0    1    1    1     1     1     1     1     1     1     1     1     1     0     1</span></span></code></pre></div>
+<span><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]</span></span>
+<span><span class="co">#&gt; [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0</span></span>
+<span><span class="co">#&gt; [2,]    0    0    0    0    1    0    0    0    0     0     0     0     0</span></span>
+<span><span class="co">#&gt; [3,]    0    0    0    0    0    0    1    0    0     0     0     0     0</span></span>
+<span><span class="co">#&gt; [4,]    0    0    1    0    1    0    0    0    0     1     1     1     1</span></span>
+<span><span class="co">#&gt; [5,]    0    0    0    0    0    0    0    0    0     1     0     0     0</span></span>
+<span><span class="co">#&gt; [6,]    1    1    1    1    1    0    1    1    1     1     1     1     1</span></span>
+<span><span class="co">#&gt;      [,14] [,15] [,16] [,17] [,18] [,19] [,20]</span></span>
+<span><span class="co">#&gt; [1,]     1     0     1     1     1     1     0</span></span>
+<span><span class="co">#&gt; [2,]     1     0     0     0     0     0     0</span></span>
+<span><span class="co">#&gt; [3,]     0     0     0     1     0     1     0</span></span>
+<span><span class="co">#&gt; [4,]     1     1     1     0     1     0     0</span></span>
+<span><span class="co">#&gt; [5,]     0     0     1     0     0     0     0</span></span>
+<span><span class="co">#&gt; [6,]     1     1     1     1     1     0     1</span></span></code></pre></div>
 <p>CFA and DIF rely on a <span class="math inline">J</span> by <span class="math inline">D</span> binary loading indicator matrix specifying
 latent dimensions each item loads on, where <span class="math inline">D</span> is the number of latent dimensions. The
 latent traits have <span class="math inline">D=2</span> dimensions
@@ -787,7 +794,9 @@ item loads on the same single dimension. In the following example, the
 responses are generated from two-dimensional latent traits that have a
 correlation of <span class="math inline">0.8</span>, and we treat them
 as one dimension. Note that the truncated lasso (<span class="math inline">L_1</span>) penalty becomes lasso penalty when
-<code>tau</code> takes <code>Inf</code>.</p>
+<code>tau</code> takes <code>Inf</code>. In the following example, DIF
+detection results are ordered by pairs of groups and DIF parameters are
+flagged by <code>X</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">D2PL_data</span>, <span class="fu"><a href="../reference/D2PL_pair_em.html">D2PL_pair_em</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">group</span>, Lambda0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, Tau <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">Inf</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.002</span>, <span class="fl">0.01</span>, by <span class="op">=</span> <span class="fl">0.002</span><span class="op">)</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
@@ -798,8 +807,6 @@ as one dimension. Note that the truncated lasso (<span class="math inline">L_1</
 <span><span class="co">#&gt; 2,3:a1       X                                           </span></span>
 <span><span class="co">#&gt; 2,3:b  X   X X X X                                       </span></span>
 <span><span class="co">#&gt; * lambda0 = 1.2, tau = 0.006</span></span></code></pre></div>
-<p>Results are ordered by pairs of groups and DIF parameters are flagged
-by <code>X</code>.</p>
 <p>If <code>D2PL_pair_em</code> does not fit the need, we recommend
 <code>D2PL_em</code> for low-dimensional cases (e.g., <span class="math inline">D\leq 3</span>) because it is more accurate;
 <code>D2PL_gvem</code> is recommend for high-dimensional cases and/or
@@ -812,7 +819,11 @@ are the two most important arguments. <code>EMM</code> and
 these methods are more accurate. Specifically, <code>IWGVEMM</code> has
 an additional importance sampling step after the GVEM estimation. We do
 not recommend <code>D2PL_lrt</code> because it is time-consuming. Users
-are referred to <span class="citation">Wang et al. (<a href="#ref-wang2023">2023</a>)</span> for <code>D2PL_em</code>.</p>
+are referred to <span class="citation">Wang et al. (<a href="#ref-wang2023">2023</a>)</span> for <code>D2PL_em</code>. In the
+example below, results are ordered by groups and group 1 is the
+reference group. DIF parameters are flagged by <code>X</code>,
+indicating that the item parameter of this group is different from that
+of group 1.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">D2PL_data</span>, <span class="fu"><a href="../reference/D2PL_gvem.html">D2PL_gvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, <span class="va">group</span>, method <span class="op">=</span> <span class="st">'IWGVEMM'</span>, Lambda0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.7</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">result</span></span>
@@ -824,16 +835,26 @@ are referred to <span class="citation">Wang et al. (<a href="#ref-wang2023">2023
 <span><span class="co">#&gt; 3:a2       X                                           </span></span>
 <span><span class="co">#&gt; 3:b  X X X X X X                                       </span></span>
 <span><span class="co">#&gt; * lambda0 = 0.5</span></span></code></pre></div>
-<p>Results are ordered by groups and group 1 is the reference group. DIF
-parameters are flagged by <code>X</code>.</p>
 <p>By default, both <code>D2PL_em</code> and <code>D2PL_pair_em</code>
 choose the best tuning parameters using the Bayesian information
 criterion (BIC), while <code>D2PL_gvem</code> uses the generalized
 information criterion (GIC) with <span class="math inline">c=1</span>.
-In the example above 0.5 is chosen, but AIC and BIC can be used too.</p>
+In the example above 0.5 is chosen, but AIC, BIC, or GIC with other
+values of <span class="math inline">c</span> can also be used by
+specifying <code>"AIC"</code>, <code>"BIC"</code>, or the value of <span class="math inline">c</span> in functions <code>coef</code>,
+<code>print</code> and <code>summary</code>. We suggest <span class="math inline">c</span> be from <span class="math inline">0</span>
+to <span class="math inline">1</span>, where larger values lead to lower
+true and false positive rates.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">'AIC'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in check.vemirt_DIF(all, fit, "lambda0"): Optimal lambda0 may be less than 0.2.</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result</span>, <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
+<span><span class="co">#&gt; a1         X                                         </span></span>
+<span><span class="co">#&gt; a2       X                                           </span></span>
+<span><span class="co">#&gt; b  X X X X X X   X                                   </span></span>
+<span><span class="co">#&gt; * lambda0 = 0.4</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">'AIC'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in check.vemirt_DIF(all, fit, "lambda0"): Optimal lambda0 may be</span></span>
+<span><span class="co">#&gt; less than 0.2.</span></span>
 <span><span class="co">#&gt;      1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
 <span><span class="co">#&gt; 2:a1                                                   </span></span>
 <span><span class="co">#&gt; 2:a2   X                                               </span></span>
@@ -842,10 +863,11 @@ In the example above 0.5 is chosen, but AIC and BIC can be used too.</p>
 <span><span class="co">#&gt; 3:a2   X   X   X                                       </span></span>
 <span><span class="co">#&gt; 3:b  X X X X X X   X X  X        X              X     X</span></span>
 <span><span class="co">#&gt; * lambda0 = 0.2</span></span></code></pre></div>
-<p>The message warns us that the optimal tuning parameter may be out of
-the range specified for estimation. Users should specify a wider range
-for the corresponding argument if the current information criterion is
-used. Finally, other parameter estimates can be obtained too:</p>
+<p>The message warns us that the optimal tuning parameter for AIC may be
+out of the range specified for estimation. Users should specify a wider
+range for the corresponding argument if the current information
+criterion is used. Finally, other parameter estimates can be obtained
+too:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result</span>, <span class="st">'BIC'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 17</span></span>
@@ -933,7 +955,7 @@ package by simulating data, estimating the model using
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result.iw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/D2PL_gvem.html">D2PL_gvem</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">model</span>, <span class="va">group</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
-<span><span class="va">result.iw.gic_0.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">result.iw.gic_0.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="fl">0.3</span><span class="op">)</span></span>
 <span><span class="va">result.iw.gic_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">result.iw.bic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">result.iw</span>, <span class="st">'BIC'</span><span class="op">)</span></span>
 <span></span>
@@ -941,9 +963,9 @@ package by simulating data, estimating the model using
 <span>  <span class="va">pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`True Positive` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">j</span><span class="op">]</span><span class="op">)</span>, `False Positive` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pos</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">j</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.gic_0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.gic_0.3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  True Positive False Positive </span></span>
-<span><span class="co">#&gt;      1.0000000      0.1666667</span></span>
+<span><span class="co">#&gt;            1.0            0.5</span></span>
 <span><span class="fu">count</span><span class="op">(</span><span class="va">j</span>, <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">result.iw.gic_1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  True Positive False Positive </span></span>
 <span><span class="co">#&gt;           0.75           0.00</span></span>
