@@ -155,8 +155,6 @@ est.D2PL_emm <- function(e, lambda) {
     params <- lapply(lst(Sigma, Mu, a, b, gamma, beta), torch_clone)
     if (!is.null(params.old) && all(distance(params, params.old) < eps))
       break
-    if (!is.null(params.old))
-      print(distance(params, params.old))
     params.old <- params
     lambda <- lambda.bak
     gamma.mask <- gamma.mask.bak
