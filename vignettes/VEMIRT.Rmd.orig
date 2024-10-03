@@ -55,7 +55,7 @@ CFA and DIF rely on a $J$ by $D$ binary loading indicator matrix specifying late
 D2PL_data$model
 ```
 
-DIF analysis additionally needs an $N$ dimensional group membership vector, whose elements are integers from $1$ to $G$, where $G$ is the number of groups. There are $G=`r max(D2PL_data$group)`$ groups in this example.
+DIF analysis additionally needs a group membership vector of length $N$, whose elements are integers from $1$ to $G$, where $G$ is the number of groups. There are $G=`r max(D2PL_data$group)`$ groups in this example.
 ```{r}
 table(D2PL_data$group)
 ```
