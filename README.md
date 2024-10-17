@@ -22,15 +22,15 @@ designs. The package contains several example datasets and functions for
 
 To install this package from source:
 
-1)  Windows users may need to install the
+1)  **Windows** users may need to install the
     [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) and include
     the checkbox option of installing Rtools to their path for easier
-    command line usage. Mac users will have to download the necessary
-    tools from the
-    [Xcode](https://apps.apple.com/ca/app/xcode/id497799835?mt=12) and
-    its related command line tools (found within Xcode’s Preference Pane
-    under Downloads/Components); most Linux distributions should already
-    have up to date compilers (or if not they can be updated easily).
+    command line usage. **Mac** users may need to install Xcode command
+    line tools by `sudo xcode-select --install` in the terminal, and
+    then install [GNU Fortran
+    compiler](https://mac.r-project.org/tools/). Most **Linux**
+    distributions should already have up to date compilers (or if not
+    they can be installed/updated easily).
 
 2)  Install the `devtools` package (if necessary), and install the
     package from [GitHub](https://github.com/) with
