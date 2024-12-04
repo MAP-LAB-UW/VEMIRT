@@ -47,3 +47,9 @@ After installing the `VEMIRT` package, open its tutorial by running
 ```{r eval = F}
 vignette("VEMIRT")
 ```
+
+## Shiny App
+After installing the `VEMIRT` package, open its shiny app by running
+```{r eval = F}
+VEMIRT::shinyVEMIRT()
+```

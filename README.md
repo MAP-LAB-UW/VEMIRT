@@ -4,6 +4,7 @@
 # VEMIRT: Variational Expectation Maximization for High-dimensional IRT Models <img src="man/figures/logo.png" align="right" height="120" alt="" />
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The goal of `VEMIRT` is to provide computationally efficient tools for
@@ -47,4 +48,12 @@ After installing the `VEMIRT` package, open its tutorial by running
 
 ``` r
 vignette("VEMIRT")
+```
+
+## Shiny App
+
+After installing the `VEMIRT` package, open its shiny app by running
+
+``` r
+VEMIRT::shinyVEMIRT()
 ```

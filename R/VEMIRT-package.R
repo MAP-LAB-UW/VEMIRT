@@ -34,6 +34,10 @@
 #'   \item \code{\link{D2PL_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms
 #'   \item \code{\link{D2PL_lrt}} conducts DIF analysis for M2PL models using the likelihood ratio test
 #' }
+#' @section Shiny app for VEMIRT:
+#' \itemize{
+#'   \item \code{\link{shinyVEMIRT}} Run the shiny app for VEMIRT
+#' }
 # #' @keywords internal
 "_PACKAGE"
 

@@ -1,15 +1,15 @@
 Package: VEMIRT
 Type: Package
 Title: Variational Expectation Maximization for High-Dimensional IRT Models
-Version: 2.5
-Date: 2024-08-18
+Version: 2.6
+Date: 2024-12-05
 Authors@R: c(
-  person("Weicong", "Lyu", role = c("aut", "cre"), email = "wlyu4@uw.edu", comment = c(ORCID = "0000-0002-8159-2161")),
+  person("Weicong", "Lyu", role = c("aut", "cre"), email = "weiconglyu@um.edu.mo", comment = c(ORCID = "0000-0002-8159-2161")),
   person("Jiaying", "Xiao", role = c("aut"), email = "jxiao6@uw.edu", comment = c(ORCID = "0000-0001-9513-6477")),
   person("Ruoyi", "Zhu", role = c("aut"), , email = "zhux0445@uw.edu", comment = c(ORCID = "0000-0002-8159-2161")),
   person("Gongjun", "Xu", role = c("aut"), email = "gongjun@umich.edu", comment = c(ORCID = "0000-0003-4023-5413")),
   person("Chun", "Wang", role = c("aut"), email = "wang4066@uw.edu", comment = c(ORCID = "0000-0003-2695-9781")))
-Maintainer: Weicong Lyu <wlyu4@uw.edu>
+Maintainer: Weicong Lyu <weiconglyu@um.edu.mo>
 Description: VEMIRT is created to assist researchers in conducting high-dimensional exploratory and confirmatory multidimensional item response theory (MIRT) analysis and corresponding differential item functioning (DIF) analysis. The core computation engine of VEMIRT is a family of Gaussian Variational EM algorithms that are considerably more efficient than currently available algorithms in other statistical packages, especially when the number of latent factors exceeds four.
 License: GPL-3
 Imports: 
@@ -26,7 +26,14 @@ Imports:
     RcppArmadillo,
     testit,
     tibble,
-    torch
+    torch,
+    shiny,
+    shinyjs,
+    bslib,
+    data.table,
+    DT,
+    callr,
+    openxlsx
 LinkingTo: Rcpp, RcppArmadillo, RcppEigen
 Encoding: UTF-8
 Depends: 

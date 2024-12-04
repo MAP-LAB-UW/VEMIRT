@@ -52,6 +52,13 @@ software packages, especially when the number of latent factors exceeds four.
 }
 }
 
+\section{Shiny app for VEMIRT}{
+
+\itemize{
+  \item \code{\link{shinyVEMIRT}} Run the shiny app for VEMIRT
+}
+}
+
 \seealso{
 Useful links:
 \itemize{
@@ -61,7 +68,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Weicong Lyu \email{wlyu4@uw.edu} (\href{https://orcid.org/0000-0002-8159-2161}{ORCID})
+\strong{Maintainer}: Weicong Lyu \email{weiconglyu@um.edu.mo} (\href{https://orcid.org/0000-0002-8159-2161}{ORCID})
 
 Authors:
 \itemize{

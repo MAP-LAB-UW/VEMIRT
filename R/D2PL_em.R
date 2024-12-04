@@ -206,7 +206,7 @@ final.D2PL_em <- function() {
 #'   \item{ ...$BIC}{Bayesian Information Criterion: \code{-2*ll+l0*log(N)}}
 #'   \item{ ...$GIC}{Generalized Information Criterion: \code{-2*ll+c*l0*log(N)*log(log(N))}}
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @seealso \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 #'

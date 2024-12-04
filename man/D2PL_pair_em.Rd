@@ -79,5 +79,5 @@ with(D2PL_data, D2PL_pair_em(data, group, Tau = c(Inf, seq(0.01, 0.05, by = 0.01
 \code{\link{D2PL_em}}, \code{\link{D2PL_gvem}}, \code{\link{D2PL_lrt}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

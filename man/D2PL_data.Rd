@@ -31,6 +31,6 @@ D2PL_data
 Simulated Data Set for DIF M2PL Analysis
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }
 \keyword{datasets}

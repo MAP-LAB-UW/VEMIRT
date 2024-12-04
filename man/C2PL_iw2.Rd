@@ -71,5 +71,5 @@ with(C2PL_data, C2PL_iw2(data, model, SE = TRUE))}
 \code{\link{C2PL_gvem}}, \code{\link{C2PL_iw}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

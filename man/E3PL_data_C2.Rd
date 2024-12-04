@@ -25,6 +25,6 @@ E3PL_data_C2
 Responses are simulated based on an M3PL model with 3 factors. The true factor correlations are set as 0.5.
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }
 \keyword{datasets}

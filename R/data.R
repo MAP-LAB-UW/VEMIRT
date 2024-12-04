@@ -2,7 +2,7 @@
 #'
 #' Responses are simulated based on an M2PL model with 2 factors. The true factor correlations are set as 0.8.
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
@@ -17,7 +17,7 @@
 #'
 #' Responses are simulated based on an M3PL model with 2 factors. The true factor correlations are set as 0.8.
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
@@ -32,7 +32,7 @@
 #'
 #' Responses are simulated based on an M2PL model with 3 factors. The true factor correlations are set as 0.5.
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
@@ -51,7 +51,7 @@
 #'
 #' Responses are simulated based on an M2PL model with 3 factors. The true factor correlations are set as 0.5.
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
@@ -70,7 +70,7 @@
 #'
 #' Responses are simulated based on an M3PL model with 3 factors. The true factor correlations are set as 0.5.
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
@@ -89,7 +89,7 @@
 #'
 #' Responses are simulated based on an M3PL model with 3 factors. The true factor correlations are set as 0.5.
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
@@ -106,7 +106,7 @@
 
 #' Simulated Data Set for DIF M2PL Analysis
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @format A list of components of the data set:
 #' \tabular{ll}{
 #' \code{ data}\tab Item responses\cr
