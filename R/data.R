@@ -126,3 +126,9 @@
 #' \code{ ...$theta}\tab Latent traits\cr
 #' }
 'D2PL_data'
+
+#' Simulated Data Set for the Graded Response Model
+'MGRM_data'
+
+#' Simulated Data Set for the Generalized Partial Credit Model
+'MGPCM_data'

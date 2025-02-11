@@ -12,6 +12,382 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// calcu_eta_
+void calcu_eta_(arma::mat& eta, arma::mat ksi, const arma::Mat<int>& y, const arma::Mat<int>& z, const arma::Col<int>& R, const int ind);
+RcppExport SEXP _VEMIRT_calcu_eta_(SEXP etaSEXP, SEXP ksiSEXP, SEXP ySEXP, SEXP zSEXP, SEXP RSEXP, SEXP indSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type ksi(ksiSEXP);
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type z(zSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    Rcpp::traits::input_parameter< const int >::type ind(indSEXP);
+    calcu_eta_(eta, ksi, y, z, R, ind);
+    return R_NilValue;
+END_RCPP
+}
+// update_sigma_i
+arma::mat update_sigma_i(const arma::mat& omega, const arma::mat& A, const arma::rowvec& eta1_i, const arma::rowvec& eta2_i);
+RcppExport SEXP _VEMIRT_update_sigma_i(SEXP omegaSEXP, SEXP ASEXP, SEXP eta1_iSEXP, SEXP eta2_iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type eta1_i(eta1_iSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type eta2_i(eta2_iSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_sigma_i(omega, A, eta1_i, eta2_i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_mu_i
+arma::rowvec update_mu_i(const arma::mat& sigma_i, const arma::rowvec& eta1_i, const arma::rowvec& eta2_i, const arma::mat& A, const arma::mat& B, const arma::Col<int>& R, const arma::Row<int>& y_i);
+RcppExport SEXP _VEMIRT_update_mu_i(SEXP sigma_iSEXP, SEXP eta1_iSEXP, SEXP eta2_iSEXP, SEXP ASEXP, SEXP BSEXP, SEXP RSEXP, SEXP y_iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type sigma_i(sigma_iSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type eta1_i(eta1_iSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type eta2_i(eta2_iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    Rcpp::traits::input_parameter< const arma::Row<int>& >::type y_i(y_iSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_mu_i(sigma_i, eta1_i, eta2_i, A, B, R, y_i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ve_step
+void ve_step(arma::cube& sigma_, arma::mat& mu_, arma::cube& sig_mu_sum, const arma::Mat<int>& y, const arma::mat& old_A, const arma::mat& old_B, const arma::Col<int>& R, const arma::mat& old_sig, const arma::mat& old_eta1, const arma::mat& old_eta2);
+RcppExport SEXP _VEMIRT_ve_step(SEXP sigma_SEXP, SEXP mu_SEXP, SEXP sig_mu_sumSEXP, SEXP ySEXP, SEXP old_ASEXP, SEXP old_BSEXP, SEXP RSEXP, SEXP old_sigSEXP, SEXP old_eta1SEXP, SEXP old_eta2SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::cube& >::type sigma_(sigma_SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type mu_(mu_SEXP);
+    Rcpp::traits::input_parameter< arma::cube& >::type sig_mu_sum(sig_mu_sumSEXP);
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_A(old_ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_B(old_BSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_sig(old_sigSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_eta1(old_eta1SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_eta2(old_eta2SEXP);
+    ve_step(sigma_, mu_, sig_mu_sum, y, old_A, old_B, R, old_sig, old_eta1, old_eta2);
+    return R_NilValue;
+END_RCPP
+}
+// calcu_sigma_cmle_cpp
+arma::mat calcu_sigma_cmle_cpp(arma::mat sigma_hat, arma::mat sigma0, double tol);
+RcppExport SEXP _VEMIRT_calcu_sigma_cmle_cpp(SEXP sigma_hatSEXP, SEXP sigma0SEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type sigma_hat(sigma_hatSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type sigma0(sigma0SEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_sigma_cmle_cpp(sigma_hat, sigma0, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_ksi_ij
+double update_ksi_ij(const arma::rowvec& Aj, const arma::rowvec& Bj, const arma::rowvec& mu_i, const arma::mat& sigma_mu_i, const int yij, const int Rj, const int ind, const bool sq_rt);
+RcppExport SEXP _VEMIRT_update_ksi_ij(SEXP AjSEXP, SEXP BjSEXP, SEXP mu_iSEXP, SEXP sigma_mu_iSEXP, SEXP yijSEXP, SEXP RjSEXP, SEXP indSEXP, SEXP sq_rtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Aj(AjSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Bj(BjSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type mu_i(mu_iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type sigma_mu_i(sigma_mu_iSEXP);
+    Rcpp::traits::input_parameter< const int >::type yij(yijSEXP);
+    Rcpp::traits::input_parameter< const int >::type Rj(RjSEXP);
+    Rcpp::traits::input_parameter< const int >::type ind(indSEXP);
+    Rcpp::traits::input_parameter< const bool >::type sq_rt(sq_rtSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_ksi_ij(Aj, Bj, mu_i, sigma_mu_i, yij, Rj, ind, sq_rt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_Aj_
+arma::rowvec update_Aj_(const arma::Row<int>& Mj, const arma::rowvec& Bj, const int Rj, const arma::Col<int>& yj, const arma::cube& sig_mu_sum, const arma::mat& mu_, const arma::vec& eta1_j, const arma::vec& eta2_j);
+RcppExport SEXP _VEMIRT_update_Aj_(SEXP MjSEXP, SEXP BjSEXP, SEXP RjSEXP, SEXP yjSEXP, SEXP sig_mu_sumSEXP, SEXP mu_SEXP, SEXP eta1_jSEXP, SEXP eta2_jSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::Row<int>& >::type Mj(MjSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Bj(BjSEXP);
+    Rcpp::traits::input_parameter< const int >::type Rj(RjSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type yj(yjSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type sig_mu_sum(sig_mu_sumSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mu_(mu_SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type eta1_j(eta1_jSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type eta2_j(eta2_jSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_Aj_(Mj, Bj, Rj, yj, sig_mu_sum, mu_, eta1_j, eta2_j));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_Bj_
+arma::rowvec update_Bj_(const arma::rowvec& Aj, const arma::rowvec& Bj, const int Rj, const arma::mat& mu_, const arma::vec& eta1_j, const arma::vec& eta2_j, const arma::Col<int>& yj);
+RcppExport SEXP _VEMIRT_update_Bj_(SEXP AjSEXP, SEXP BjSEXP, SEXP RjSEXP, SEXP mu_SEXP, SEXP eta1_jSEXP, SEXP eta2_jSEXP, SEXP yjSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Aj(AjSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Bj(BjSEXP);
+    Rcpp::traits::input_parameter< const int >::type Rj(RjSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mu_(mu_SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type eta1_j(eta1_jSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type eta2_j(eta2_jSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type yj(yjSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_Bj_(Aj, Bj, Rj, mu_, eta1_j, eta2_j, yj));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calcu_n2vlb_j
+double calcu_n2vlb_j(const arma::rowvec& Aj, const arma::rowvec& Bj, const arma::mat& mu_, const arma::cube& sig_mu_sum, const arma::Col<int>& yj, const int Rj, const arma::vec& ksi1_j, const arma::vec& ksi2_j, const arma::vec& eta1_j, const arma::vec& eta2_j);
+RcppExport SEXP _VEMIRT_calcu_n2vlb_j(SEXP AjSEXP, SEXP BjSEXP, SEXP mu_SEXP, SEXP sig_mu_sumSEXP, SEXP yjSEXP, SEXP RjSEXP, SEXP ksi1_jSEXP, SEXP ksi2_jSEXP, SEXP eta1_jSEXP, SEXP eta2_jSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Aj(AjSEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type Bj(BjSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mu_(mu_SEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type sig_mu_sum(sig_mu_sumSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type yj(yjSEXP);
+    Rcpp::traits::input_parameter< const int >::type Rj(RjSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type ksi1_j(ksi1_jSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type ksi2_j(ksi2_jSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type eta1_j(eta1_jSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type eta2_j(eta2_jSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_n2vlb_j(Aj, Bj, mu_, sig_mu_sum, yj, Rj, ksi1_j, ksi2_j, eta1_j, eta2_j));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calcu_n2vlb_0
+double calcu_n2vlb_0(const arma::mat& sig, const arma::mat& hat_sig, const int N);
+RcppExport SEXP _VEMIRT_calcu_n2vlb_0(SEXP sigSEXP, SEXP hat_sigSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type sig(sigSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type hat_sig(hat_sigSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_n2vlb_0(sig, hat_sig, N));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calcu_entro_
+double calcu_entro_(const arma::cube& sigma_, const int N, const int K);
+RcppExport SEXP _VEMIRT_calcu_entro_(SEXP sigma_SEXP, SEXP NSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::cube& >::type sigma_(sigma_SEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_entro_(sigma_, N, K));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vem_grm
+Rcpp::List vem_grm(const arma::Mat<int>& y, const arma::Col<int>& R, arma::mat old_A, arma::mat old_B, arma::mat old_sig, arma::mat old_ksi1, arma::mat old_ksi2, const arma::Mat<int> Mod, const int max_iter, const double tol_para, const int stop_cri, const int verbose);
+RcppExport SEXP _VEMIRT_vem_grm(SEXP ySEXP, SEXP RSEXP, SEXP old_ASEXP, SEXP old_BSEXP, SEXP old_sigSEXP, SEXP old_ksi1SEXP, SEXP old_ksi2SEXP, SEXP ModSEXP, SEXP max_iterSEXP, SEXP tol_paraSEXP, SEXP stop_criSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_A(old_ASEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_B(old_BSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_sig(old_sigSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_ksi1(old_ksi1SEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_ksi2(old_ksi2SEXP);
+    Rcpp::traits::input_parameter< const arma::Mat<int> >::type Mod(ModSEXP);
+    Rcpp::traits::input_parameter< const int >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< const double >::type tol_para(tol_paraSEXP);
+    Rcpp::traits::input_parameter< const int >::type stop_cri(stop_criSEXP);
+    Rcpp::traits::input_parameter< const int >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(vem_grm(y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter, tol_para, stop_cri, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// b2gamma
+arma::mat b2gamma(const arma::mat& B, const arma::Col<int>& R);
+RcppExport SEXP _VEMIRT_b2gamma(SEXP BSEXP, SEXP RSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    rcpp_result_gen = Rcpp::wrap(b2gamma(B, R));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gamma2b
+arma::mat gamma2b(const arma::mat& gamma, const arma::Col<int>& R);
+RcppExport SEXP _VEMIRT_gamma2b(SEXP gammaSEXP, SEXP RSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    rcpp_result_gen = Rcpp::wrap(gamma2b(gamma, R));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calcu_Fjr
+void calcu_Fjr(arma::mat& Fjr, const arma::mat& Theta_is, const arma::mat& A, const arma::mat& B, const arma::Row<int>& y_i);
+RcppExport SEXP _VEMIRT_calcu_Fjr(SEXP FjrSEXP, SEXP Theta_isSEXP, SEXP ASEXP, SEXP BSEXP, SEXP y_iSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type Fjr(FjrSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is(Theta_isSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::Row<int>& >::type y_i(y_iSEXP);
+    calcu_Fjr(Fjr, Theta_is, A, B, y_i);
+    return R_NilValue;
+END_RCPP
+}
+// calcu_Fjrp
+void calcu_Fjrp(arma::mat& Fjrp, const arma::mat& Theta_is, const arma::mat& A, const arma::mat& B, const arma::Row<int>& y_i, const arma::Col<int>& R);
+RcppExport SEXP _VEMIRT_calcu_Fjrp(SEXP FjrpSEXP, SEXP Theta_isSEXP, SEXP ASEXP, SEXP BSEXP, SEXP y_iSEXP, SEXP RSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type Fjrp(FjrpSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is(Theta_isSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::Row<int>& >::type y_i(y_iSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    calcu_Fjrp(Fjrp, Theta_is, A, B, y_i, R);
+    return R_NilValue;
+END_RCPP
+}
+// calcu_tid_wis
+void calcu_tid_wis(arma::vec& tid_wis, const arma::mat& Theta_is, const arma::mat& Theta_is__, const arma::rowvec& mu_i, const arma::mat& sigma_i, const arma::mat& sig, const arma::mat& Fjr, const arma::mat& Fjrp);
+RcppExport SEXP _VEMIRT_calcu_tid_wis(SEXP tid_wisSEXP, SEXP Theta_isSEXP, SEXP Theta_is__SEXP, SEXP mu_iSEXP, SEXP sigma_iSEXP, SEXP sigSEXP, SEXP FjrSEXP, SEXP FjrpSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type tid_wis(tid_wisSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is(Theta_isSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is__(Theta_is__SEXP);
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type mu_i(mu_iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type sigma_i(sigma_iSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type sig(sigSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Fjr(FjrSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Fjrp(FjrpSEXP);
+    calcu_tid_wis(tid_wis, Theta_is, Theta_is__, mu_i, sigma_i, sig, Fjr, Fjrp);
+    return R_NilValue;
+END_RCPP
+}
+// calcu_grad_sig
+arma::mat calcu_grad_sig(const arma::mat& old_sig, const arma::mat& Theta_is, const arma::vec& tid_wis);
+RcppExport SEXP _VEMIRT_calcu_grad_sig(SEXP old_sigSEXP, SEXP Theta_isSEXP, SEXP tid_wisSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_sig(old_sigSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is(Theta_isSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type tid_wis(tid_wisSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_grad_sig(old_sig, Theta_is, tid_wis));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calcu_grad_A
+arma::mat calcu_grad_A(const arma::Mat<int>& M, const arma::mat& Theta_is, const arma::vec& tid_wis, const arma::mat& Fjr, const arma::mat& Fjrp);
+RcppExport SEXP _VEMIRT_calcu_grad_A(SEXP MSEXP, SEXP Theta_isSEXP, SEXP tid_wisSEXP, SEXP FjrSEXP, SEXP FjrpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is(Theta_isSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type tid_wis(tid_wisSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Fjr(FjrSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Fjrp(FjrpSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_grad_A(M, Theta_is, tid_wis, Fjr, Fjrp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calcu_grad_gam
+arma::mat calcu_grad_gam(const arma::mat& old_gam, const arma::mat& Theta_is, const arma::vec& tid_wis, const arma::mat& Fjr, const arma::mat& Fjrp, const arma::Row<int>& y_i, const arma::Col<int>& R);
+RcppExport SEXP _VEMIRT_calcu_grad_gam(SEXP old_gamSEXP, SEXP Theta_isSEXP, SEXP tid_wisSEXP, SEXP FjrSEXP, SEXP FjrpSEXP, SEXP y_iSEXP, SEXP RSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_gam(old_gamSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Theta_is(Theta_isSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type tid_wis(tid_wisSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Fjr(FjrSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Fjrp(FjrpSEXP);
+    Rcpp::traits::input_parameter< const arma::Row<int>& >::type y_i(y_iSEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    rcpp_result_gen = Rcpp::wrap(calcu_grad_gam(old_gam, Theta_is, tid_wis, Fjr, Fjrp, y_i, R));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_param
+arma::mat update_param(const arma::mat& old_param, const arma::mat& grad_param, arma::mat& vu_param, arma::mat& r_param, const double beta1, const double beta2, const double beta1t, const double beta2t, const double eps, const double eta);
+RcppExport SEXP _VEMIRT_update_param(SEXP old_paramSEXP, SEXP grad_paramSEXP, SEXP vu_paramSEXP, SEXP r_paramSEXP, SEXP beta1SEXP, SEXP beta2SEXP, SEXP beta1tSEXP, SEXP beta2tSEXP, SEXP epsSEXP, SEXP etaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type old_param(old_paramSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type grad_param(grad_paramSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type vu_param(vu_paramSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type r_param(r_paramSEXP);
+    Rcpp::traits::input_parameter< const double >::type beta1(beta1SEXP);
+    Rcpp::traits::input_parameter< const double >::type beta2(beta2SEXP);
+    Rcpp::traits::input_parameter< const double >::type beta1t(beta1tSEXP);
+    Rcpp::traits::input_parameter< const double >::type beta2t(beta2tSEXP);
+    Rcpp::traits::input_parameter< const double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< const double >::type eta(etaSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_param(old_param, grad_param, vu_param, r_param, beta1, beta2, beta1t, beta2t, eps, eta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gen_theta_is
+arma::mat gen_theta_is(const arma::rowvec& mu, const arma::mat& sigma, int M);
+RcppExport SEXP _VEMIRT_gen_theta_is(SEXP muSEXP, SEXP sigmaSEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::rowvec& >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(gen_theta_is(mu, sigma, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// iwgvem_grm
+Rcpp::List iwgvem_grm(const arma::Mat<int>& y, const arma::Col<int>& R, arma::mat old_A, arma::mat old_B, arma::mat old_sig, const arma::mat& mu_n, const arma::cube& sigma_n, const arma::Mat<int>& Mod, const int S, const int M, const double beta1, const double beta2, const double eta_A, const double eta_gam, const double eta_sig, const double eps, const int max_iter, const double tol_para, const int verbose);
+RcppExport SEXP _VEMIRT_iwgvem_grm(SEXP ySEXP, SEXP RSEXP, SEXP old_ASEXP, SEXP old_BSEXP, SEXP old_sigSEXP, SEXP mu_nSEXP, SEXP sigma_nSEXP, SEXP ModSEXP, SEXP SSEXP, SEXP MSEXP, SEXP beta1SEXP, SEXP beta2SEXP, SEXP eta_ASEXP, SEXP eta_gamSEXP, SEXP eta_sigSEXP, SEXP epsSEXP, SEXP max_iterSEXP, SEXP tol_paraSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::Col<int>& >::type R(RSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_A(old_ASEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_B(old_BSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type old_sig(old_sigSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mu_n(mu_nSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type sigma_n(sigma_nSEXP);
+    Rcpp::traits::input_parameter< const arma::Mat<int>& >::type Mod(ModSEXP);
+    Rcpp::traits::input_parameter< const int >::type S(SSEXP);
+    Rcpp::traits::input_parameter< const int >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const double >::type beta1(beta1SEXP);
+    Rcpp::traits::input_parameter< const double >::type beta2(beta2SEXP);
+    Rcpp::traits::input_parameter< const double >::type eta_A(eta_ASEXP);
+    Rcpp::traits::input_parameter< const double >::type eta_gam(eta_gamSEXP);
+    Rcpp::traits::input_parameter< const double >::type eta_sig(eta_sigSEXP);
+    Rcpp::traits::input_parameter< const double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< const int >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< const double >::type tol_para(tol_paraSEXP);
+    Rcpp::traits::input_parameter< const int >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(iwgvem_grm(y, R, old_A, old_B, old_sig, mu_n, sigma_n, Mod, S, M, beta1, beta2, eta_A, eta_gam, eta_sig, eps, max_iter, tol_para, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ecfa2
 List ecfa2(const arma::mat& u, const arma::mat& Sigma, const int& domain, const int& person, const int& item, const arma::mat& eta, const arma::mat& new_a, const arma::vec& new_b);
 RcppExport SEXP _VEMIRT_ecfa2(SEXP uSEXP, SEXP SigmaSEXP, SEXP domainSEXP, SEXP personSEXP, SEXP itemSEXP, SEXP etaSEXP, SEXP new_aSEXP, SEXP new_bSEXP) {
@@ -901,6 +1277,29 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_VEMIRT_calcu_eta_", (DL_FUNC) &_VEMIRT_calcu_eta_, 6},
+    {"_VEMIRT_update_sigma_i", (DL_FUNC) &_VEMIRT_update_sigma_i, 4},
+    {"_VEMIRT_update_mu_i", (DL_FUNC) &_VEMIRT_update_mu_i, 7},
+    {"_VEMIRT_ve_step", (DL_FUNC) &_VEMIRT_ve_step, 10},
+    {"_VEMIRT_calcu_sigma_cmle_cpp", (DL_FUNC) &_VEMIRT_calcu_sigma_cmle_cpp, 3},
+    {"_VEMIRT_update_ksi_ij", (DL_FUNC) &_VEMIRT_update_ksi_ij, 8},
+    {"_VEMIRT_update_Aj_", (DL_FUNC) &_VEMIRT_update_Aj_, 8},
+    {"_VEMIRT_update_Bj_", (DL_FUNC) &_VEMIRT_update_Bj_, 7},
+    {"_VEMIRT_calcu_n2vlb_j", (DL_FUNC) &_VEMIRT_calcu_n2vlb_j, 10},
+    {"_VEMIRT_calcu_n2vlb_0", (DL_FUNC) &_VEMIRT_calcu_n2vlb_0, 3},
+    {"_VEMIRT_calcu_entro_", (DL_FUNC) &_VEMIRT_calcu_entro_, 3},
+    {"_VEMIRT_vem_grm", (DL_FUNC) &_VEMIRT_vem_grm, 12},
+    {"_VEMIRT_b2gamma", (DL_FUNC) &_VEMIRT_b2gamma, 2},
+    {"_VEMIRT_gamma2b", (DL_FUNC) &_VEMIRT_gamma2b, 2},
+    {"_VEMIRT_calcu_Fjr", (DL_FUNC) &_VEMIRT_calcu_Fjr, 5},
+    {"_VEMIRT_calcu_Fjrp", (DL_FUNC) &_VEMIRT_calcu_Fjrp, 6},
+    {"_VEMIRT_calcu_tid_wis", (DL_FUNC) &_VEMIRT_calcu_tid_wis, 8},
+    {"_VEMIRT_calcu_grad_sig", (DL_FUNC) &_VEMIRT_calcu_grad_sig, 3},
+    {"_VEMIRT_calcu_grad_A", (DL_FUNC) &_VEMIRT_calcu_grad_A, 5},
+    {"_VEMIRT_calcu_grad_gam", (DL_FUNC) &_VEMIRT_calcu_grad_gam, 7},
+    {"_VEMIRT_update_param", (DL_FUNC) &_VEMIRT_update_param, 10},
+    {"_VEMIRT_gen_theta_is", (DL_FUNC) &_VEMIRT_gen_theta_is, 3},
+    {"_VEMIRT_iwgvem_grm", (DL_FUNC) &_VEMIRT_iwgvem_grm, 19},
     {"_VEMIRT_ecfa2", (DL_FUNC) &_VEMIRT_ecfa2, 8},
     {"_VEMIRT_acfa2", (DL_FUNC) &_VEMIRT_acfa2, 10},
     {"_VEMIRT_lb2pl", (DL_FUNC) &_VEMIRT_lb2pl, 7},

@@ -16,5 +16,5 @@ Extract DIF 2PL Items
 \code{\link{summary.vemirt_DIF}}, \code{\link{print.vemirt_DIF_summary}}
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

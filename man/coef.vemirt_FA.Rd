@@ -16,5 +16,5 @@ Extract Parameter Estimates from Explanatory or Confirmatory Analysis
 \code{\link{C2PL_gvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}, \code{\link{C3PL_sgvem}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_IS}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_rot}}, \code{\link{print.vemirt_FA}}
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

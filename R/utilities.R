@@ -229,7 +229,7 @@ summary.vemirt_DIF <- function(object, criterion = NULL) {
 #'
 #' @usage coef(object)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @seealso \code{\link{summary.vemirt_DIF}}, \code{\link{print.vemirt_DIF_summary}}
 #' @export
 coef.vemirt_DIF_summary <- function(object) {
@@ -242,7 +242,7 @@ coef.vemirt_DIF_summary <- function(object) {
 #'
 #' @usage print(x, max = 99999L, ...)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @seealso \code{\link{summary.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}
 #' @export
 print.vemirt_DIF_summary <- function(x, max = 99999L, ...) {
@@ -264,7 +264,7 @@ new.vemirt_FA <- function(raw) {
 #'
 #' @usage coef(object)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @seealso \code{\link{C2PL_gvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}, \code{\link{C3PL_sgvem}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_IS}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_rot}}, \code{\link{print.vemirt_FA}}
 #' @export
 coef.vemirt_FA <- function(object) {
@@ -288,7 +288,7 @@ coef.vemirt_FA <- function(object) {
 #'
 #' @usage print(x)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @seealso \code{\link{C2PL_gvem}}, \code{\link{C2PL_bs}}, \code{\link{C2PL_iw}}, \code{\link{C3PL_sgvem}}, \code{\link{E2PL_gvem_adaptlasso}}, \code{\link{E2PL_gvem_lasso}}, \code{\link{E2PL_gvem_rot}}, \code{\link{E2PL_IS}}, \code{\link{E3PL_sgvem_adaptlasso}}, \code{\link{E3PL_sgvem_lasso}}, \code{\link{E3PL_sgvem_rot}}, \code{\link{coef.vemirt_FA}}
 #' @export
 print.vemirt_FA <- function(x, max = 99999L, digits = 3, ...) {

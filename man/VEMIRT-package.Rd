@@ -25,9 +25,11 @@ software packages, especially when the number of latent factors exceeds four.
   \item \code{\link{E2PL_gvem_lasso}} conducts M2PL Analysis with Lasso penalty
   \item \code{\link{E2PL_gvem_adaptlasso}} conducts M2PL Analysis with adaptive Lasso penalty
   \item \code{\link{E2PL_iw}} conducts importance sampling to correct bias for M2PL analysis
-  \item \code{\link{E3PL_sgvem_rot}} conducts stochastic GVEM to futher imporve the computational effficiency for exploratory M3PL analysis
+  \item \code{\link{E3PL_sgvem_rot}} conducts stochastic GVEM to further improve the computational effficiency for exploratory M3PL analysis
   \item \code{\link{E3PL_sgvem_lasso}} conducts M3PL Analysis with Lasso penalty
   \item \code{\link{E3PL_sgvem_adaptlasso}} conducts M3PL Analysis with adaptive Lasso penalty
+  \item \code{\link{MGRM_gvem}} conducts GVEM for the multidimensional graded response model with post-hoc rotation
+  \item \code{\link{MGPCM_gvem}} conducts GVEM for the multidimensional partial credit model with post-hoc rotation
 }
 }
 
@@ -39,6 +41,8 @@ software packages, especially when the number of latent factors exceeds four.
   \item \code{\link{C2PL_iw}} conducts importance sampling to correct bias for M2PL analysis
   \item \code{\link{C2PL_iw2}} conducts IW-GVEM for confirmatory M2PL analysis (alternative implementation to \code{\link{C2PL_iw}})
   \item \code{\link{C3PL_sgvem}} conducts stochastic GVEM for confirmatory M3PL analysis
+  \item \code{\link{MGRM_gvem}} conducts GVEM for the multidimensional graded response model
+  \item \code{\link{MGPCM_gvem}} conducts GVEM for the multidimensional partial credit model
 }
 }
 
@@ -72,6 +76,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Yijun Cheng \email{chengxb@uw.edu} (\href{https://orcid.org/0000-0002-0671-9193}{ORCID})
   \item Jiaying Xiao \email{jxiao6@uw.edu} (\href{https://orcid.org/0000-0001-9513-6477}{ORCID})
   \item Ruoyi Zhu \email{zhux0445@uw.edu} (\href{https://orcid.org/0000-0002-8159-2161}{ORCID})
   \item Gongjun Xu \email{gongjun@umich.edu} (\href{https://orcid.org/0000-0003-4023-5413}{ORCID})
