@@ -9,7 +9,7 @@ multidimensional item response theory (MIRT) analysis and cooresponding item
 differential functioning (DIF) analysis. The core computation
 engine of VEMIRT is a family of Gaussian Variational EM algorithms that are
 considerably more efficient than currently available algorithms in other
-software packages, especially when the number of latent factors exceeds four."><meta property="og:image" content="https://MAP-LAB-UW.github.io/VEMIRT/logo.png"></head><body>
+software packages, especially when the number of latent factors exceeds four."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -17,7 +17,7 @@ software packages, especially when the number of latent factors exceeds four."><
 
     <a class="navbar-brand me-2" href="../index.html">VEMIRT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,8 @@ software packages, especially when the number of latent factors exceeds four."><
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>VEMIRT: A Package for High-Dimensional IRT Models</h1>
+
+      <h1>VEMIRT: A Package for High-Dimensional IRT Models</h1>
       <small class="dont-index">Source: <a href="https://github.com/MAP-LAB-UW/VEMIRT/blob/master/R/VEMIRT-package.R" class="external-link"><code>R/VEMIRT-package.R</code></a></small>
       <div class="d-none name"><code>VEMIRT-package.Rd</code></div>
     </div>
@@ -67,9 +68,11 @@ software packages, especially when the number of latent factors exceeds four.</p
 <li><p><code><a href="E2PL_gvem_lasso.html">E2PL_gvem_lasso</a></code> conducts M2PL Analysis with Lasso penalty</p></li>
 <li><p><code><a href="E2PL_gvem_adaptlasso.html">E2PL_gvem_adaptlasso</a></code> conducts M2PL Analysis with adaptive Lasso penalty</p></li>
 <li><p><code><a href="C2PL_iw.html">E2PL_iw</a></code> conducts importance sampling to correct bias for M2PL analysis</p></li>
-<li><p><code><a href="E3PL_sgvem_rot.html">E3PL_sgvem_rot</a></code> conducts stochastic GVEM to futher imporve the computational effficiency for exploratory M3PL analysis</p></li>
+<li><p><code><a href="E3PL_sgvem_rot.html">E3PL_sgvem_rot</a></code> conducts stochastic GVEM to further improve the computational effficiency for exploratory M3PL analysis</p></li>
 <li><p><code><a href="E3PL_sgvem_lasso.html">E3PL_sgvem_lasso</a></code> conducts M3PL Analysis with Lasso penalty</p></li>
 <li><p><code><a href="E3PL_sgvem_adaptlasso.html">E3PL_sgvem_adaptlasso</a></code> conducts M3PL Analysis with adaptive Lasso penalty</p></li>
+<li><p><code><a href="MGRM_gvem.html">MGRM_gvem</a></code> conducts GVEM for the multidimensional graded response model with post-hoc rotation</p></li>
+<li><p><code><a href="MGPCM_gvem.html">MGPCM_gvem</a></code> conducts GVEM for the multidimensional partial credit model with post-hoc rotation</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="confirmatory-factor-analysis">Confirmatory factor analysis<a class="anchor" aria-label="anchor" href="#confirmatory-factor-analysis"></a></h2>
@@ -80,6 +83,8 @@ software packages, especially when the number of latent factors exceeds four.</p
 <li><p><code><a href="C2PL_iw.html">C2PL_iw</a></code> conducts importance sampling to correct bias for M2PL analysis</p></li>
 <li><p><code><a href="C2PL_iw2.html">C2PL_iw2</a></code> conducts IW-GVEM for confirmatory M2PL analysis (alternative implementation to <code><a href="C2PL_iw.html">C2PL_iw</a></code>)</p></li>
 <li><p><code><a href="C3PL_sgvem.html">C3PL_sgvem</a></code> conducts stochastic GVEM for confirmatory M3PL analysis</p></li>
+<li><p><code><a href="MGRM_gvem.html">MGRM_gvem</a></code> conducts GVEM for the multidimensional graded response model</p></li>
+<li><p><code><a href="MGPCM_gvem.html">MGPCM_gvem</a></code> conducts GVEM for the multidimensional partial credit model</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="differential-item-functioning-analysis">Differential item functioning analysis<a class="anchor" aria-label="anchor" href="#differential-item-functioning-analysis"></a></h2>
@@ -105,7 +110,8 @@ software packages, especially when the number of latent factors exceeds four.</p
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p><strong>Maintainer</strong>: Weicong Lyu <a href="mailto:weiconglyu@um.edu.mo">weiconglyu@um.edu.mo</a> (<a href="https://orcid.org/0000-0002-8159-2161" class="external-link">ORCID</a>)</p>
-<p>Authors:</p><ul><li><p>Jiaying Xiao <a href="mailto:jxiao6@uw.edu">jxiao6@uw.edu</a> (<a href="https://orcid.org/0000-0001-9513-6477" class="external-link">ORCID</a>)</p></li>
+<p>Authors:</p><ul><li><p>Yijun Cheng <a href="mailto:chengxb@uw.edu">chengxb@uw.edu</a> (<a href="https://orcid.org/0000-0002-0671-9193" class="external-link">ORCID</a>)</p></li>
+<li><p>Jiaying Xiao <a href="mailto:jxiao6@uw.edu">jxiao6@uw.edu</a> (<a href="https://orcid.org/0000-0001-9513-6477" class="external-link">ORCID</a>)</p></li>
 <li><p>Ruoyi Zhu <a href="mailto:zhux0445@uw.edu">zhux0445@uw.edu</a> (<a href="https://orcid.org/0000-0002-8159-2161" class="external-link">ORCID</a>)</p></li>
 <li><p>Gongjun Xu <a href="mailto:gongjun@umich.edu">gongjun@umich.edu</a> (<a href="https://orcid.org/0000-0003-4023-5413" class="external-link">ORCID</a>)</p></li>
 <li><p>Chun Wang <a href="mailto:wang4066@uw.edu">wang4066@uw.edu</a> (<a href="https://orcid.org/0000-0003-2695-9781" class="external-link">ORCID</a>)</p></li>
@@ -116,7 +122,7 @@ software packages, especially when the number of latent factors exceeds four.</p
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Weicong Lyu, Jiaying Xiao, Ruoyi Zhu, Gongjun Xu, Chun Wang.</p>
+  <p>Developed by Weicong Lyu, Yijun Cheng, Jiaying Xiao, Ruoyi Zhu, Gongjun Xu, Chun Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">

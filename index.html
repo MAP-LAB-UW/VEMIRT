@@ -20,7 +20,6 @@
 <script src="deps/KaTex-0.16.10/katex.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><script src="extra.js"></script><meta property="og:title" content="Variational Expectation Maximization for High-Dimensional IRT Models">
 <meta name="description" content="VEMIRT is created to assist researchers in conducting high-dimensional exploratory and confirmatory multidimensional item response theory (MIRT) analysis and corresponding differential item functioning (DIF) analysis. The core computation engine of VEMIRT is a family of Gaussian Variational EM algorithms that are considerably more efficient than currently available algorithms in other statistical packages, especially when the number of latent factors exceeds four.">
 <meta property="og:description" content="VEMIRT is created to assist researchers in conducting high-dimensional exploratory and confirmatory multidimensional item response theory (MIRT) analysis and corresponding differential item functioning (DIF) analysis. The core computation engine of VEMIRT is a family of Gaussian Variational EM algorithms that are considerably more efficient than currently available algorithms in other statistical packages, especially when the number of latent factors exceeds four.">
-<meta property="og:image" content="https://MAP-LAB-UW.github.io/VEMIRT/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -30,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">VEMIRT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,10 +55,8 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="vemirt-variational-expectation-maximization-for-high-dimensional-irt-models-">VEMIRT: Variational Expectation Maximization for High-dimensional IRT Models <a class="anchor" aria-label="anchor" href="#vemirt-variational-expectation-maximization-for-high-dimensional-irt-models-"></a>
-</h1>
-</div>
+<div class="page-header"><h1 id="vemirt-variational-expectation-maximization-for-high-dimensional-irt-models-">VEMIRT: Variational Expectation Maximization for High-dimensional IRT Models <img src="reference/figures/logo.png" align="right" height="120" alt=""><a class="anchor" aria-label="anchor" href="#vemirt-variational-expectation-maximization-for-high-dimensional-irt-models-"></a>
+</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
 <p>The goal of <code>VEMIRT</code> is to provide computationally efficient tools for high-dimensional data, large sample sizes, large item banks, and complex designs. The package contains several example datasets and functions for</p>
@@ -82,7 +79,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MAP-LAB-UW/VEMIRT"</span>, build_vignettes <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
-<span><span class="fu">torch</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/torch/man/install_torch.html" class="external-link">install_torch</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">torch</span><span class="fu">::</span><span class="fu"><a href="https://torch.mlverse.org/docs/reference/install_torch.html" class="external-link">install_torch</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
@@ -125,6 +122,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Weicong Lyu <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8159-2161" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Yijun Cheng <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0671-9193" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Jiaying Xiao <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9513-6477" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Ruoyi Zhu <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-8159-2161" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Gongjun Xu <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-4023-5413" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
@@ -139,7 +137,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Weicong Lyu, Jiaying Xiao, Ruoyi Zhu, Gongjun Xu, Chun Wang.</p>
+  <p>Developed by Weicong Lyu, Yijun Cheng, Jiaying Xiao, Ruoyi Zhu, Gongjun Xu, Chun Wang.</p>
 </div>
 
 <div class="pkgdown-footer-right">
