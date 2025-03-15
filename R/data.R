@@ -1,3 +1,18 @@
+#' Simulated Data Set for Confirmatory M1PL Analysis
+#'
+#' Responses are simulated based on an M1PL model with 2 factors. The true factor correlations are set as 0.8.
+#'
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators\cr
+#' \tab\cr
+#' \code{params}\tab True parameters used for generating the item responses
+#' }
+'C1PL_data'
+
 #' Simulated Data Set for Confirmatory M2PL Analysis
 #'
 #' Responses are simulated based on an M2PL model with 2 factors. The true factor correlations are set as 0.8.
@@ -103,6 +118,29 @@
 #' \code{params}\tab True parameters used for generating the item responses
 #' }
 'E3PL_data_C2'
+
+#' Simulated Data Set for DIF M1PL Analysis
+#'
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators\cr
+#' \tab\cr
+#' \code{group}\tab Group indicators\cr
+#' \tab\cr
+#' \code{j}\tab Number of DIF items (the first \code{j} items have DIF)\cr
+#' \tab\cr
+#' \code{params}\tab A list of true parameters used for generating the item responses:\cr
+#' \tab\cr
+#' \code{ ...$a}\tab Slopes\cr
+#' \tab\cr
+#' \code{ ...$b}\tab Negated intercepts\cr
+#' \tab\cr
+#' \code{ ...$theta}\tab Latent traits\cr
+#' }
+'D1PL_data'
 
 #' Simulated Data Set for DIF M2PL Analysis
 #'

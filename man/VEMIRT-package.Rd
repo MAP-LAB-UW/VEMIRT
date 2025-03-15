@@ -49,6 +49,8 @@ software packages, especially when the number of latent factors exceeds four.
 \section{Differential item functioning analysis}{
 
 \itemize{
+  \item \code{\link{D1PL_em}} conducts DIF analysis for M1PL models using EM algorithms
+  \item \code{\link{D1PL_gvem}} conducts DIF analysis for M1PL models using GVEM algorithms
   \item \code{\link{D2PL_em}} conducts DIF analysis for M2PL models using EM algorithms
   \item \code{\link{D2PL_pair_em}} conducts DIF analysis for 2PL models using EM algorithms with group pairwise truncated \eqn{L_1} penalty
   \item \code{\link{D2PL_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms

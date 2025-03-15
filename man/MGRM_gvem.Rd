@@ -14,7 +14,7 @@ MGRM_gvem(
   M = 10,
   MinDim = 0,
   MaxDim = 0,
-  verbose = TRUE,
+  verbose = FALSE,
   EFA = FALSE
 )
 }

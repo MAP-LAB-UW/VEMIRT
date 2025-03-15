@@ -90,7 +90,7 @@ Currently these functions do not estimate the standard errors of item parameters
 E2PL_gvem_rot(E2PL_data_C1$data, domain = 3)
 ```
 
-Both `E2PL_gvem_lasso` and `E2PL_gvem_adaptlasso` need item responses, constraint setting (`constrain`), and a binary matrix specifying constraints on the sub-matrix of the factor loading structure (`indic`). `constrain` should be either `"C1"` or `"C2"` to ensure identifiability. Under `"C1"`, a $D\times D$ sub-matrix of `indic` should be an identity matrix, indicating that each of these $D$ items loads solely on one factor. Notice that the first `r ncol(E2PL_data_C1$model)` rows of `E2PL_data_C1$data` form an identity matrix.
+Both `E2PL_gvem_lasso` and `E2PL_gvem_adaptlasso` need item responses, constraint setting (`constrain`), and a binary matrix specifying constraints on the sub-matrix of the factor loading structure (`indic`). `constrain` should be either `"C1"` or `"C2"` to ensure identifiability. Under `"C1"`, a $D\times D$ sub-matrix of `indic` should be an identity matrix, indicating that each of these $D$ items loads solely on one factor. Notice that the first `r ncol(E2PL_data_C1$model)` rows of `E2PL_data_C1$model` form an identity matrix.
 ```{r}
 E2PL_data_C1$model
 ```

@@ -19,8 +19,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' with(MGPCM_data, MGPCM_gvem(data, model))}
+#' with(MGPCM_gvem, MGPCM_gvem(data, model))
 #' 
 MGPCM_gvem <- function(data, model = matrix(1, nrow = J, ncol = 4), group = rep(1, nrow(data)), iter = 2000, eps = 1e-5, SE = FALSE, verbose = TRUE, EFA = FALSE) {
   fn <- list(init.MGPCM_gvem, est.MGPCM_gvem)
@@ -43,12 +42,12 @@ MGPCM_gvem <- function(data, model = matrix(1, nrow = J, ncol = 4), group = rep(
   if(SE) cat(file = output, 'Calculating SE, please be patient...\n')
   result <- fn[[2]](init())
   
-  if(verbose) {
-    cat("\n")
-    output <- capture.output(lst(a = result$a, b = result$b))
-    cat(output, sep = "\n")
-  }
-  invisible(result)
+  # if(verbose) {
+  #   cat("\n")
+  #   output <- capture.output(lst(a = result$a, b = result$b))
+  #   cat(output, sep = "\n")
+  # }
+  return(result)
 }
 
 library(torch)

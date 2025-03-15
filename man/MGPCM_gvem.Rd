@@ -42,8 +42,7 @@ An object of class \code{vemirt_DIF}, which is a list containing the following e
 GVEM Algorithm for the Generalized Partial Credit Model
 }
 \examples{
-\dontrun{
-with(MGPCM_data, MGPCM_gvem(data, model))}
+with(MGPCM_gvem, MGPCM_gvem(data, model))
 
 }
 \author{

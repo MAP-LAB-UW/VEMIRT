@@ -1,10 +1,10 @@
 
-# # ---- Required Packages -------------------------------------------------------
+# ---- Required Packages -------------------------------------------------------
 # Rcpp::sourceCpp("./_GvgemsgrmAlgorithm.cpp")
 # Rcpp::sourceCpp("./_IwGvemGrmAlgorithm.cpp")
 
 # ---- Call Function ----
-GRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 200, tol = 1e-4, S = 10, M = 10, MinDim, MaxDim, verbose = TRUE, EFA = FALSE) {
+GRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 200, tol = 1e-4, S = 10, M = 10, MinDim, MaxDim, verbose = FALSE, EFA = FALSE) {
   
   # -- load simulated data --
   y <- data
@@ -140,12 +140,12 @@ GRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 200, tol
     iter         = output$it
   )
 
-  if(verbose) {
-    cat("\n")
-    output <- capture.output(lst(a = a, b = b, dim = K))
-    cat(output, sep = "\n")
-  }
-  invisible(result)
+  # if(verbose) {
+  #   cat("\n")
+  #   output <- capture.output(lst(a = a, b = b, dim = K))
+  #   cat(output, sep = "\n")
+  # }
+  return(result)
 }
 
 IwGRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 2000, tol = 1e-4, S = 10, M = 10, MinDim, MaxMim, verbose = TRUE, EFA = FALSE) {
@@ -197,7 +197,6 @@ IwGRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 2000, 
   }
   invisible(result)
 }
-
 #' GVEM Algorithm for the Graded Response Model
 #' @param data An \eqn{N\times J} matrix of item responses where 0 is the minimal partial credit score (missing responses should be coded as \code{NA}) 
 #' @param model A \eqn{J\times K} matrix of loading indicators (K is the Number of latent dimension)(all items load on the only dimension by default)
@@ -213,6 +212,7 @@ IwGRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 2000, 
 #' @param EFA Whether to run EFA or CFA
 #'
 #' @return An object of class \code{vemirt_DIF}, which is a list containing the following elements:
+
 #'   \item{ ...$SIGMA}{Person-level posterior covariance matrices}
 #'   \item{ ...$MU}{Person-level posterior mean vectors}
 #'   \item{ ...$Sigma}{Group-level covariance matrices}
@@ -232,7 +232,7 @@ IwGRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 2000, 
 #' \dontrun{
 #' with(MGRM_data, MGRM_gvem(data, method = "IWGVEM", model, EFA = FALSE))}
 
-MGRM_gvem <- function(data, model = matrix(1, ncol(data)), method = "GVEM", iter = 200, tol = 1e-4,S = 10, M = 10, MinDim = 0, MaxDim = 0,  verbose = TRUE, EFA = FALSE) {
+MGRM_gvem <- function(data, model = matrix(1, ncol(data)), method = "GVEM", iter = 200, tol = 1e-4,S = 10, M = 10, MinDim = 0, MaxDim = 0,  verbose = FALSE, EFA = FALSE) {
   fn <- switch(method,
                GVEM = GRM_gvem_method,
                IWGVEM = IwGRM_gvem_method,
