@@ -190,8 +190,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // vem_grm
-Rcpp::List vem_grm(const arma::Mat<int>& y, const arma::Col<int>& R, arma::mat old_A, arma::mat old_B, arma::mat old_sig, arma::mat old_ksi1, arma::mat old_ksi2, const arma::Mat<int> Mod, const int max_iter, const double tol_para, const int stop_cri, const int verbose);
-RcppExport SEXP _VEMIRT_vem_grm(SEXP ySEXP, SEXP RSEXP, SEXP old_ASEXP, SEXP old_BSEXP, SEXP old_sigSEXP, SEXP old_ksi1SEXP, SEXP old_ksi2SEXP, SEXP ModSEXP, SEXP max_iterSEXP, SEXP tol_paraSEXP, SEXP stop_criSEXP, SEXP verboseSEXP) {
+Rcpp::List vem_grm(const arma::Mat<int>& y, const arma::Col<int>& R, arma::mat old_A, arma::mat old_B, arma::mat old_sig, arma::mat old_ksi1, arma::mat old_ksi2, const arma::Mat<int> Mod, const int max_iter, const double tol_para, const int stop_cri, const int EFA, const int verbose);
+RcppExport SEXP _VEMIRT_vem_grm(SEXP ySEXP, SEXP RSEXP, SEXP old_ASEXP, SEXP old_BSEXP, SEXP old_sigSEXP, SEXP old_ksi1SEXP, SEXP old_ksi2SEXP, SEXP ModSEXP, SEXP max_iterSEXP, SEXP tol_paraSEXP, SEXP stop_criSEXP, SEXP EFASEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -206,8 +206,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type max_iter(max_iterSEXP);
     Rcpp::traits::input_parameter< const double >::type tol_para(tol_paraSEXP);
     Rcpp::traits::input_parameter< const int >::type stop_cri(stop_criSEXP);
+    Rcpp::traits::input_parameter< const int >::type EFA(EFASEXP);
     Rcpp::traits::input_parameter< const int >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(vem_grm(y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter, tol_para, stop_cri, verbose));
+    rcpp_result_gen = Rcpp::wrap(vem_grm(y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter, tol_para, stop_cri, EFA, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1288,7 +1289,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_VEMIRT_calcu_n2vlb_j", (DL_FUNC) &_VEMIRT_calcu_n2vlb_j, 10},
     {"_VEMIRT_calcu_n2vlb_0", (DL_FUNC) &_VEMIRT_calcu_n2vlb_0, 3},
     {"_VEMIRT_calcu_entro_", (DL_FUNC) &_VEMIRT_calcu_entro_, 3},
-    {"_VEMIRT_vem_grm", (DL_FUNC) &_VEMIRT_vem_grm, 12},
+    {"_VEMIRT_vem_grm", (DL_FUNC) &_VEMIRT_vem_grm, 13},
     {"_VEMIRT_b2gamma", (DL_FUNC) &_VEMIRT_b2gamma, 2},
     {"_VEMIRT_gamma2b", (DL_FUNC) &_VEMIRT_gamma2b, 2},
     {"_VEMIRT_calcu_Fjr", (DL_FUNC) &_VEMIRT_calcu_Fjr, 5},

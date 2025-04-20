@@ -45,8 +45,8 @@ calcu_entro_ <- function(sigma_, N, K) {
     .Call('_VEMIRT_calcu_entro_', PACKAGE = 'VEMIRT', sigma_, N, K)
 }
 
-vem_grm <- function(y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter = 1000L, tol_para = 1e-4, stop_cri = 2L, verbose = 1L) {
-    .Call('_VEMIRT_vem_grm', PACKAGE = 'VEMIRT', y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter, tol_para, stop_cri, verbose)
+vem_grm <- function(y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter = 1000L, tol_para = 1e-4, stop_cri = 2L, EFA = 1L, verbose = 1L) {
+    .Call('_VEMIRT_vem_grm', PACKAGE = 'VEMIRT', y, R, old_A, old_B, old_sig, old_ksi1, old_ksi2, Mod, max_iter, tol_para, stop_cri, EFA, verbose)
 }
 
 b2gamma <- function(B, R) {

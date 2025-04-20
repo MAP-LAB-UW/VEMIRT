@@ -25,6 +25,10 @@ MGPCM_gvem <- function(data, model = matrix(1, nrow = J, ncol = 4), group = rep(
   fn <- list(init.MGPCM_gvem, est.MGPCM_gvem)
   Y <- as.matrix(data)
   D <- as.matrix(model)
+  if(EFA == TRUE & ncol(model) !=1)
+  {
+    model[upper.tri(model)] <- 0
+  }
   N <- nrow(Y)
   group <- rep(1, nrow(data))
   X <- group
@@ -41,17 +45,12 @@ MGPCM_gvem <- function(data, model = matrix(1, nrow = J, ncol = 4), group = rep(
   cat(file = output, 'Preparing the output...\n')
   if(SE) cat(file = output, 'Calculating SE, please be patient...\n')
   result <- fn[[2]](init())
-  
-  # if(verbose) {
-  #   cat("\n")
-  #   output <- capture.output(lst(a = result$a, b = result$b))
-  #   cat(output, sep = "\n")
-  # }
+
   return(result)
 }
 
-library(torch)
-library(tibble)
+# library(torch)
+# library(tibble)
 init.MGPCM_gvem <- function(Y, D, X, iter, eps, SE, EFA, ...) {
   
   N <- nrow(Y)
@@ -82,7 +81,7 @@ init.MGPCM_gvem <- function(Y, D, X, iter, eps, SE, EFA, ...) {
   xi <- torch_normal(mean = 0, std = 1, size = (N * J * (P+1)))$view(c(N, J, P+1))
   xi <- xi * mask.k
   #xi<-torch_tensor(xi_hat)# test
-  
+
   #### initialize a
   total_score <- Y$sum(dim = 2)
   covariance <- ((Y - Y$mean(dim = 1)) * (total_score - total_score$mean())$unsqueeze(2))$sum(dim = 1) / (Y$size(1) - 1)
@@ -96,7 +95,6 @@ init.MGPCM_gvem <- function(Y, D, X, iter, eps, SE, EFA, ...) {
   a <- a * a.mask
   #a <- torch_tensor(a_hat)# test
   
-  
   # Generate random normal values for b_hat_full of shape (J, P)
   #b <- torch_rand(J, P)
   b <- torch_normal(mean = 0, std = 1, size = (J * P))$view(c(J, P))
@@ -106,7 +104,6 @@ init.MGPCM_gvem <- function(Y, D, X, iter, eps, SE, EFA, ...) {
   zeros_column <- torch_zeros(b$size(1), 1)
   # Concatenate the column of zeros to the left of b_hat
   b <- torch_cat(list(zeros_column, b), dim = 2)*mask.bb
-  
   n <- tapply(1:N, X, identity)
   
   k_diff <- (P_range_matrix-Y_matrix) * mask.b
@@ -114,7 +111,6 @@ init.MGPCM_gvem <- function(Y, D, X, iter, eps, SE, EFA, ...) {
   k_diff <- k_diff$unsqueeze(4)$unsqueeze(5)
   
   niter.init <- mstep.MGPCM_gvem()
- 
   keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, Y.mask, a.mask, mask.b,mask.bb, mask.k, eta, xi, niter.init, p,P, zero_mask, k_diff, k_diff_square,P_range_max, SE, EFA)
   init.new()
 }
@@ -142,10 +138,11 @@ mstep.MGPCM_gvem <- function() {
       mu <- (a.mask * MU$unsqueeze(2))$unsqueeze(4)
       sigma.mu <- SIGMA$unsqueeze(2) * a.mask$unsqueeze(2) * a.mask$unsqueeze(3) + mu %*% t(mu)
       Sigma <- sym(groupmean(n, sigma.mu))
+      if(EFA == 1) Sigma <- torch_stack(replicate(1, diag(K), simplify = F))
       #############################
       a <- 0.5 *((k_diff_square*eta$view(c(N, J, -1, 1, 1)) * (sigma.mu)$unsqueeze(3))$sum(3))$sum(1)$pinverse() %*% ((k_diff*( 2 * eta *BB - 0.5)$view(c(N,J, -1, 1, 1)) * mu$unsqueeze(3))$sum(3))$sum(1)
       a <- a$squeeze(length(dim(a)))* a.mask
-    
+      
       #update the difficulty parameters ----
       Y_matrix <- as.matrix(Y) + 1
       a_matrix <- as.matrix(a)
@@ -184,7 +181,7 @@ mstep.MGPCM_gvem <- function() {
       # Update the original b_hat_new if needed
       b <- torch_tensor(b_hat_new_numeric)
       
-
+      
       #############################
       DW2 <- (t((a$unsqueeze(1))$unsqueeze(4)[X])%*% mu)$squeeze()
       DW2 <- DW2$unsqueeze(3)$tile(c(1, 1, P+1))
@@ -241,26 +238,26 @@ final.MGPCM_gvem <- function(){
     a<- as.matrix(a)
     #promax rotation
     if(EFA == TRUE){
-    if(K>1){
-      rot <- (promax(a,m=4))
-      G <- (rot$rotmat);
-      a <- a %*% (G)
-      sig_hat <- (solve(G)) %*% sig_hat %*% t(solve(G));
-      MU <- MU %*% solve(G);
+      if(K>1){
+        rot <- (promax(a,m=4))
+        G <- (rot$rotmat);
+        a <- a %*% (G)
+        sig_hat <- (solve(G)) %*% sig_hat %*% t(solve(G));
+        MU <- MU %*% solve(G);
+      }
+      se <- sqrt(diag(sig_hat))
+      for(d in 1:K)
+      {
+        sig_hat[,d] <- sig_hat[,d]/se;
+        sig_hat[d,] <- sig_hat[d,]/se;
+      }
+      for(d in 1:K)
+      {
+        if(mean(a[,d])<0){
+          a[,d] <- -a[,d];MU[,d] <- -MU[,d];
+          sig_hat[,d] <- -sig_hat[,d];sig_hat[d,] <- -sig_hat[d,];}
+      }
     }
-    se <- sqrt(diag(sig_hat))
-    for(d in 1:K)
-    {
-      sig_hat[,d] <- sig_hat[,d]/se;
-      sig_hat[d,] <- sig_hat[d,]/se;
-    }
-    for(d in 1:K)
-    {
-      if(mean(a[,d])<0){
-        a[,d] <- -a[,d];MU[,d] <- -MU[,d];
-        sig_hat[,d] <- -sig_hat[,d];sig_hat[d,] <- -sig_hat[d,];}
-    }
-  }
     else{
       sigma <- as.matrix(Sigma[1,3,])
       lambda <- diag(1/(sqrt(diag(sigma))))
@@ -268,6 +265,7 @@ final.MGPCM_gvem <- function(){
       se <- sqrt(diag(diag(K)))
       a <- a * a.mask
     }
+     
     #############################
     # permn=permutations(K,K)
     # error_last <- 10^6
@@ -288,39 +286,41 @@ final.MGPCM_gvem <- function(){
       }))
     }
     if(SE){
-    library(mvQuad)
-    SE.level=4
-    grid <- suppressMessages(createNIGrid(K, 'nHN', SE.level))
-    rescale(grid, m = colMeans(as.array(MU)), C = sig_hat, dec.type = 1)
-
-    z <- torch_tensor(getNodes(grid))
-    w <- as.vector(getWeights(grid)) / as.array(torch_tensor(sig_hat)$det()$sqrt())
-    b0 <- torch_tensor(b)[,2:(P+1)]$requires_grad_(T)
-    zeros_column <- torch_zeros(J, 1)
-    # Concatenate the column of zeros to the left of b_hat
-    b <- torch_cat(list(zeros_column, b0), dim = 2)$contiguous()
-    a <- torch_tensor(a)$requires_grad_(T)
-    xi <- (z %*% t(a))$unsqueeze(3)$expand(c(dim(z)[1],J,P+1))*(P_range_max$unsqueeze(2)$expand(c(P+1, J))$t()$unsqueeze(1)$expand(c(dim(z)[1],J,P+1)))
-    xi[,,2:(P+1)] <- xi[,,2:(P+1)] - b0$unsqueeze(1)
-    xi <- torch_where(mask.bb, xi, -Inf)
-    logP <- xi - torch_logsumexp(xi, dim = 3)$unsqueeze(-1)
-    tmp <- ((zero_mask)$unsqueeze(2) * logP$unsqueeze(1))
-    tmp <- torch_where(mask.bb, tmp, 0)$sum(3:4)
-    l <- torch_logsumexp(tmp+log(torch_tensor(w))$unsqueeze(1), dim = 2)
-    I <- Reduce(`+`, lapply(l$unbind(),function(l) {
-      d <- vec(autograd_grad(l, list(a,b0), retain_graph = T))
-      d$unsqueeze(2) %*% d$unsqueeze(1)
-    }))
-    SE.all <- I$pinverse()$diag()$sqrt()
-    SE.a <- as.array(torch_zeros(a.mask$shape)$masked_scatter(a.mask, SE.all[1:(J*K)]))
-    SE.b <- SE.all[(J*K+1):length(SE.all)]$view(c(J,-1))$masked_fill(!mask.bb[,2:(P+1)],0)
-    b <- b[,2:(dim(b)[2])]
-    c(lapply(lst(Sigma = sig_hat, MU, a, b, SE.a, SE.b,elbo = ll), as.array))
+      library(mvQuad)
+      SE.level=4
+      grid <- suppressMessages(createNIGrid(K, 'nHN', SE.level))
+      rescale(grid, m = colMeans(as.array(MU)), C = sig_hat, dec.type = 1)
+      
+      z <- torch_tensor(getNodes(grid))
+      w <- as.vector(getWeights(grid)) / as.array(torch_tensor(sig_hat)$det()$sqrt())
+      b0 <- torch_tensor(b)[,2:(P+1)]$requires_grad_(T)
+      zeros_column <- torch_zeros(J, 1)
+      # Concatenate the column of zeros to the left of b_hat
+      b <- torch_cat(list(zeros_column, b0), dim = 2)$contiguous()
+      a <- torch_tensor(a)$requires_grad_(T)
+      xi <- (z %*% t(a))$unsqueeze(3)$expand(c(dim(z)[1],J,P+1))*(P_range_max$unsqueeze(2)$expand(c(P+1, J))$t()$unsqueeze(1)$expand(c(dim(z)[1],J,P+1)))
+      xi[,,2:(P+1)] <- xi[,,2:(P+1)] - b0$unsqueeze(1)
+      xi <- torch_where(mask.bb, xi, -Inf)
+      logP <- xi - torch_logsumexp(xi, dim = 3)$unsqueeze(-1)
+      tmp <- ((zero_mask)$unsqueeze(2) * logP$unsqueeze(1))
+      tmp <- torch_where(mask.bb, tmp, 0)$sum(3:4)
+      l <- torch_logsumexp(tmp+log(torch_tensor(w))$unsqueeze(1), dim = 2)
+      I <- Reduce(`+`, lapply(l$unbind(),function(l) {
+        d <- vec(autograd_grad(l, list(a,b0), retain_graph = T))
+        d$unsqueeze(2) %*% d$unsqueeze(1)
+      }))
+      SE.all <- I$pinverse()$diag()$sqrt()
+      SE.a <- as.array(torch_zeros(a.mask$shape)$masked_scatter(a.mask, SE.all[1:(J*K)]))
+      SE.b <- SE.all[(J*K+1):length(SE.all)]$view(c(J,-1))$masked_fill(!mask.bb[,2:(P+1)],0)
+      b <- b[,2:(dim(b)[2])]
+      vbic <- -2*ll + log(N)*(sum(a!=0) + sum(b!=0) + (sum(sig_hat!=0)-ncol(sig_hat))/2) 
+      c(lapply(lst(Sigma = sig_hat, MU, a, b, SE.a, SE.b,elbo = ll, vbic = vbic), as.array))
     }else {
       b <- b[,2:(dim(b)[2])]
-      c(lapply(lst(Sigma = sig_hat, MU, a, b,elbo = ll), as.array))
+      vbic <- -2*ll + log(N)*(sum(a!=0) + sum(b!=0) + (sum(sig_hat!=0)-ncol(sig_hat))/2) 
+      c(lapply(lst(Sigma = sig_hat, MU, a, b,elbo = ll, vbic = vbic), as.array))
     }
-      
+    
   })
 }
 

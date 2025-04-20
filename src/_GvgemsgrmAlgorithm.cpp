@@ -527,6 +527,7 @@ Rcpp::List vem_grm(
   const int    max_iter = 1000,
   const double tol_para = 1e-4,
   const int    stop_cri = 2,
+  const int EFA = 1,
   const int verbose = 1
 
 ){
@@ -599,8 +600,13 @@ Rcpp::List vem_grm(
     // -- m-step --
     // -- 1. update sigma_theta --
     hat_sig = sum(sig_mu_sum_n, 2)/N;
-    new_sig = calcu_sigma_cmle_cpp(hat_sig, old_sig, 1e-6);
-    
+    if(EFA == 1) {
+      hat_sig.zeros();
+      hat_sig.diag().ones();
+      new_sig = hat_sig;
+    }else{
+      new_sig = calcu_sigma_cmle_cpp(hat_sig, old_sig, 1e-6);
+    }
     // -- 2.1 update ksi and eta --
     
     for(j=0;j<J;j++){

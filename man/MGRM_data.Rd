@@ -5,12 +5,28 @@
 \alias{MGRM_data}
 \title{Simulated Data Set for the Graded Response Model}
 \format{
-An object of class \code{list} of length 3.
+A list of components of the data set:
+\tabular{ll}{
+\code{ data}\tab Item responses\cr
+\tab\cr
+\code{model}\tab Loading indicators\cr
+\tab\cr
+\code{params}\tab A list of true parameters used for generating the item responses:\cr
+\tab\cr
+\code{ ...$a}\tab Slopes\cr
+\tab\cr
+\code{ ...$b}\tab Negated intercepts\cr
+\tab\cr
+\code{ ...$theta}\tab Latent traits\cr
+}
 }
 \usage{
 MGRM_data
 }
 \description{
 Simulated Data Set for the Graded Response Model
+}
+\author{
+Yijun Cheng <chengxb@uw.edu>
 }
 \keyword{datasets}

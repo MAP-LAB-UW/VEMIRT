@@ -1,5 +1,5 @@
-
-# ---- Required Packages -------------------------------------------------------
+#
+# # ---- Required Packages -------------------------------------------------------
 # Rcpp::sourceCpp("./_GvgemsgrmAlgorithm.cpp")
 # Rcpp::sourceCpp("./_IwGvemGrmAlgorithm.cpp")
 
@@ -49,7 +49,7 @@ GRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 200, tol
       output0 <- vem_grm(y = y, R = R, old_A = init_A, old_B = init_B, old_sig = init_sig,
                         old_ksi1 = init_ksi1, old_ksi2 = init_ksi2, Mod = Mod, max_iter = iter,
                         tol_para = tol, stop_cri = 2, verbose = ifelse(verbose == TRUE, 1, 0))
-      vbic <- output0$n2vlb + log(nrow(y))*(sum(output0$new_A!=0) + sum(output0$new_B!=0,na.rm=T) + (sum(output0$new_sig!=0) - ncol(output0$new_sig))/2) 
+      vbic <- output0$n2vlb #+ log(nrow(y))*(sum(output0$new_A!=0) + sum(output0$new_B!=0,na.rm=T) + (sum(output0$new_sig!=0) - ncol(output0$new_sig))/2) 
       if(vbic < bic)
       {
         estDim <- dim
@@ -69,7 +69,7 @@ GRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 200, tol
   output <- vem_grm(y = y, R = R, old_A = init_A, old_B = init_B, old_sig = init_sig,
                     old_ksi1 = init_ksi1, old_ksi2 = init_ksi2, Mod = Mod, max_iter = iter,
                     tol_para = tol, stop_cri = 2, verbose = ifelse(verbose == TRUE, 1, 0))
-  vbic <- output$n2vlb + log(nrow(y))*(sum(output$new_A!=0) + sum(output$new_B!=0,na.rm=T) + (sum(output$new_sig!=0) - ncol(output$new_sig))/2) 
+  vbic <- output$n2vlb #+ log(nrow(y))*(sum(output$new_A!=0) + sum(output$new_B!=0,na.rm=T) + (sum(output$new_sig!=0) - ncol(output$new_sig))/2) 
   }
   
   b <- output$new_B
@@ -140,17 +140,12 @@ GRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 200, tol
     iter         = output$it
   )
 
-  # if(verbose) {
-  #   cat("\n")
-  #   output <- capture.output(lst(a = a, b = b, dim = K))
-  #   cat(output, sep = "\n")
-  # }
   return(result)
 }
 
 IwGRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 2000, tol = 1e-4, S = 10, M = 10, MinDim, MaxMim, verbose = TRUE, EFA = FALSE) {
   
-  result <- GRM_gvem_method(data, model = model, iter = iter, tol = tol,MinDim, MaxMim, verbose = FALSE, EFA = FALSE )
+  result <- GRM_gvem_method(data,model= model, iter = iter, tol = tol,MinDim, MaxMim, verbose = FALSE, EFA = FALSE )
   
   y <- data
   y.na <- is.na(y)
@@ -188,15 +183,11 @@ IwGRM_gvem_method <- function(data, model = matrix(1, ncol(data)), iter = 2000, 
     a    = output$new_A,
     b    = b,
     SIGMA  = output$new_sig,
-    iter         = output$it
+    iter         = result$it
   )
-  if(verbose) {
-    cat("\n")
-    output <- capture.output(lst(a = result$a, b = result$b))
-    cat(output, sep = "\n")
-  }
-  invisible(result)
+  return(result)
 }
+
 #' GVEM Algorithm for the Graded Response Model
 #' @param data An \eqn{N\times J} matrix of item responses where 0 is the minimal partial credit score (missing responses should be coded as \code{NA}) 
 #' @param model A \eqn{J\times K} matrix of loading indicators (K is the Number of latent dimension)(all items load on the only dimension by default)
@@ -237,5 +228,6 @@ MGRM_gvem <- function(data, model = matrix(1, ncol(data)), method = "GVEM", iter
                GVEM = GRM_gvem_method,
                IWGVEM = IwGRM_gvem_method,
                stop(paste0("Method '", method, "' not supported.")))
+  if(EFA == TRUE & ncol(model) != 1)  {model[upper.tri(model)] <- 0}
   fn(data, model = model, iter = iter, tol, S = 10, M = 10, MinDim, MaxDim, verbose = verbose, EFA = EFA)
 }
