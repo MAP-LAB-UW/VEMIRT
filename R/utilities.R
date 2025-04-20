@@ -18,10 +18,6 @@ keep <- function(...) {
   })
 }
 
-NULL.tensor <- function() {
-  torch_tensor(NULL, dtype = torch_float())
-}
-
 diagonal <- function(e) {
   torch_diagonal(e, dim1 = -1, dim2 = -2)
 }
