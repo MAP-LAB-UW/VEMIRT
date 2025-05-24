@@ -34,7 +34,7 @@ generate_para_pcm<-function(N, J, D, model, K_list, sL = 0, sU = 0, aL = 0.5 , a
   }
 
   for(i in 1:N)
-    thet[i,] <- rmvnorm(1, rep(0, D), sigt);
+    thet[i,] <- mvrnorm(1, rep(0, D), sigt);
   aj <- aj * model
   return(list(thet_true = thet, a_true = aj, b_true = bet, Sig_true = sigt))
 }
@@ -184,7 +184,7 @@ permute <- function(est, real)
   return(est[,permn[permun,]])
 }
 
-library(mvtnorm)
+library(MASS)
 
 K_list <- c(rep(3,15), rep(5,15)); # graded responses
 D <- 3; N <- 1000; J <- 30;

@@ -30,7 +30,7 @@ init.D2PL_gvem <- function(Y, D, X, iter, eps, ...) {
 
   lambda <- 0
   niter.init <- mstep.D2PL_gvem()
-  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, eta, niter.init, p, z0)
+  keep(Y, D, X, iter, eps, N, n, J, K, G, MU, SIGMA, Mu, Sigma, a, b, gamma, beta, Y.mask, a.mask, gamma.mask, beta.mask, group.mask, eta, niter.init, p, z0)
   init.new()
 }
 

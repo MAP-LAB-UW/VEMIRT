@@ -120,7 +120,7 @@ pa_poly(D2PL_data$data, n.iter = 5)
 
 | Function | Description |
 | :-: | :-: |
-| `E2PL_gvem_rot` | GVEM with post-doc rotation |
+| `E2PL_gvem_rot` | GVEM with post-hoc rotation |
 | `E2PL_gvem_lasso` | GVEM with lasso penalty |
 | `E2PL_gvem_adaptlasso` | GVEM with adaptive lasso penalty |
 | `E2PL_iw` | Importance sampling for GVEM |
@@ -349,7 +349,7 @@ E2PL_iw(E2PL_data_C1$data, result)
 
 | Function | Description |
 | :-: | :-: |
-| `E3PL_sgvem_rot` | Stochastic GVEM with post-doc rotation |
+| `E3PL_sgvem_rot` | Stochastic GVEM with post-hoc rotation |
 | `E3PL_sgvem_lasso` | Stochastic GVEM with lasso penalty |
 | `E3PL_sgvem_adaptlasso` | Stochastic GVEM with adaptive lasso penalty |
 
