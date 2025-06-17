@@ -63,7 +63,7 @@ mstep.D2PL_pair_em <- function() {
     eta <- lambda / rho
     a$requires_grad_(T)
     b$requires_grad_(T)
-    opt <- optim_lbfgs(lst(a, b))
+    opt <- optim_lbfgs(lst(a, b), max_iter = iter, tolerance_change = eps)
     loss <- function() {
       xi <- ((a$unsqueeze(2) * z$unsqueeze(3) - b$unsqueeze(2))[X])$masked_fill(!Y.mask, NaN)
       Q <- (torch_where(U, nnf_logsigmoid(xi), nnf_logsigmoid(-xi))$nansum(3) * W)$sum() - rho / 2 * (penalty.D2PL_pair_em(d.a + u.a, a, mask) + penalty.D2PL_pair_em(d.b + u.b, b, mask))
