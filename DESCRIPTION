@@ -15,29 +15,30 @@ Description: VEMIRT is created to assist researchers in conducting high-dimensio
 License: GPL-3
 Imports: 
     abind,
+    bslib,
+    callr,
+    data.table,
+    DT,
     GPArotation,
     MASS,
     Matrix,
     mirt,
     mvQuad,
     mvnfast,
+    openxlsx,
+    plotly,
     polycor,
     psych,
     Rcpp,
     RcppArmadillo,
-    testit,
-    tibble,
-    torch,
+    rstan,
     shiny,
     shinyjs,
     shinyWidgets,
-    bslib,
-    data.table,
-    DT,
-    callr,
-    plotly,
-    viridis,
-    openxlsx
+    testit,
+    tibble,
+    torch,
+    viridis
 LinkingTo: Rcpp, RcppArmadillo, RcppEigen
 Encoding: UTF-8
 Depends: 
