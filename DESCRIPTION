@@ -18,6 +18,7 @@ Imports:
     bslib,
     callr,
     data.table,
+    dplyr,
     DT,
     GPArotation,
     MASS,
@@ -37,6 +38,7 @@ Imports:
     shinyWidgets,
     testit,
     tibble,
+    tidyr,
     torch,
     viridis
 LinkingTo: Rcpp, RcppArmadillo, RcppEigen
