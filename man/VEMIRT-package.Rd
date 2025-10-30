@@ -58,10 +58,11 @@ software packages, especially when the number of latent factors exceeds four.
 }
 }
 
-\section{Shiny app for VEMIRT}{
+\section{Shiny apps for VEMIRT}{
 
 \itemize{
   \item \code{\link{shinyVEMIRT}} Run the shiny app for VEMIRT
+  \item \code{\link{DIFdashboard}} Run the shiny app for DIF Dashboard
 }
 }
 

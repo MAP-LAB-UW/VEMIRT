@@ -1,8 +1,8 @@
 Package: VEMIRT
 Type: Package
 Title: Variational Expectation Maximization for High-Dimensional IRT Models
-Version: 2.11
-Date: 2025-06-17
+Version: 2.12
+Date: 2025-10-31
 Authors@R: c(
   person("Weicong", "Lyu", role = c("aut", "cre"), email = "weiconglyu@um.edu.mo", comment = c(ORCID = "0000-0002-8159-2161")),
   person("Yijun", "Cheng", role = c("aut"), email = "chengxb@uw.edu", comment = c(ORCID = "0000-0002-0671-9193")),
@@ -30,17 +30,20 @@ Imports:
     torch,
     shiny,
     shinyjs,
+    shinyWidgets,
     bslib,
     data.table,
     DT,
     callr,
+    plotly,
+    viridis,
     openxlsx
 LinkingTo: Rcpp, RcppArmadillo, RcppEigen
 Encoding: UTF-8
 Depends: 
     R (>= 3.10)
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: https://MAP-LAB-UW.github.io/VEMIRT, https://github.com/MAP-LAB-UW/VEMIRT
 Suggests: 
     knitr,
