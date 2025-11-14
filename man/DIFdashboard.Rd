@@ -11,4 +11,8 @@ Shiny App for DIF Dashboard
 }
 \author{
 Yijun Cheng <chengxb@uw.edu>
+
+He Ren <heren@uw.edu>
+
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

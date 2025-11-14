@@ -81,6 +81,7 @@ Authors:
 \itemize{
   \item Yijun Cheng \email{chengxb@uw.edu} (\href{https://orcid.org/0000-0002-0671-9193}{ORCID})
   \item Jiaying Xiao \email{jxiao6@uw.edu} (\href{https://orcid.org/0000-0001-9513-6477}{ORCID})
+  \item He Ren \email{heren@uw.edu} (\href{https://orcid.org/0000-0003-1208-7089}{ORCID})
   \item Ruoyi Zhu \email{zhux0445@uw.edu} (\href{https://orcid.org/0000-0002-8159-2161}{ORCID})
   \item Gongjun Xu \email{gongjun@umich.edu} (\href{https://orcid.org/0000-0003-4023-5413}{ORCID})
   \item Chun Wang \email{wang4066@uw.edu} (\href{https://orcid.org/0000-0003-2695-9781}{ORCID})

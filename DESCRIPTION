@@ -1,12 +1,13 @@
 Package: VEMIRT
 Type: Package
 Title: Variational Expectation Maximization for High-Dimensional IRT Models
-Version: 2.12
-Date: 2025-10-31
+Version: 2.13
+Date: 2025-11-14
 Authors@R: c(
   person("Weicong", "Lyu", role = c("aut", "cre"), email = "weiconglyu@um.edu.mo", comment = c(ORCID = "0000-0002-8159-2161")),
   person("Yijun", "Cheng", role = c("aut"), email = "chengxb@uw.edu", comment = c(ORCID = "0000-0002-0671-9193")),
   person("Jiaying", "Xiao", role = c("aut"), email = "jxiao6@uw.edu", comment = c(ORCID = "0000-0001-9513-6477")),
+  person("He", "Ren", role = c("aut"), email = "heren@uw.edu", comment = c(ORCID = "0000-0003-1208-7089")),
   person("Ruoyi", "Zhu", role = c("aut"), , email = "zhux0445@uw.edu", comment = c(ORCID = "0000-0002-8159-2161")),
   person("Gongjun", "Xu", role = c("aut"), email = "gongjun@umich.edu", comment = c(ORCID = "0000-0003-4023-5413")),
   person("Chun", "Wang", role = c("aut"), email = "wang4066@uw.edu", comment = c(ORCID = "0000-0003-2695-9781")))
