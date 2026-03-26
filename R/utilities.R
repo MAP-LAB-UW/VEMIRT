@@ -10,6 +10,14 @@ t.torch_tensor <- function(x) {
   torch_transpose(x, -1, -2)
 }
 
+logdsigmoid <- function(x) {
+  nnf_logsigmoid(x) + nnf_logsigmoid(-x)
+}
+
+dsigmoid <- function(x) {
+  torch_exp(logdsigmoid(x))
+}
+
 keep <- function(...) {
   env <- parent.frame()
   env$ls.keep <- names(lst(...))
@@ -54,6 +62,10 @@ distance <- function(x, y) {
 
 IC <- function(ll, l0, N, c) {
   -2 * ll + l0 * c(AIC = 2, BIC = log(N), GIC = c * log(N) * log(log(N)))
+}
+
+clone <- function(...) {
+  with_no_grad(lapply(lst(...), torch_clone))
 }
 
 init.new <- function() {
@@ -111,15 +123,15 @@ new.vemirt_DIF <- function(niter0, all, N, criterion) {
   structure(lst(niter0, all, N, best, fit = all[[best]]), class = 'vemirt_DIF')
 }
 
-#' Extract Parameter Estimates from DIF 2PL Analysis
+#' Extract Parameter Estimates from DIF Analysis
 #'
 #' @param object An object of class \code{vemirt_DIF}
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
 #'
 #' @usage coef(object, criterion = NULL)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
+#' @seealso \code{\link{D1PL_em}}, \code{\link{D1PL_pair_em}}, \code{\link{D1PL_gvem}}, \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 coef.vemirt_DIF <- function(object, criterion = NULL) {
   if (length(criterion) != 1)
@@ -128,15 +140,15 @@ coef.vemirt_DIF <- function(object, criterion = NULL) {
     object$all[[best.vemirt_DIF(object$all, object$N, criterion)]]
 }
 
-#' Print DIF 2PL Items by Group
+#' Print DIF Items by Group
 #'
 #' @param x An object of class \code{vemirt_DIF}
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
 #'
 #' @usage print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
+#' @seealso \code{\link{D1PL_em}}, \code{\link{D1PL_pair_em}}, \code{\link{D1PL_gvem}}, \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 #' @export
 print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...) {
   fit <- coef.vemirt_DIF(x, criterion)
@@ -154,38 +166,56 @@ print.vemirt_DIF <- function(x, criterion = NULL, max = 99999L, digits = 3, ...)
     }
     print(dat, max = max, digits = digits, ...)
   } else if (pair) {
-    dat <- do.call(rbind, lapply(1:(G - 1), function(m) {
-      do.call(rbind, lapply((m + 1):G, function(n) {
-        dif <- as.data.frame(t(ifelse(cbind(fit$d.a[m, n, ], fit$d.b[m, n, ]) != 0, 'X', '')))
-        rownames(dif) <- paste0(m, ',', n, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
-        colnames(dif) <- paste0(1:ncol(dif))
-        dif
+    dat <- if (is.null(fit$d.a))
+      do.call(rbind, lapply(1:(G - 1), function(m) {
+        do.call(rbind, lapply((m + 1):G, function(n) {
+          dif <- as.data.frame(t(ifelse(fit$d.b[m, n, ] != 0, 'X', '')))
+          rownames(dif) <- paste0(m, ',', n, ':b')
+          colnames(dif) <- paste0(1:ncol(dif))
+          dif
+        }))
       }))
-    }))
+    else
+      do.call(rbind, lapply(1:(G - 1), function(m) {
+        do.call(rbind, lapply((m + 1):G, function(n) {
+          dif <- as.data.frame(t(ifelse(cbind(fit$d.a[m, n, ], fit$d.b[m, n, ]) != 0, 'X', '')))
+          rownames(dif) <- paste0(m, ',', n, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
+          colnames(dif) <- paste0(1:ncol(dif))
+          dif
+        }))
+      }))
     print(dat, max = max, ...)
     cat(sep = '', '* lambda0 = ', fit$lambda0, ', tau = ', fit$tau, '\n')
   } else {
-    dat <- do.call(rbind, lapply(2:G, function(g) {
-      dif <- as.data.frame(t(ifelse(cbind(fit$gamma[g, , ], fit$beta[g, ]) != 0, 'X', '')))
-      rownames(dif) <- paste0(g, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
-      colnames(dif) <- paste0(1:ncol(dif))
-      dif
-    }))
+    dat <- if (is.null(fit$gamma))
+      do.call(rbind, lapply(2:G, function(g) {
+        dif <- as.data.frame(t(ifelse(fit$beta[g, ] != 0, 'X', '')))
+        rownames(dif) <- paste0(g, ':b')
+        colnames(dif) <- paste0(1:ncol(dif))
+        dif
+      }))
+    else
+      do.call(rbind, lapply(2:G, function(g) {
+        dif <- as.data.frame(t(ifelse(cbind(fit$gamma[g, , ], fit$beta[g, ]) != 0, 'X', '')))
+        rownames(dif) <- paste0(g, ':', c(paste0('a', 1:(nrow(dif) - 1)), 'b'))
+        colnames(dif) <- paste0(1:ncol(dif))
+        dif
+      }))
     print(dat, max = max, ...)
     cat(sep = '', '* lambda0 = ', fit$lambda0, '\n')
   }
   invisible(fit)
 }
 
-#' Summarize DIF 2PL Items
+#' Summarize DIF Items
 #'
 #' @param x An object of class \code{vemirt_DIF}
 #' @param criterion Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)
 #'
-#' @author Weicong Lyu <wlyu4@uw.edu>
+#' @author Weicong Lyu <weiconglyu@um.edu.mo>
 #' @usage summary(x, criterion = NULL)
 #'
-#' @seealso \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
+#' @seealso \code{\link{D1PL_em}}, \code{\link{D1PL_pair_em}}, \code{\link{D1PL_gvem}}, \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
 #' @export
 summary.vemirt_DIF <- function(object, criterion = NULL) {
   fit <- coef.vemirt_DIF(object, criterion)
@@ -203,23 +233,38 @@ summary.vemirt_DIF <- function(object, criterion = NULL) {
     }
   } else {
     if (pair) {
-      dat <- sapply(1:dim(fit$d.a)[3], function(j) {
-        dif <- c('a1' = any(fit$d.a[, , j] != 0), 'b' = any(fit$d.b[, , j] != 0))
-      }) + 0
+      dat <- 0 + if (is.null(fit$d.a)) {
+        dat <- as.matrix(unlist(lapply(1:dim(fit$d.b)[3], function(j) {
+          c('b' = any(fit$d.b[, , j] != 0))
+        })))
+        colnames(dat) <- 'b'
+        t(dat)
+      } else
+        sapply(1:dim(fit$d.a)[3], function(j) {
+          c('a1' = any(fit$d.a[, , j] != 0), 'b' = any(fit$d.b[, , j] != 0))
+        })
       colnames(dat) <- paste0(1:ncol(dat))
     } else
-      dat <- (Reduce(`+`, lapply(2:G, function(g) {
-        dif <- t((cbind(fit$gamma[g, , ], fit$beta[g, ]) != 0) + 0)
-        rownames(dif) <- c(paste0('a', 1:(nrow(dif) - 1)), 'b')
-        colnames(dif) <- paste0(1:ncol(dif))
-        dif
-      })) != 0) + 0
+      dat <- 0 + 0 != if (is.null(fit$gamma))
+        Reduce(`+`, lapply(2:G, function(g) {
+          dif <- t((fit$beta[g, ] != 0) + 0)
+          rownames(dif) <- 'b'
+          colnames(dif) <- paste0(1:ncol(dif))
+          dif
+        }))
+      else
+        Reduce(`+`, lapply(2:G, function(g) {
+          dif <- t((cbind(fit$gamma[g, , ], fit$beta[g, ]) != 0) + 0)
+          rownames(dif) <- c(paste0('a', 1:(nrow(dif) - 1)), 'b')
+          colnames(dif) <- paste0(1:ncol(dif))
+          dif
+        }))
     dat <- structure(list(pair = pair, fit = fit, dif = dat), class = 'vemirt_DIF_summary')
   }
   dat
 }
 
-#' Extract DIF 2PL Items
+#' Extract DIF Items
 #'
 #' @param object An object of class \code{vemirt_DIF_summary}
 #'
@@ -232,7 +277,7 @@ coef.vemirt_DIF_summary <- function(object) {
   object$dif
 }
 
-#' Print Summary of DIF 2PL Items
+#' Print Summary of DIF Items
 #'
 #' @param x An object of class \code{vemirt_DIF_summary}
 #'

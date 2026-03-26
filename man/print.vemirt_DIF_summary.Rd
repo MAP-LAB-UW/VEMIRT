@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{print.vemirt_DIF_summary}
 \alias{print.vemirt_DIF_summary}
-\title{Print Summary of DIF 2PL Items}
+\title{Print Summary of DIF Items}
 \usage{
 print(x, max = 99999L, ...)
 }
@@ -10,7 +10,7 @@ print(x, max = 99999L, ...)
 \item{x}{An object of class \code{vemirt_DIF_summary}}
 }
 \description{
-Print Summary of DIF 2PL Items
+Print Summary of DIF Items
 }
 \seealso{
 \code{\link{summary.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{coef.vemirt_DIF}
 \alias{coef.vemirt_DIF}
-\title{Extract Parameter Estimates from DIF 2PL Analysis}
+\title{Extract Parameter Estimates from DIF Analysis}
 \usage{
 coef(object, criterion = NULL)
 }
@@ -12,11 +12,11 @@ coef(object, criterion = NULL)
 \item{criterion}{Information criterion for model selection, one of \code{'AIC'}, \code{'BIC'}, \code{'GIC'}, or the constant for computing GIC, otherwise use the criterion specified when fitting the model(s)}
 }
 \description{
-Extract Parameter Estimates from DIF 2PL Analysis
+Extract Parameter Estimates from DIF Analysis
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+\code{\link{D1PL_em}}, \code{\link{D1PL_pair_em}}, \code{\link{D1PL_gvem}}, \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

@@ -8,7 +8,6 @@ D1PL_gvem(
   data,
   model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
-  a = 1,
   method = "IWGVEMM",
   Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1),
   criterion = "GIC",
@@ -27,8 +26,6 @@ D1PL_gvem(
 \item{model}{A \eqn{J\times K} binary matrix of loading indicators  (all items load on the only dimension by default)}
 
 \item{group}{An \eqn{N} dimensional vector of group indicators from \code{1} to \code{G} (all respondents are in the same group by default)}
-
-\item{a}{A scalar indicating the common discrimination parameter for all the dimensions of all the items (takes \code{1} by default)}
 
 \item{method}{Estimation algorithm, one of \code{'GVEM'} or \code{'IWGVEMM'}}
 
@@ -64,9 +61,8 @@ An object of class \code{vemirt_DIF}, which is a list containing the following e
   \item{ ...$MU}{Person-level posterior mean vectors}
   \item{ ...$Sigma}{Group-level covariance matrices}
   \item{ ...$Mu}{Group-level mean vectors}
-  \item{ ...$a}{Slopes for group 1}
+  \item{ ...$a}{Slopes (fixed to 1)}
   \item{ ...$b}{Intercepts for group 1}
-  \item{ ...$gamma}{D1PL parameters for the slopes (all elements are zero)}
   \item{ ...$beta}{D1PL parameters for the intercepts}
   \item{ ...$RMSE}{Root mean square error of fitted probability of each item for each group}
   \item{ ...$ll}{Estimated lower bound of log-likelihood}
@@ -83,7 +79,7 @@ GVEM Algorithms for DIF Detection in M1PL Models
 with(D1PL_data, D1PL_gvem(data, model, group))}
 }
 \seealso{
-\code{\link{D1PL_em}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
+\code{\link{D1PL_pair_em}}, \code{\link{D1PL_em}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{summary.vemirt_DIF}}
 }
 \author{
 Weicong Lyu <weiconglyu@um.edu.mo>

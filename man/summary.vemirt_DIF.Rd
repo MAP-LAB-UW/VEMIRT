@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{summary.vemirt_DIF}
 \alias{summary.vemirt_DIF}
-\title{Summarize DIF 2PL Items}
+\title{Summarize DIF Items}
 \usage{
 summary(x, criterion = NULL)
 }
@@ -12,11 +12,11 @@ summary(x, criterion = NULL)
 \item{x}{An object of class \code{vemirt_DIF}}
 }
 \description{
-Summarize DIF 2PL Items
+Summarize DIF Items
 }
 \seealso{
-\code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
+\code{\link{D1PL_em}}, \code{\link{D1PL_pair_em}}, \code{\link{D1PL_gvem}}, \code{\link{D2PL_em}}, \code{\link{D2PL_pair_em}}, \code{\link{D2PL_gvem}}, \code{\link{coef.vemirt_DIF}}, \code{\link{print.vemirt_DIF}}, \code{\link{coef.vemirt_DIF_summary}}, \code{\link{print.vemirt_DIF_summary}}
 }
 \author{
-Weicong Lyu <wlyu4@uw.edu>
+Weicong Lyu <weiconglyu@um.edu.mo>
 }

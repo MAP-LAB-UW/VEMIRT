@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{coef.vemirt_DIF_summary}
 \alias{coef.vemirt_DIF_summary}
-\title{Extract DIF 2PL Items}
+\title{Extract DIF Items}
 \usage{
 coef(object)
 }
@@ -10,7 +10,7 @@ coef(object)
 \item{object}{An object of class \code{vemirt_DIF_summary}}
 }
 \description{
-Extract DIF 2PL Items
+Extract DIF Items
 }
 \seealso{
 \code{\link{summary.vemirt_DIF}}, \code{\link{print.vemirt_DIF_summary}}

@@ -2,7 +2,9 @@ library(abind)
 library(mvtnorm)
 set.seed(246)
 
-Sigma <- matrix(c(1, 0.8, 0.8, 1), 2)
+Omega <- matrix(c(1, .8, .8, 1), 2)
+sigma <- diag(c(1.5, 2))
+Sigma <- sigma %*% Omega %*% sigma
 J <- 20
 D <- cbind(rep(1:0, J / 2), rep(0:1, J / 2))
 N <- 1000
