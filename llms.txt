@@ -10,7 +10,8 @@ designs. The package contains several example datasets and functions for
 - Standard error estimates for confirmatory M2PL analysis
 - Bootstrap sampling and importance sampling correction for M2PL
   analysis
-- Differential item functioning detection for confirmatory M2PL analysis
+- Differential item functioning detection for confirmatory M1PL and M2PL
+  analysis
 
 ## Installation
 
@@ -78,6 +79,9 @@ VEMIRT::shinyVEMIRT()
   : EM Algorithms for DIF Detection in M1PL Models
 - [`D1PL_gvem()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md)
   : GVEM Algorithms for DIF Detection in M1PL Models
+- [`D1PL_pair_em()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md)
+  : EM Algorithm with ADMM for DIF Detection Using Group Pairwise
+  Truncated \\L_1\\ Penalty in 1PL Models
 - [`D2PL_data`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_data.md)
   : Simulated Data Set for DIF M2PL Analysis
 - [`D2PL_em()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_em.md)
@@ -124,24 +128,24 @@ VEMIRT::shinyVEMIRT()
   [`VEMIRT-package`](https://MAP-LAB-UW.github.io/VEMIRT/reference/VEMIRT-package.md)
   : VEMIRT: A Package for High-Dimensional IRT Models
 - [`coef()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/coef.vemirt_DIF.md)
-  : Extract Parameter Estimates from DIF 2PL Analysis
+  : Extract Parameter Estimates from DIF Analysis
 - [`coef()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/coef.vemirt_DIF_summary.md)
-  : Extract DIF 2PL Items
+  : Extract DIF Items
 - [`coef()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/coef.vemirt_FA.md)
   : Extract Parameter Estimates from Explanatory or Confirmatory
   Analysis
 - [`pa_poly()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/pa_poly.md)
   : Parallel analysis using polychoric correlation
 - [`print()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/print.vemirt_DIF.md)
-  : Print DIF 2PL Items by Group
+  : Print DIF Items by Group
 - [`print()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/print.vemirt_DIF_summary.md)
-  : Print Summary of DIF 2PL Items
+  : Print Summary of DIF Items
 - [`print()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/print.vemirt_FA.md)
   : Print Parameter Estimates from Explanatory or Confirmatory Analysis
 - [`shinyVEMIRT()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/shinyVEMIRT.md)
   : Shiny App for VEMIRT
 - [`summary()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/summary.vemirt_DIF.md)
-  : Summarize DIF 2PL Items
+  : Summarize DIF Items
 
 # Articles
 

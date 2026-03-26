@@ -22,14 +22,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/MAP-LAB-UW/VEMIRT/blob/master/DESCRIPTION)
 
-Lyu W, Cheng Y, Xiao J, Ren H, Zhu R, Xu G, Wang C (2025). *VEMIRT:
+Lyu W, Cheng Y, Xiao J, Ren H, Zhu R, Xu G, Wang C (2026). *VEMIRT:
 Variational Expectation Maximization for High-Dimensional IRT Models*. R
-package version 2.13, <https://MAP-LAB-UW.github.io/VEMIRT>.
+package version 2.14, <https://MAP-LAB-UW.github.io/VEMIRT>.
 
     @Manual{,
       title = {VEMIRT: Variational Expectation Maximization for High-Dimensional IRT Models},
       author = {Weicong Lyu and Yijun Cheng and Jiaying Xiao and He Ren and Ruoyi Zhu and Gongjun Xu and Chun Wang},
-      year = {2025},
-      note = {R package version 2.13},
+      year = {2026},
+      note = {R package version 2.14},
       url = {https://MAP-LAB-UW.github.io/VEMIRT},
     }

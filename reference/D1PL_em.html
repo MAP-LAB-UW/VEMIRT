@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VEMIRT</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.14</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,6 @@
 <span>  <span class="va">data</span>,</span>
 <span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  a <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"EMM"</span>,</span>
 <span>  Lambda0 <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="fl">0</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
 <span>  level <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -70,10 +69,6 @@
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
 <dd><p>An \(N\) dimensional vector of group indicators from <code>1</code> to <code>G</code> (all respondents are in the same group by default)</p></dd>
-
-
-<dt id="arg-a">a<a class="anchor" aria-label="anchor" href="#arg-a"></a></dt>
-<dd><p>A scalar indicating the common discrimination parameter for all the dimensions of all the items (takes <code>1</code> by default)</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
@@ -147,9 +142,6 @@
   <dt> ...$b</dt>
 <dd><p>Intercepts for group 1</p></dd>
 
-  <dt> ...$gamma</dt>
-<dd><p>D1PL parameters for the slopes (all elements are zero)</p></dd>
-
   <dt> ...$beta</dt>
 <dd><p>D1PL parameters for the intercepts</p></dd>
 
@@ -157,7 +149,7 @@
 <dd><p>Log-likelihood</p></dd>
 
   <dt> ...$l0</dt>
-<dd><p>Number of nonzero D1PL parameters in <code>gamma</code> and <code>beta</code></p></dd>
+<dd><p>Number of nonzero D1PL parameters in <code>beta</code></p></dd>
 
   <dt> ...$AIC</dt>
 <dd><p>Akaike Information Criterion: <code>-2*ll+l0*2</code></p></dd>
@@ -171,7 +163,7 @@
 </dl></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="D1PL_gvem.html">D1PL_gvem</a></code>, <code><a href="coef.vemirt_DIF.html">coef.vemirt_DIF</a></code>, <code><a href="print.vemirt_DIF.html">print.vemirt_DIF</a></code>, <code><a href="summary.vemirt_DIF.html">summary.vemirt_DIF</a></code></p></div>
+    <div class="dont-index"><p><code><a href="D1PL_pair_em.html">D1PL_pair_em</a></code>, <code><a href="D1PL_gvem.html">D1PL_gvem</a></code>, <code><a href="coef.vemirt_DIF.html">coef.vemirt_DIF</a></code>, <code><a href="print.vemirt_DIF.html">print.vemirt_DIF</a></code>, <code><a href="summary.vemirt_DIF.html">summary.vemirt_DIF</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

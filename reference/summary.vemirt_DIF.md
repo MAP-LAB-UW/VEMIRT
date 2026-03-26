@@ -1,6 +1,6 @@
-# Summarize DIF 2PL Items
+# Summarize DIF Items
 
-Summarize DIF 2PL Items
+Summarize DIF Items
 
 ## Usage
 
@@ -22,6 +22,9 @@ summary(x, criterion = NULL)
 
 ## See also
 
+[`D1PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_em.md),
+[`D1PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md),
+[`D1PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md),
 [`D2PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_em.md),
 [`D2PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_pair_em.md),
 [`D2PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_gvem.md),
@@ -32,4 +35,4 @@ summary(x, criterion = NULL)
 
 ## Author
 
-Weicong Lyu \<wlyu4@uw.edu\>
+Weicong Lyu \<weiconglyu@um.edu.mo\>

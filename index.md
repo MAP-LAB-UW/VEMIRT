@@ -10,7 +10,8 @@ designs. The package contains several example datasets and functions for
 - Standard error estimates for confirmatory M2PL analysis
 - Bootstrap sampling and importance sampling correction for M2PL
   analysis
-- Differential item functioning detection for confirmatory M2PL analysis
+- Differential item functioning detection for confirmatory M1PL and M2PL
+  analysis
 
 ## Installation
 

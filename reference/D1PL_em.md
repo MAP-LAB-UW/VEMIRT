@@ -9,7 +9,6 @@ D1PL_em(
   data,
   model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
-  a = 1,
   method = "EMM",
   Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1),
   level = 10,
@@ -37,11 +36,6 @@ D1PL_em(
 
   An \\N\\ dimensional vector of group indicators from `1` to `G` (all
   respondents are in the same group by default)
-
-- a:
-
-  A scalar indicating the common discrimination parameter for all the
-  dimensions of all the items (takes `1` by default)
 
 - method:
 
@@ -132,10 +126,6 @@ following elements:
 
   Intercepts for group 1
 
-- ...\$gamma:
-
-  D1PL parameters for the slopes (all elements are zero)
-
 - ...\$beta:
 
   D1PL parameters for the intercepts
@@ -146,7 +136,7 @@ following elements:
 
 - ...\$l0:
 
-  Number of nonzero D1PL parameters in `gamma` and `beta`
+  Number of nonzero D1PL parameters in `beta`
 
 - ...\$AIC:
 
@@ -162,6 +152,7 @@ following elements:
 
 ## See also
 
+[`D1PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md),
 [`D1PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md),
 [`coef.vemirt_DIF`](https://MAP-LAB-UW.github.io/VEMIRT/reference/coef.vemirt_DIF.md),
 [`print.vemirt_DIF`](https://MAP-LAB-UW.github.io/VEMIRT/reference/print.vemirt_DIF.md),

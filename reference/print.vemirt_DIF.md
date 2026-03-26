@@ -1,6 +1,6 @@
-# Print DIF 2PL Items by Group
+# Print DIF Items by Group
 
-Print DIF 2PL Items by Group
+Print DIF Items by Group
 
 ## Usage
 
@@ -22,6 +22,9 @@ print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 
 ## See also
 
+[`D1PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_em.md),
+[`D1PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md),
+[`D1PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md),
 [`D2PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_em.md),
 [`D2PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_pair_em.md),
 [`D2PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_gvem.md),
@@ -30,4 +33,4 @@ print(x, criterion = NULL, max = 99999L, digits = 3, ...)
 
 ## Author
 
-Weicong Lyu \<wlyu4@uw.edu\>
+Weicong Lyu \<weiconglyu@um.edu.mo\>

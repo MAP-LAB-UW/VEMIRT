@@ -79,6 +79,10 @@ identifies the number of factors via parallel analysis.
 - [`D1PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md)
   conducts DIF analysis for M1PL models using GVEM algorithms
 
+- [`D1PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md)
+  conducts DIF analysis for 1PL models using EM algorithms with group
+  pairwise truncated \\L_1\\ penalty
+
 - [`D2PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_em.md)
   conducts DIF analysis for M2PL models using EM algorithms
 

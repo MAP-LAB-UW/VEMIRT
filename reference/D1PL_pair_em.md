@@ -1,23 +1,22 @@
-# GVEM Algorithms for DIF Detection in M1PL Models
+# EM Algorithm with ADMM for DIF Detection Using Group Pairwise Truncated \\L_1\\ Penalty in 1PL Models
 
-GVEM Algorithms for DIF Detection in M1PL Models
+EM Algorithm with ADMM for DIF Detection Using Group Pairwise Truncated
+\\L_1\\ Penalty in 1PL Models
 
 ## Usage
 
 ``` r
-D1PL_gvem(
+D1PL_pair_em(
   data,
-  model = matrix(1, ncol(data)),
   group = rep(1, nrow(data)),
-  method = "IWGVEMM",
-  Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.1, 1, by = 0.1),
-  criterion = "GIC",
+  Lambda0 = if (length(unique(group)) == 1) 0 else seq(0.5, 1.5, by = 0.1),
+  Tau = if (length(unique(group)) == 1) 0 else c(Inf, seq(0.05, 0.3, by = 0.05)),
+  rho0 = 0.5,
+  level = 10,
+  criterion = "BIC",
   iter = 200,
   eps = 0.001,
   c = 1,
-  S = 10,
-  M = 10,
-  lr = 0.1,
   verbose = TRUE
 )
 ```
@@ -29,29 +28,34 @@ D1PL_gvem(
   An \\N\times J\\ binary matrix of item responses (missing responses
   should be coded as `NA`)
 
-- model:
-
-  A \\J\times K\\ binary matrix of loading indicators (all items load on
-  the only dimension by default)
-
 - group:
 
   An \\N\\ dimensional vector of group indicators from `1` to `G` (all
   respondents are in the same group by default)
 
-- method:
-
-  Estimation algorithm, one of `'GVEM'` or `'IWGVEMM'`
-
 - Lambda0:
 
-  A vector of `lambda0` values for \\L_1\\ penalty (`lambda` equals
-  `sqrt(N) * lambda0`)
+  A vector of `lambda0` values for truncated \\L_1\\ penalty (`lambda`
+  equals `sqrt(N) / G * lambda0`)
+
+- Tau:
+
+  A vector of `tau` values for truncated \\L_1\\ penalty (becomes
+  \\L_1\\ penalty when `tau` equals `Inf`)
+
+- rho0:
+
+  A value of `rho` for augmented Lagrangian in ADMM (`tau` equals
+  `sqrt(N) / G * tau0`)
+
+- level:
+
+  Accuracy level of Gaussian quadrature for `mvQuad`
 
 - criterion:
 
-  Information criterion for model selection, one of `'GIC'`
-  (recommended), `'BIC'`, or `'AIC'`
+  Information criterion for model selection, one of `'BIC'`
+  (recommended), `'AIC'`, or `'GIC'`
 
 - iter:
 
@@ -64,19 +68,6 @@ D1PL_gvem(
 - c:
 
   Constant for computing GIC
-
-- S:
-
-  Sample size for approximating the expected lower bound (`'IWGVEMM'`
-  only)
-
-- M:
-
-  Sample size for approximating a tighter lower bound (`'IWGVEMM'` only)
-
-- lr:
-
-  Learning rate for the Adam optimizer (`'IWGVEMM'` only)
 
 - verbose:
 
@@ -114,19 +105,23 @@ following elements:
 
 - ...\$lambda:
 
-  `sqrt(N) * lambda0`
+  `sqrt(N) / G * lambda0`
+
+- ...\$tau:
+
+  Corresponding element in `Tau`
+
+- ...\$rho0:
+
+  Same as `rho0` in input
+
+- ...\$rho:
+
+  `sqrt(N) / G * rho0`
 
 - ...\$niter:
 
   Number(s) of iterations
-
-- ...\$SIGMA:
-
-  Person-level posterior covariance matrices
-
-- ...\$MU:
-
-  Person-level posterior mean vectors
 
 - ...\$Sigma:
 
@@ -138,28 +133,27 @@ following elements:
 
 - ...\$a:
 
-  Slopes (fixed to 1)
+  Slopes
 
 - ...\$b:
 
-  Intercepts for group 1
+  Intercepts
 
-- ...\$beta:
+- ...\$d.b:
 
-  D1PL parameters for the intercepts
+  Group pairwise differences of intercepts
 
-- ...\$RMSE:
+- ...\$u.b:
 
-  Root mean square error of fitted probability of each item for each
-  group
+  Lagrangian multipliers of corresponding elements in `d.b`
 
 - ...\$ll:
 
-  Estimated lower bound of log-likelihood
+  Log-likelihood
 
 - ...\$l0:
 
-  Number of nonzero D1PL parameters in `beta`
+  Number of nonzero D1PL parameters in `gamma` and `beta`
 
 - ...\$AIC:
 
@@ -175,8 +169,8 @@ following elements:
 
 ## See also
 
-[`D1PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md),
 [`D1PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_em.md),
+[`D1PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md),
 [`coef.vemirt_DIF`](https://MAP-LAB-UW.github.io/VEMIRT/reference/coef.vemirt_DIF.md),
 [`print.vemirt_DIF`](https://MAP-LAB-UW.github.io/VEMIRT/reference/print.vemirt_DIF.md),
 [`summary.vemirt_DIF`](https://MAP-LAB-UW.github.io/VEMIRT/reference/summary.vemirt_DIF.md)
@@ -189,5 +183,5 @@ Weicong Lyu \<weiconglyu@um.edu.mo\>
 
 ``` r
 if (FALSE) { # \dontrun{
-with(D1PL_data, D1PL_gvem(data, model, group))} # }
+with(D1PL_data, D1PL_pair_em(data, group, Tau = c(Inf, seq(0.01, 0.05, by = 0.01))))} # }
 ```

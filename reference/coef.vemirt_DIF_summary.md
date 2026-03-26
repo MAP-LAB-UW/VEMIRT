@@ -1,6 +1,6 @@
-# Extract DIF 2PL Items
+# Extract DIF Items
 
-Extract DIF 2PL Items
+Extract DIF Items
 
 ## Usage
 

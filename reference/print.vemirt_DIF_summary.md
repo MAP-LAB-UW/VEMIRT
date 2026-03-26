@@ -1,6 +1,6 @@
-# Print Summary of DIF 2PL Items
+# Print Summary of DIF Items
 
-Print Summary of DIF 2PL Items
+Print Summary of DIF Items
 
 ## Usage
 

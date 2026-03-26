@@ -1,6 +1,6 @@
-# Extract Parameter Estimates from DIF 2PL Analysis
+# Extract Parameter Estimates from DIF Analysis
 
-Extract Parameter Estimates from DIF 2PL Analysis
+Extract Parameter Estimates from DIF Analysis
 
 ## Usage
 
@@ -22,6 +22,9 @@ coef(object, criterion = NULL)
 
 ## See also
 
+[`D1PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_em.md),
+[`D1PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md),
+[`D1PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_gvem.md),
 [`D2PL_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_em.md),
 [`D2PL_pair_em`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_pair_em.md),
 [`D2PL_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_gvem.md),
@@ -30,4 +33,4 @@ coef(object, criterion = NULL)
 
 ## Author
 
-Weicong Lyu \<wlyu4@uw.edu\>
+Weicong Lyu \<weiconglyu@um.edu.mo\>
