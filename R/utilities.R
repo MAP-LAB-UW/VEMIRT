@@ -34,6 +34,10 @@ sym <- function(e) {
   (e + t(e)) / 2
 }
 
+pinverse <- function(e) {
+  linalg_pinv(e, hermitian = T, rtol = 1e-15)
+}
+
 prox <- function(x, lambda) {
   sign(x) * (abs(x) - lambda)$maximum(0)
 }

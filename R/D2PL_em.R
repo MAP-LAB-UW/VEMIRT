@@ -69,7 +69,7 @@ mstep.D2PL_em <- function() {
       dd.b <- W.dd$nansum(1:2)$unsqueeze(3)
       dd.ab <- -(Z * W.dd)$nansum(1:2)
       dd <- torch_cat(list(torch_cat(list(dd.a, dd.ab$unsqueeze(3)), 3), torch_cat(list(dd.ab$unsqueeze(2), dd.b), 3)), 2)$masked_fill(!ab.mask, 0)
-      ab <- torch_hstack(list(a, b$unsqueeze(2))) - (dd$pinverse()$masked_fill(!ab.mask, 0) %*% torch_cat(list(d.a, d.b), 2)$unsqueeze(3))$squeeze(3)
+      ab <- torch_hstack(list(a, b$unsqueeze(2))) - (pinverse(dd)$masked_fill(!ab.mask, 0) %*% torch_cat(list(d.a, d.b), 2)$unsqueeze(3))$squeeze(3)
       a <- ab[, 1:-2]$masked_fill(!a.mask, 0)
       b <- ab[, -1]
 
@@ -85,7 +85,7 @@ mstep.D2PL_em <- function() {
       if (lambda == 0) {
         dd.gammabeta <- groupsum(n, (Z * W.dd)$nansum(2))
         dd <- torch_cat(list(torch_cat(list(dd.gamma, dd.gammabeta$unsqueeze(4)), 4), torch_cat(list(dd.gammabeta$unsqueeze(3), dd.beta), 4)), 3)$masked_fill(!gammabeta.mask, 0)
-        gammabeta <- torch_cat(list(gamma, beta$unsqueeze(3)), 3) - (dd$pinverse()$masked_fill(!gammabeta.mask, 0) %*% torch_cat(list(d.gamma, d.beta), 3)$unsqueeze(4))$squeeze(4)
+        gammabeta <- torch_cat(list(gamma, beta$unsqueeze(3)), 3) - (pinverse(dd)$masked_fill(!gammabeta.mask, 0) %*% torch_cat(list(d.gamma, d.beta), 3)$unsqueeze(4))$squeeze(4)
         gamma <- gammabeta[.., 1:-2]
         beta <- gammabeta[.., -1]
       } else {

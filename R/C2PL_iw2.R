@@ -30,7 +30,7 @@ final.C2PL_iw2 <- function(e, SE.level) {
       d <- torch_cat(autograd_grad(l, list(a.v, b), retain_graph = T))
       d$unsqueeze(2) %*% d$unsqueeze(1)
     }))
-    SE <- I$pinverse()$diag()$sqrt()
+    SE <- pinverse(I)$diag()$sqrt()
     SE.a <- as.array(torch_zeros(a.mask$shape)$masked_scatter(a.mask, SE[1:-(J + 1)]))
     SE.b <- as.array(SE[-J:-1])
   }

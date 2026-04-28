@@ -165,6 +165,33 @@
 #' }
 'D2PL_data'
 
+#' Simulated Data Set for DIF M2PL Bifactor Analysis
+#'
+#' @author Yijun Cheng <chengxb@uw.edu>, Weicong Lyu <weiconglyu@um.edu.mo>
+#' @format A list of components of the data set:
+#' \tabular{ll}{
+#' \code{ data}\tab Item responses\cr
+#' \tab\cr
+#' \code{model}\tab Loading indicators\cr
+#' \tab\cr
+#' \code{ndim}\tab The first \code{ndim} dimensions are substantive factors, while others are nuisance factors\cr
+#' \tab\cr
+#' \code{impact}\tab Whether nuisance factors have impact\cr
+#' \tab\cr
+#' \code{group}\tab Group indicators\cr
+#' \tab\cr
+#' \code{j}\tab Indices of DIF items\cr
+#' \tab\cr
+#' \code{params}\tab A list of true parameters used for generating the item responses:\cr
+#' \tab\cr
+#' \code{ ...$a}\tab Slopes\cr
+#' \tab\cr
+#' \code{ ...$b}\tab Negated intercepts\cr
+#' \tab\cr
+#' \code{ ...$theta}\tab Latent traits\cr
+#' }
+'D2PL_bifactor_data'
+
 #' Simulated Data Set for Generalized Partial Credit Model
 #'
 #' @author Yijun Cheng <chengxb@uw.edu>

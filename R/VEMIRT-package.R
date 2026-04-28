@@ -40,6 +40,7 @@
 #'   \item \code{\link{D2PL_pair_em}} conducts DIF analysis for 2PL models using EM algorithms with group pairwise truncated \eqn{L_1} penalty
 #'   \item \code{\link{D2PL_gvem}} conducts DIF analysis for M2PL models using GVEM algorithms
 #'   \item \code{\link{D2PL_lrt}} conducts DIF analysis for M2PL models using the likelihood ratio test
+#'   \item \code{\link{D2PL_bifactor_gvem}} conducts DIF analysis for M2PL bifactor models using GVEM algorithms
 #' }
 #' @section Shiny apps for VEMIRT:
 #' \itemize{
