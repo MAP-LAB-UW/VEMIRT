@@ -82,6 +82,10 @@ VEMIRT::shinyVEMIRT()
 - [`D1PL_pair_em()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D1PL_pair_em.md)
   : EM Algorithm with ADMM for DIF Detection Using Group Pairwise
   Truncated \\L_1\\ Penalty in 1PL Models
+- [`D2PL_bifactor_data`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_bifactor_data.md)
+  : Simulated Data Set for DIF M2PL Bifactor Analysis
+- [`D2PL_bifactor_gvem()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_bifactor_gvem.md)
+  : GVEM Algorithms for DIF Detection in M2PL Bifactor Models
 - [`D2PL_data`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_data.md)
   : Simulated Data Set for DIF M2PL Analysis
 - [`D2PL_em()`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_em.md)

@@ -96,6 +96,9 @@ identifies the number of factors via parallel analysis.
 - [`D2PL_lrt`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_lrt.md)
   conducts DIF analysis for M2PL models using the likelihood ratio test
 
+- [`D2PL_bifactor_gvem`](https://MAP-LAB-UW.github.io/VEMIRT/reference/D2PL_bifactor_gvem.md)
+  conducts DIF analysis for M2PL bifactor models using GVEM algorithms
+
 ## Shiny apps for VEMIRT
 
 - [`shinyVEMIRT`](https://MAP-LAB-UW.github.io/VEMIRT/reference/shinyVEMIRT.md)
