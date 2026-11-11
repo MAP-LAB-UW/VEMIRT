@@ -31,14 +31,23 @@ The goal of `VEMIRT` is to provide computationally efficient tools for high-dime
 
 To install this package from source:
 
-1) **Windows** users may need to install the [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) and include the checkbox option of installing Rtools to their path for easier command line usage.
-**Mac** users may need to install Xcode command line tools by `sudo xcode-select --install` in the terminal, and then install [GNU Fortran compiler](https://mac.r-project.org/tools/).
-Most **Linux** distributions should already have up to date compilers (or if not they can be installed/updated easily). 
+<!-- 1) **Windows** users may need to install the [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) and include the checkbox option of installing Rtools to their path for easier command line usage. -->
+<!-- **Mac** users may need to install Xcode command line tools by `sudo xcode-select --install` in the terminal, and then install [GNU Fortran compiler](https://mac.r-project.org/tools/). -->
+<!-- Most **Linux** distributions should already have up to date compilers (or if not they can be installed/updated easily).  -->
 
-2) Install the `devtools` package (if necessary), and install the package from [GitHub](https://github.com/) with
-``` {r eval = F}
+1) **Windows** users may need to install [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/) compatible with their R version.
+   **macOS** users may need to install the Xcode Command Line Tools by running `xcode-select --install` in Terminal, followed by the appropriate [GNU Fortran compiler](https://mac.r-project.org/tools/). Note that GNU Fortran may need to be reinstalled after a macOS upgrade.
+   On **Linux**, the required compilers may already be installed; otherwise, they can typically be installed or updated through the distribution's package manager.
+
+2) Install the `pak` package (if necessary), and install the package from [GitHub](https://github.com/) with
+<!-- ``` {r eval = F}
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("MAP-LAB-UW/VEMIRT", build_vignettes = T)
+torch::install_torch()``` -->
+``` {r eval = F}
+if (!require(pak)) install.packages("pak")
+options(pkg.build_vignettes = TRUE)
+pak::pak("MAP-LAB-UW/VEMIRT", dependencies = TRUE)
 torch::install_torch()
 ```
 

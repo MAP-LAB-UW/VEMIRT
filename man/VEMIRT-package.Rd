@@ -81,6 +81,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Weicong Lyu \email{weiconglyu@um.edu.mo} (\href{https://orcid.org/0000-0002-8159-2161}{ORCID})
   \item Yijun Cheng \email{chengxb@uw.edu} (\href{https://orcid.org/0000-0002-0671-9193}{ORCID})
   \item Jiaying Xiao \email{jxiao6@uw.edu} (\href{https://orcid.org/0000-0001-9513-6477}{ORCID})
   \item He Ren \email{heren@uw.edu} (\href{https://orcid.org/0000-0003-1208-7089}{ORCID})

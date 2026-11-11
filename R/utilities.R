@@ -1,11 +1,6 @@
 # Written by Weicong Lyu
 
 #' @export
-`%*%.torch_tensor` <- function(x, y) {
-  torch_matmul(x, y)
-}
-
-#' @export
 t.torch_tensor <- function(x) {
   torch_transpose(x, -1, -2)
 }
