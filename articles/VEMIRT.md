@@ -9,6 +9,7 @@ models, and differential item functioning (DIF) analysis of M2PL models
 using the `VEMIRT` package in `R`, which can be installed with
 
 ``` r
+
 if (!require(devtools)) install.packages("devtools")
 devtools::install_github("MAP-LAB-UW/VEMIRT", build_vignettes = T)
 torch::install_torch()
@@ -18,6 +19,7 @@ The package requires a C++ compiler to work properly, and users are
 referred to <https://github.com/MAP-LAB-UW/VEMIRT> for more information.
 
 ``` r
+
 library(VEMIRT)
 ```
 
@@ -29,11 +31,11 @@ high-dimensional latent traits.
 
 Data required for analysis are summarized below:
 
-|           Analysis            | Item Responses | Loading Indicator | Group Membership |
-|:-----------------------------:|:--------------:|:-----------------:|:----------------:|
-|  Exploratory Factor Analysis  |   \checkmark   |                   |                  |
-| Confirmatory Factor Analysis  |   \checkmark   |    \checkmark     |                  |
-| Differential Item Functioning |   \checkmark   |    \checkmark     |    \checkmark    |
+| Analysis | Item Responses | Loading Indicator | Group Membership |
+|:--:|:--:|:--:|:--:|
+| Exploratory Factor Analysis | \checkmark |  |  |
+| Confirmatory Factor Analysis | \checkmark | \checkmark |  |
+| Differential Item Functioning | \checkmark | \checkmark | \checkmark |
 
 Here we take dataset `D2PL_data` as an example. This simulated dataset
 is for DIF 2PL analysis. Responses should be an N by J binary matrix,
@@ -43,6 +45,7 @@ missing data, which should be coded as `NA`. In this example, there are
 N=1500 respondents and J=20 items.
 
 ``` r
+
 head(D2PL_data$data)
 #>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19]
 #> [1,]    0    1    0    1    1    0    1    0    0     0     1     0     0     1     0     1     1     1     1
@@ -65,6 +68,7 @@ latent dimensions each item loads on, where D is the number of latent
 dimensions. The latent traits have D=2 dimensions here.
 
 ``` r
+
 D2PL_data$model
 #>       [,1] [,2]
 #>  [1,]    1    0
@@ -94,6 +98,7 @@ whose elements are integers from 1 to G, where G is the number of
 groups. There are G=3 groups in this example.
 
 ``` r
+
 table(D2PL_data$group)
 #> 
 #>   1   2   3 
@@ -115,6 +120,7 @@ Users can specify the number of simulated datasets, which takes
 `n.iter = 10` by default.
 
 ``` r
+
 pa_poly(D2PL_data$data, n.iter = 5)
 #> Parallel analysis suggests that the number of factors =  2
 ```
@@ -144,6 +150,7 @@ default. Another choice is `rot = "cfQ"`, which performs the
 CF-Quartimax rotation.
 
 ``` r
+
 E2PL_gvem_rot(E2PL_data_C1$data, domain = 3)
 #>          a1      a2       a3       b
 #> 1   0.10594  1.5952 -0.10845  1.7290
@@ -188,6 +195,7 @@ factor. Notice that the first 3 rows of `E2PL_data_C1$model` form an
 identity matrix.
 
 ``` r
+
 E2PL_data_C1$model
 #>       [,1] [,2] [,3]
 #>  [1,]    1    0    0
@@ -232,6 +240,7 @@ In the following example, the first 2 rows and any other row form such a
 lower triangular matrix, so `non_pen` can take any integer from 3 to 30.
 
 ``` r
+
 E2PL_data_C2$model
 #>       [,1] [,2] [,3]
 #>  [1,]    1    0    0
@@ -271,6 +280,7 @@ E2PL_data_C2$model
 ([2024](#ref-cho2024)) for algorithmic details.
 
 ``` r
+
 result <- with(E2PL_data_C1, E2PL_gvem_lasso(data, model, constrain = "C1"))
 result
 #>       a1     a2   a3       b
@@ -343,6 +353,7 @@ and `E2PL_iw` helps reduce the bias through importance sampling ([Ma et
 al., 2024](#ref-ma2024)).
 
 ``` r
+
 E2PL_iw(E2PL_data_C1$data, result)
 #>      a1     a2   a3       b
 #> 1  1.69  0.000 0.00  1.8353
@@ -406,6 +417,7 @@ examples, the priors for difficulty parameters and guessing parameters
 are N(0,2^2) and \beta(10,40) respectively.
 
 ``` r
+
 with(E3PL_data_C1, E3PL_sgvem_adaptlasso(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40, constrain = "C1"))
 #>       a1    a2    a3       b     c
 #> 1  0.794 0.000 0.000  0.1891 0.185
@@ -503,6 +515,7 @@ The following examples use a simulated dataset, `C2PL_data`, which has
 N=1000 respondents, J=20 items and D=2 dimensions.
 
 ``` r
+
 result <- with(C2PL_data, C2PL_gvem(data, model))
 result
 #>      a1   a2       b
@@ -600,6 +613,7 @@ difficulty parameters and guessing parameters are chosen to be N(0,2^2)
 and \beta(10,40) respectively.
 
 ``` r
+
 with(C3PL_data, C3PL_sgvem(data, model, mu_b = 0, sigma2_b = 4, Alpha = 10, Beta = 40))
 #>      a1    a2       b     c
 #> 1  1.16 0.000 -0.1390 0.185
@@ -649,6 +663,7 @@ following example, DIF detection results are ordered by pairs of groups
 and DIF parameters are flagged by `X`.
 
 ``` r
+
 with(D2PL_data, D2PL_pair_em(data, group, Lambda0 = seq(1, 1.5, by = 0.1), Tau = c(Inf, seq(0.002, 0.01, by = 0.002)), verbose = FALSE))
 #>        1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
 #> 1,2:a1                                                   
@@ -678,6 +693,7 @@ are flagged by `X`, indicating that the item parameter of this group is
 different from that of group 1.
 
 ``` r
+
 result <- with(D2PL_data, D2PL_gvem(data, model, group, method = 'IWGVEMM', Lambda0 = seq(0.2, 0.7, by = 0.1), verbose = F))
 result
 #>      1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
@@ -700,6 +716,7 @@ from 0 to 1, where larger values lead to lower true and false positive
 rates.
 
 ``` r
+
 summary(result, 0.5)
 #>    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
 #> a1         X                                         
@@ -725,6 +742,7 @@ criterion is used. Finally, other parameter estimates can be obtained
 too:
 
 ``` r
+
 str(coef(result, 'BIC'))
 #> List of 17
 #>  $ lambda0: num 0.3
@@ -753,6 +771,7 @@ simulating data, estimating the model using `VEMIRT`, and then checking
 accuracy.
 
 ``` r
+
 library(abind)
 library(mvtnorm)
 ```
@@ -760,6 +779,7 @@ library(mvtnorm)
 ### Confirmatory 2PL Model
 
 ``` r
+
 set.seed(1)
 Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
 J <- 10
@@ -791,6 +811,7 @@ c(a = rmse(a[model == 1], coef(result.iw2)$a[model == 1]), b = rmse(b, coef(resu
 ### DIF 2PL Model
 
 ``` r
+
 set.seed(1)
 Sigma <- matrix(c(1, 0.85, 0.85, 1), 2)
 J <- 10

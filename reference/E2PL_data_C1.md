@@ -13,17 +13,17 @@ E2PL_data_C1
 
 A list of components of the data set:
 
-|             |                                                                              |
-|-------------|------------------------------------------------------------------------------|
-| ` data`     | Item responses                                                               |
-|             |                                                                              |
-| `model`     | Loading indicators for (adaptive) lasso penalty                              |
-|             |                                                                              |
-| `constrain` | Constraint for model identification (`'C1'`)                                 |
-|             |                                                                              |
-| `non_pen`   | Index of an item that is associated with all the factors (`NULL` under `C1`) |
-|             |                                                                              |
-| `params`    | True parameters used for generating the item responses                       |
+|  |  |
+|----|----|
+| ` data` | Item responses |
+|  |  |
+| `model` | Loading indicators for (adaptive) lasso penalty |
+|  |  |
+| `constrain` | Constraint for model identification (`'C1'`) |
+|  |  |
+| `non_pen` | Index of an item that is associated with all the factors (`NULL` under `C1`) |
+|  |  |
+| `params` | True parameters used for generating the item responses |
 
 ## Author
 

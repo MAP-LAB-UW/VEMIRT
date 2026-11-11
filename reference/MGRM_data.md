@@ -12,19 +12,19 @@ MGRM_data
 
 A list of components of the data set:
 
-|              |                                                                   |
-|--------------|-------------------------------------------------------------------|
-| ` data`      | Item responses                                                    |
-|              |                                                                   |
-| `model`      | Loading indicators                                                |
-|              |                                                                   |
-| `params`     | A list of true parameters used for generating the item responses: |
-|              |                                                                   |
-| ` ...$a`     | Slopes                                                            |
-|              |                                                                   |
-| ` ...$b`     | Negated intercepts                                                |
-|              |                                                                   |
-| ` ...$theta` | Latent traits                                                     |
+|  |  |
+|----|----|
+| ` data` | Item responses |
+|  |  |
+| `model` | Loading indicators |
+|  |  |
+| `params` | A list of true parameters used for generating the item responses: |
+|  |  |
+| ` ...$a` | Slopes |
+|  |  |
+| ` ...$b` | Negated intercepts |
+|  |  |
+| ` ...$theta` | Latent traits |
 
 ## Author
 

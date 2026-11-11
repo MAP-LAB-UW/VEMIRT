@@ -122,6 +122,9 @@ Useful links:
 
 Authors:
 
+- Weicong Lyu <weiconglyu@um.edu.mo>
+  ([ORCID](https://orcid.org/0000-0002-8159-2161))
+
 - Yijun Cheng <chengxb@uw.edu>
   ([ORCID](https://orcid.org/0000-0002-0671-9193))
 
