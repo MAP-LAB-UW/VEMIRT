@@ -57,8 +57,12 @@ After installing the `VEMIRT` package, open its tutorial by running
 vignette("VEMIRT")
 ```
 
-## Shiny App
-After installing the `VEMIRT` package, open its shiny app by running
+## Shiny Apps
+After installing `VEMIRT`, you can launch the main Shiny application with
 ```{r eval = F}
 VEMIRT::shinyVEMIRT()
+```
+To open the DIF Dashboard Shiny application, run
+```{r eval = F}
+VEMIRT::DIFdashboard()
 ```
